@@ -1,4 +1,4 @@
-var tcdian = (function () {
+var tcdian = window.__ = (function () {
 
   // Used for built-in method references.
   var _arrayProto = Array.prototype,
@@ -59,6 +59,9 @@ var tcdian = (function () {
     '&quot;': '"',
     '&#39;': "'"
   }
+
+  // Demilitarized zone
+  var DMZ = Object.create(null)
 
   // _optimizeCb
   function _optimizeCb(func, context, argCount) {
@@ -715,6 +718,7 @@ var tcdian = (function () {
     }
     return left + 1
   }
+
   // _.sortedLastIndexBy-----------------------------------------------------//
 
   /**
@@ -1172,12 +1176,20 @@ var tcdian = (function () {
   // _.includes--------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if value is in collection. If collection is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If fromIndex is negative, it's used as the offset from the end of collection.
     * Arguments
-      array(Array): The
+      collection (Array|Object|string): The collection to inspect.
+      value (*): The value to search for.
+      [fromIndex=0] (number): The index to search from.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if value is found, else false.
   **/
+
+  function includes(collection, value, fromIndex = 0) {
+    if (!isArrayLike(collection)) collection = values(collection)
+    if (fromIndex < 0) fromIndex = Math.max(0, collection.length + fromIndex)
+    return collection.includes(value, fromIndex)
+  }
 
   // _.invokeMap-------------------------------------------------------------//
 
@@ -1262,42 +1274,76 @@ var tcdian = (function () {
   // _.sample----------------------------------------------------------------//
 
   /**
-    * description
+    * Gets a random element from collection.
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to sample.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the random element.
   **/
+
+  function sample(collection) {
+    let initialCollection = isArrayLike(obj) ? collection : values(collection)
+    return initialCollection[Math.floor(Math.random() * initialCollection.length)]
+  }
 
   // _.sampleSize------------------------------------------------------------//
 
   /**
-    * description
+    * Gets n random elements at unique keys from collection up to the size of collection.
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to sample.
+      [n = 1](number): The number of elements to sample.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the random elements.
   **/
+
+  function sampleSize(collection, n = 1) {
+    let shuffledArr = shuffle(collection)
+    let size = n < 0 ? 0 : n
+    return shuffledArr.slice(0, n)
+  }
 
   // _.shuffle---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of shuffled values, using a version of the Fisher - Yates shuffle.
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to shuffle.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new shuffled array.
   **/
+
+  function shuffle(collection) {
+    let values = Object.values(collection)
+    //洗牌算法
+    let len = values.length
+    for (let i = 0; i < len - 1; i++) {
+      let randomIndex = Math.floor(Math.random() * (len - i)) + i
+      exchange(values, i, randomIndex)
+    }
+
+    function exchange(arr, x, y) {
+      let tmp = arr[x]
+      arr[x] = arr[y]
+      arr[y] = tmp
+    }
+    return values
+  }
 
   // _.size------------------------------------------------------------------//
 
   /**
-    * description
+    * Gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
     * Arguments
-      array(Array): The
+      collection(Array | Object | string): The collection to inspect.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the collection size.
   **/
+
+  function size(collection) {
+    if (collection == null) return 0
+    return isArrayLike(collection) ? collection.length : keys(collection).length
+  }
 
   // _.some------------------------------------------------------------------//
 
@@ -1323,83 +1369,183 @@ var tcdian = (function () {
   // _.now-------------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * Gets the timestamp of the number of milliseconds that have elapsed since the Unix epoch(1 January 1970 00: 00: 00 UTC).
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the timestamp.
   **/
+
+  function now() {
+    return Date.now()
+  }
 
   //------------------------------------Function--------------------------------------
   // _.after-----------------------------------------------------------------//
 
   /**
-    * description
+    * The opposite of _.before; this method creates a function that invokes func once it's called n or more times.
     * Arguments
-      array(Array): The
+      n (number): The number of calls before func is invoked.
+      func (Function): The function to restrict.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new restricted function.
   **/
+
+  function after(timers, func) {
+    return function(...args) {
+      if(--timers <= 0) {
+        return func.call(this, ...args)
+      }
+    }
+  }
 
   // _.ary-------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func, with up to n arguments, ignoring any additional arguments.
     * Arguments
-      array(Array): The
+      func (Function): The function to cap arguments for.
+      [n=func.length] (number): The arity cap.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new capped function.
   **/
+
+  function ary(func, argsCount = func.length) {
+    return function(...args) {
+      return func.apply(this, args.slice(0, argsCount))
+    }
+  }
 
   // _.before----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func, with the this binding and arguments of the created function,
+      while it's called less than n times. Subsequent calls to the created function return the result of the last func invocation.
     * Arguments
-      array(Array): The
+      n (number): The number of calls at which func is no longer invoked.
+      func (Function): The function to restrict.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new restricted function.
   **/
+
+  function before(times, func) {
+    let memo
+    return function (...args) {
+      if(--times > 0) {
+        memo = func.call(this, ...args)
+      }
+      return memo
+    }
+  }
 
   // _.bind------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with the this binding of thisArg and partials prepended to the arguments it receives.
+
+      The _.bind.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+
+      Note: Unlike native Function#bind, this method doesn't set the "length" property of bound functions.
     * Arguments
-      array(Array): The
+      func (Function): The function to bind.
+      thisArg (*): The this binding of func.
+      [partials] (...*): The arguments to be partially applied.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new bound function.
   **/
+
+  function bind(func, thisArg, ...partials) {
+    return function(...args) {
+      if (!isFunction(func)) throw new Error('Bind must be called on a function')
+      let separator = 0
+      let finalArgs = partials.map(partial => {
+        if(partial === __) return args[separator++]
+        return partial
+      }).concat(args.slice(separator))
+      return func.call(thisArg, ...finalArgs)
+    }
+  }
 
   // _.bindKey---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes the method at object[key] with partials prepended to the arguments it receives.
+
+      This method differs from _.bind by allowing bound functions to reference methods that may be redefined or don't yet exist. See Peter Michaux's article for more details.
+
+      The _.bindKey.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
     * Arguments
-      array(Array): The
+      object(Object): The object to invoke the method on.
+      key(string): The key of the method.
+      [partials](... * ): The arguments to be partially applied.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new bound function.
   **/
+
+  function bindKey(obj, key, ...partials) {
+    return function (...args) {
+      let func = obj[key]
+      if (!isFunction(func)) throw new Error('bindKey must be called on a function')
+      let separator = 0
+      let finalArgs = partials.map(partial => {
+        if (partial === __) return args[separator++]
+        return partial
+      }).concat(args.slice(separator))
+      return func.call(obj, ...finalArgs)
+    }
+  }
 
   // _.curry-----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that accepts arguments of func and either invokes func returning its result, if at least arity number of arguments have been provided, or returns a function that accepts the remaining func arguments, and so on. The arity of func may be specified if func.length is not sufficient.
+
+      The _.curry.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for provided arguments.
+
+      Note: This method doesn't set the "length" property of curried functions.
     * Arguments
-      array(Array): The
+      func (Function): The function to curry.
+      [arity=func.length] (number): The arity of func.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new curried function.
   **/
+
+  function curry(func, arity = func.length) {
+    return function(...args) {
+      let argsLen = args.filter(arg => arg !== __).length
+      if (argsLen >= arity) {
+        return bind(func, this, ...args)()
+      } else {
+        return curry(bind(func, this, ...args), arity - argsLen)
+      }
+    }
+  }
 
   // _.curryRight------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.curry except that arguments are applied to func in the manner of _.partialRight instead of _.partial.
+
+      The _.curryRight.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for provided arguments.
+
+      Note: This method doesn't set the "length" property of curried functions.
     * Arguments
-      array(Array): The
+      func (Function): The function to curry.
+      [arity=func.length] (number): The arity of func.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new curried function.
   **/
+
+  function curryRight(func, arity = func.length) {
+    return function (...args) {
+      let argsLen = args.filter(arg => arg !== __).length
+      let finalArgs = new Array(arity - args.length).fill(__).concat(args)
+      if (argsLen >= arity) {
+        return bind(func, this, ...finalArgs)()
+      } else {
+        return curryRight(bind(func, this, ...finalArgs), arity - argsLen)
+      }
+    }
+  }
 
   // _.debounce--------------------------------------------------------------//
 
@@ -1414,62 +1560,111 @@ var tcdian = (function () {
   // _.defer-----------------------------------------------------------------//
 
   /**
-    * description
+    * Defers invoking the func until the current call stack has cleared.Any additional arguments are provided to func when it 's invoked.
     * Arguments
-      array(Array): The
+      func (Function): The function to defer.
+      [args] (...*): The arguments to invoke func with.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the timer id.
   **/
+
+  function defer(func, ...args) {
+    return delay(func, 0, ...args)
+  }
 
   // _.delay-----------------------------------------------------------------//
 
   /**
-    * description
+    * Invokes func after wait milliseconds.Any additional arguments are provided to func when it 's invoked.
     * Arguments
-      array(Array): The
+      func (Function): The function to delay.
+      wait (number): The number of milliseconds to delay invocation.
+      [args] (...*): The arguments to invoke func with.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the timer id.
   **/
+
+  function delay(func, wait, ...args) {
+    return setTimeout(() => {
+      return func.apply(DMZ, args)
+    }, wait);
+  }
 
   // _.flip------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with arguments reversed.
     * Arguments
-      array(Array): The
+      func (Function): The function to flip arguments for.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new flipped function.
   **/
+
+  function flip(func) {
+    return function(...args) {
+      return func.apply(this, args.reverse())
+    }
+  }
 
   // _.memoize---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that memoizes the result of func. If resolver is provided,
+      it determines the cache key for storing the result based on the arguments provided to the memoized function.
+      By default, the first argument provided to the memoized function is used as the map cache key. The func is invoked with the this binding of the memoized function.
+
+      Note: The cache is exposed as the cache property on the memoized function. Its creation may be customized
+      by replacing the _.memoize.Cache constructor with one whose instances implement the Map method interface of clear, delete, get, has, and set.
     * Arguments
-      array(Array): The
+      func (Function): The function to have its output memoized.
+      [resolver] (Function): The function to resolve the cache key.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new memoized function.
   **/
+
+  function memoize(func, resolver) {
+    let memo = function (...args) {
+      let cache = memo.cache
+      let key = resolver ? resolver.call(this, ...args) : args[0]
+      if(!(cache.has(key))) {
+        let value = func.call(this, ...args)
+        cache.set(key, value)
+      }
+      return cache.get(key)
+    }
+    memo.cache = new Map()
+    return memo
+  }
 
   // _.negate----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that negates the result of the predicate func. The func predicate is invoked with the this binding and arguments of the created function.
     * Arguments
-      array(Array): The
+      predicate(Function): The predicate to negate.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new negated function.
   **/
+
+  function negate(predicate) {
+    return function (...args) {
+      return !predicate.apply(this, args)
+    }
+  }
 
   // _.once------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that is restricted to invoking func once. Repeat calls to the function return the value of the first invocation. The func is invoked with the this binding and arguments of the created function.
     * Arguments
-      array(Array): The
+      func (Function): The function to restrict.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new restricted function.
   **/
+
+  function once(func) {
+    return before(2, func)
+  }
 
   // _.overArgs--------------------------------------------------------------//
 
@@ -1484,52 +1679,119 @@ var tcdian = (function () {
   // _.partial---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with partials prepended to the arguments it receives. This method is like _.bind except it does not alter the this binding.
+
+      The _.partial.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+
+      Note: This method doesn't set the "length" property of partially applied functions.
     * Arguments
-      array(Array): The
+      func (Function): The function to partially apply arguments to.
+      [partials] (...*): The arguments to be partially applied.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new partially applied function.
   **/
+
+  function partial(func, ...partials) {
+    return function (...args) {
+      if (!isFunction(func)) throw new Error('partial must be called on a function')
+      let separator = 0
+      let finalArgs = partials.map(partial => {
+        if (partial === __) return args[separator++]
+        return partial
+      }).concat(args.slice(separator))
+      return func.call(this, ...finalArgs)
+    }
+  }
 
   // _.partialRight----------------------------------------------------------//
-
   /**
-    * description
+    * This method is like _.partial except that partially applied arguments are appended to the arguments it receives.
+
+      The _.partialRight.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+
+      Note: This method doesn't set the "length" property of partially applied functions.
     * Arguments
-      array(Array): The
+      func (Function): The function to partially apply arguments to.
+      [partials] (...*): The arguments to be partially applied.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new partially applied function.
   **/
+
+  function partialRight(func, ...partivals) {
+    return function (...args) {
+      if (!isFunction(func)) throw new Error('partialRight must be called on a function')
+      let funcLen = func.length
+      let separator = 0
+      let argsList = new Array(Math.max(0, funcLen - partivals.length)).fill(__).concat(partivals)
+      let finalArgs = argsList.map(item => {
+        if (item === __) return args[separator++]
+        return item
+      }).concat(args.slice(separator))
+      return func.call(this, ...finalArgs)
+    }
+  }
 
   // _.rearg-----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with arguments arranged according to the specified indexes where the argument value at the
+      first index is provided as the first argument, the argument value at the second index is provided as the second argument, and so on.
     * Arguments
-      array(Array): The
+      func (Function): The function to rearrange arguments for.
+      indexes (...(number|number[])): The arranged argument indexes.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function rearg(func, indexes) {
+    return function (...args) {
+      let finalArgs = new Array(indexes.length)
+      indexes.forEach((item, i) => {
+        finalArgs[i] = args[item]
+      })
+      return func.call(this, ...finalArgs)
+    }
+  }
 
   // _.rest------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with the this binding of the created function and arguments from start and beyond provided as an array.
+
+      Note: This method is based on the rest parameter.
     * Arguments
-      array(Array): The
+      func (Function): The function to apply a rest parameter to.
+      [start=func.length-1] (number): The start position of the rest parameter.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function rest(func, start = func.length - 1) {
+    return function (...args) {
+      let args1 = args.slice(0, start)
+      let args2 = args.slice(start)
+      return func.call(this, ...args1, args2)
+    }
+  }
 
   // _.spread----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with the this binding of the create function and an array of arguments much like Function#apply.
+
+      Note: This method is based on the spread operator.
     * Arguments
-      array(Array): The
+      func (Function): The function to spread arguments over.
+      [start=0] (number): The start position of the spread.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function spread(func, start = 0) {
+    return function (argsArr) {
+      return func.call(this, ...argsArr.slice(start))
+    }
+  }
 
   // _.throttle--------------------------------------------------------------//
 
@@ -1544,12 +1806,16 @@ var tcdian = (function () {
   // _.unary-----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that accepts up to one argument, ignoring any additional arguments.
     * Arguments
-      array(Array): The
+      func (Function): The function to cap arguments for.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new capped function.
   **/
+
+  function unary(func) {
+    return ary(func, 1)
+  }
 
   // _.wrap------------------------------------------------------------------//
 
@@ -2929,9 +3195,11 @@ var tcdian = (function () {
     * Returns
       (Array): Returns the array of property values.
   **/
+
   function values(obj) {
     return Object.values(obj)
   }
+
   // _.valuesIn--------------------------------------------------------------//
 
   /**
@@ -3939,6 +4207,7 @@ var tcdian = (function () {
     /* _.forEachRight------------------------- */
     /* _.groupBy------------------------------ */
     /* _.includes----------------------------- */
+    includes,
     /* _.invokeMap---------------------------- */
     /* _.keyBy-------------------------------- */
     /* _.map---------------------------------- */
@@ -3948,36 +4217,60 @@ var tcdian = (function () {
     /* _.reduceRight-------------------------- */
     /* _.reject------------------------------- */
     /* _.sample------------------------------- */
+    sample,
     /* _.sampleSize--------------------------- */
+    sampleSize,
     /* _.shuffle------------------------------ */
+    shuffle,
     /* _.size--------------------------------- */
+    size,
     /* _.some--------------------------------- */
     /* _.sortBy------------------------------- */
     //------------------------------------Date------------------------------------------
     /* _.now---------------------------------- */
+    now,
     //------------------------------------Function--------------------------------------
     /* _.after-------------------------------- */
+    after,
     /* _.ary---------------------------------- */
+    ary,
     /* _.before------------------------------- */
+    before,
     /* _.bind--------------------------------- */
+    bind,
     /* _.bindKey------------------------------ */
+    bindKey,
     /* _.curry-------------------------------- */
+    curry,
     /* _.curryRight--------------------------- */
+    curryRight,
     /* _.debounce----------------------------- */
     /* _.defer-------------------------------- */
+    defer,
     /* _.delay-------------------------------- */
+    delay,
     /* _.flip--------------------------------- */
+    flip,
     /* _.memoize------------------------------ */
+    memoize,
     /* _.negate------------------------------- */
+    negate,
     /* _.once--------------------------------- */
+    once,
     /* _.overArgs----------------------------- */
     /* _.partial------------------------------ */
+    partial,
     /* _.partialRight------------------------- */
+    partialRight,
     /* _.rearg-------------------------------- */
+    rearg,
     /* _.rest--------------------------------- */
+    rest,
     /* _.spread------------------------------- */
+    spread,
     /* _.throttle----------------------------- */
     /* _.unary-------------------------------- */
+    unary,
     /* _.wrap--------------------------------- */
     //------------------------------------Lang------------------------------------------
     /* _.castArray---------------------------- */
