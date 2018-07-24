@@ -2726,13 +2726,18 @@ var tcdian = (function () {
   // _.keys------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of the own enumerable property names of object.
+
+      Note: Non - object values are coerced to objects.See the ES spec for more details.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the array of property names.
   **/
 
+  function keys(obj) {
+    return Object.keys(obj)
+  }
   // _.keysIn----------------------------------------------------------------//
 
   /**
@@ -2916,13 +2921,17 @@ var tcdian = (function () {
   // _.values----------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
-    * Returns
-      (Array): Returns the new array of chunks.
-  **/
+    * Creates an array of the own enumerable string keyed property values of object.
 
+      Note: Non - object values are coerced to objects.
+    * Arguments
+      object(Object): The object to query.
+    * Returns
+      (Array): Returns the array of property values.
+  **/
+  function values(obj) {
+    return Object.values(obj)
+  }
   // _.valuesIn--------------------------------------------------------------//
 
   /**
@@ -4107,6 +4116,7 @@ var tcdian = (function () {
     /* _.invertBy----------------------------- */
     /* _.invoke------------------------------- */
     /* _.keys--------------------------------- */
+    keys,
     /* _.keysIn------------------------------- */
     /* _.mapKeys------------------------------ */
     /* _.mapValues---------------------------- */
@@ -4126,6 +4136,7 @@ var tcdian = (function () {
     /* _.update------------------------------- */
     /* _.updateWith--------------------------- */
     /* _.values------------------------------- */
+    values,
     /* _.valuesIn----------------------------- */
     //------------------------------------Seq-------------------------------------------
     /* _-------------------------------------- */
