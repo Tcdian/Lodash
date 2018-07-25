@@ -1948,42 +1948,64 @@ var tcdian = window.__ = (function () {
   // _.conformsTo------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if object conforms to source by invoking the predicate properties of source with the corresponding property values of object.
+
+      Note: This method is equivalent to _.conforms when source is partially applied.
     * Arguments
-      array(Array): The
+      object(Object): The object to inspect.
+      source(Object): The object of property predicates to conform to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if object conforms, else false.
   **/
+
+  function conformsTo(obj, source) {
+    return Object.keys(source).every(item => source[item].call(DMZ, obj[item]))
+  }
 
   // _.eq--------------------------------------------------------------------//
 
   /**
-    * description
+    * Performs a SameValueZero comparison between two values to determine if they are equivalent.
     * Arguments
-      array(Array): The
+      value( * ): The value to compare.
+      other( * ): The other value to compare.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if the values are equivalent, else false.
   **/
+
+  function eq(value, other) {
+    return value === other || (isNaN(value) && isNaN(other))
+  }
 
   // _.gt--------------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if value is greater than other.
     * Arguments
-      array(Array): The
+      value( * ): The value to compare.
+      other( * ): The other value to compare.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if value is greater than other, else false.
   **/
+
+  function gt(value, other) {
+    return value > other
+  }
 
   // _.gte-------------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if value is greater than or equal to other.
     * Arguments
-      array(Array): The
+      value( * ): The value to compare.
+      other( * ): The other value to compare.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if value is greater than or equal to other, else false.
   **/
+
+  function gte(value, other) {
+    return value >= other
+  }
 
   // _.isArguments-----------------------------------------------------------//
 
@@ -2138,12 +2160,44 @@ var tcdian = window.__ = (function () {
   // .isEqual----------------------------------------------------------------//
 
   /**
-    * description
+    * Performs a deep comparison between two values to determine if they are equivalent.
+
+      Note: This method supports comparing arrays, array buffers, booleans, date objects, error objects, maps, numbers, Object objects, regexes, sets, strings, symbols, and typed arrays.
+      Object objects are compared by their own, not inherited, enumerable properties. Functions and DOM nodes are compared by strict equality, i.e. ===.
     * Arguments
-      array(Array): The
+      value( * ): The value to compare.
+      other( * ): The other value to compare.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if the values are equivalent, else false.
   **/
+
+  function isEqual(value, other) {
+    if (_objectProto.toString.call(value) != _objectProto.toString.call(other)) {
+      return false
+    }
+    if (!isObject(value) || isFunction(value) || _objectProto.toString.call(value) === _typeMap.DOMException) {
+      return eq(value, other)
+    }
+    if (isTypedArray(value) || isArrayBuffer(value) || isArray(value)) {
+      return value.length === other.length ? value.every((item, index) => isEqual(item, other[index])) : false
+    }
+    if (isSet(value) || isMap(value)) {
+      if(value.size !== other.size) return false
+      let valueKeys = Array.from(value.keys())
+      let otherKeys = Array.from(other.keys())
+      return valueKeys.every(key => {
+        for(let i = 0; i < otherKeys.length; i++) {
+          if (isEqual(key, otherKeys[i])) {
+            return isEqual(value[key], other[otherKeys[i]])
+          }
+        }
+        return false
+      })
+    }
+    let valueKeys = Object.keys(value)
+    let otherKeys = Object.keys(other)
+    return valueKeys.length === otherKeys.length && valueKeys.every(key => isEqual(value[key], other[key]))
+  }
 
   // .isEqualWith------------------------------------------------------------//
 
@@ -2248,12 +2302,22 @@ var tcdian = window.__ = (function () {
   // _.isMatch---------------------------------------------------------------//
 
   /**
-    * description
+    * Performs a partial deep comparison between object and source to determine if object contains equivalent property values.
+
+      Note: This method is equivalent to _.matches when source is partially applied.
+
+      Partial comparisons will match empty array and empty object source values against any array or object value, respectively. See _.isEqual for a list of supported value comparisons.
     * Arguments
-      array(Array): The
+      object(Object): The object to inspect.
+      source(Object): The object of property values to match.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if object is a match, else false.
   **/
+
+  function isMatch(obj, source) {
+    let compareObj = Object.assign({}, obj, source)
+    return isEqual(obj, compareObj)
+  }
 
   // _.isMatchWith-----------------------------------------------------------//
 
@@ -2518,102 +2582,177 @@ var tcdian = window.__ = (function () {
   // _.lt--------------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if value is less than other.
     * Arguments
-      array(Array): The
+      value( * ): The value to compare.
+      other( * ): The other value to compare.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if value is less than other, else false.
   **/
+
+  function lt(value, other) {
+    return value < other
+  }
 
   // _.lte-------------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if value is less than or equal to other.
     * Arguments
-      array(Array): The
+      value( * ): The value to compare.
+      other( * ): The other value to compare.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if value is less than or equal to other, else false.
   **/
+
+  function lte(value, other) {
+    return value <= other
+  }
 
   // _.toArray---------------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to an array.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the converted array.
   **/
+
+  function toArray(value) {
+    if (isString(value))
+      return value.split('')
+    if (!isObject(value))
+      return []
+    if (isArray(value) || isTypedArray(value) || isArrayBuffer(value))
+      return value.slice()
+    if (isArrayLike(value))
+      return _arrayProto.slice.call(value)
+    if (isSet(value) || isMap(value))
+      return Array.from(value.values())
+    return values(value)
+  }
 
   // _.toFinite--------------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to a finite number.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the converted number.
   **/
+
+  function toFinite(value) {
+    if (value === Infinity) return Number.MAX_VALUE
+    if (value === -Infinity) return Number.MIN_VALUE
+    let result = Number(value)
+    return isNaN(value) ? 0 : value
+  }
 
   // _.toInteger-------------------------------------------------------------//
-
   /**
-    * description
+    * Converts value to an integer.
+
+      Note: This method is loosely based on ToInteger.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the converted integer.
   **/
+
+  function toInteger(value) {
+    let result = toFinite(value)
+    return result - result % 1
+  }
 
   // _.toLength--------------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to an integer suitable for use as the length of an array-like object.
+
+      Note: This method is based on ToLength.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the converted integer.
   **/
+
+  function toLength(value) {
+    let result = toInteger(value)
+    return result < 0 ? 0 : (result > 4294967295 ? 4294967295 : result)
+  }
 
   // _.toNumber--------------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to a number.
     * Arguments
-      array(Array): The
+      value( * ): The value to process.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the number.
   **/
+
+  function toNumber(value) {
+    return Number(value)
+  }
 
   // _.toPlainObject---------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to a plain object flattening inherited enumerable string keyed properties of value to own properties of the plain object.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the converted plain object.
   **/
+
+  function toPlainObject(value) {
+    let result = {}
+    if(!isString(value) && !isObject(value)) {
+      return result
+    }
+    for(let key in value) {
+      result[key] = value[key]
+    }
+    return result
+  }
 
   // _.toSafeInteger---------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to a safe integer.A safe integer can be compared and represented correctly.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the converted integer.
   **/
+
+  function toSafeInteger(value) {
+    var result = toInteger(value)
+    if (result >= Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
+    if (result <= Number.MIN_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
+    return result
+  }
 
   // _.toString--------------------------------------------------------------//
 
   /**
-    * description
+    * Converts value to a string. An empty string is returned for null and undefined values. The sign of -0 is preserved.
     * Arguments
-      array(Array): The
+      value( * ): The value to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the converted string.
   **/
+
+  function toString(value) {
+    if (value == void 0) return ''
+    if (isString(value)) return value
+    if (isArray(value)) return value.join()
+    if (isSymbol(value)) return value.toString()
+    if (Object.is(value, -0)) return '-0'
+    return '' + value
+  }
 
   //------------------------------------Math------------------------------------------
   // _.add-------------------------------------------------------------------//
@@ -2801,12 +2940,19 @@ var tcdian = window.__ = (function () {
   // _.assign----------------------------------------------------------------//
 
   /**
-    * description
+    * Assigns own enumerable string keyed properties of source objects to the destination object.Source objects are applied from left to right.Subsequent sources overwrite property assignments of previous sources.
+
+      Note: This method mutates object and is loosely based on Object.assign.
     * Arguments
-      array(Array): The
+      object(Object): The destination object.
+      [sources](...Object): The source objects.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function assign(obj, ...sources) {
+    return Object.assign(obj, ...sources)
+  }
 
   // _.assignIn--------------------------------------------------------------//
 
@@ -3755,12 +3901,20 @@ var tcdian = window.__ = (function () {
   // _.conforms--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes the predicate properties of source with the corresponding property values of a given object, returning true if all predicates return truthy, else false.
+
+      Note: The created function is equivalent to _.conformsTo with source partially applied.
     * Arguments
-      array(Array): The
+      source(Object): The object of property predicates to conform to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new spec function.
   **/
+
+  function conforms(source) {
+    return function (obj) {
+      return conformsTo(obj, source)
+    }
+  }
 
   // _.constant--------------------------------------------------------------//
 
@@ -4351,9 +4505,13 @@ var tcdian = window.__ = (function () {
     /* _.cloneDeepWith------------------------ */
     /* _.cloneWith---------------------------- */
     /* _.conformsTo--------------------------- */
+    conformsTo,
     /* _.eq----------------------------------- */
+    eq,
     /* _.gt----------------------------------- */
+    gt,
     /* _.gte---------------------------------- */
+    gte,
     /* _.isArguments-------------------------- */
     isArguments,
     /* _.isArray------------------------------ */
@@ -4374,6 +4532,7 @@ var tcdian = window.__ = (function () {
     /* _.isEmpty------------------------------ */
     isEmpty,
     /* _.isEqual------------------------------ */
+    isEqual,
     /* _.isEqualWith-------------------------- */
     /* _.isError------------------------------ */
     isError,
@@ -4388,6 +4547,7 @@ var tcdian = window.__ = (function () {
     /* _.isMap-------------------------------- */
     isMap,
     /* _.isMatch------------------------------ */
+    isMatch,
     /* _.isMatchWith-------------------------- */
     /* _.isNaN-------------------------------- */
     isNaN,
@@ -4424,15 +4584,25 @@ var tcdian = window.__ = (function () {
     /* _.isWeakSet---------------------------- */
     isWeakSet,
     /* _.lt----------------------------------- */
+    lt,
     /* _.lte---------------------------------- */
+    lte,
     /* _.toArray------------------------------ */
+    toArray,
     /* _.toFinite----------------------------- */
+    toFinite,
     /* _.toInteger---------------------------- */
+    toInteger,
     /* _.toLength----------------------------- */
+    toLength,
     /* _.toNumber----------------------------- */
+    toNumber,
     /* _.toPlainObject------------------------ */
+    toPlainObject,
     /* _.toSafeInteger------------------------ */
+    toSafeInteger,
     /* _.toString----------------------------- */
+    toString,
     //------------------------------------Math------------------------------------------
     /* _.add---------------------------------- */
     /* _.ceil--------------------------------- */
@@ -4455,6 +4625,7 @@ var tcdian = window.__ = (function () {
     /* _.random------------------------------- */
     //------------------------------------Object----------------------------------------
     /* _.assign------------------------------- */
+    assign,
     /* _.assignIn----------------------------- */
     /* _.assignInWith------------------------- */
     /* _.assignWith--------------------------- */
@@ -4554,6 +4725,7 @@ var tcdian = window.__ = (function () {
     /* _.bindAll------------------------------ */
     /* _.cond--------------------------------- */
     /* _.conforms----------------------------- */
+    conforms,
     /* _.constant----------------------------- */
     /* _.defaultTo---------------------------- */
     /* _.flow--------------------------------- */
