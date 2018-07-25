@@ -2781,7 +2781,7 @@ var tcdian = window.__ = (function () {
       (number): Returns the rounded up number.
   **/
 
-  function ceil(number, precision = 0)) {
+  function ceil(number, precision = 0) {
     var digit = Math.pow(10, precision)
     return Math.ceil(number * digit) / digit
   }
