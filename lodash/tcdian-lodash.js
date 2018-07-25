@@ -1871,7 +1871,7 @@ var tcdian = window.__ = (function () {
     if (isMap(value)) {
       let result = new Map()
       value.forEach((item, key) => {
-        result.set(key) = item
+        result.set(key, item)
       })
       return result
     }
@@ -1908,7 +1908,7 @@ var tcdian = window.__ = (function () {
     if (isMap(value)) {
       let map = new Map()
       value.forEach((item, key) => {
-        map.set(cloneDeep(key)) = cloneDeep(item)
+        map.set(cloneDeep(key), cloneDeep(item))
       })
       return map
     }
