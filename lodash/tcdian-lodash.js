@@ -2647,7 +2647,7 @@ var tcdian = window.__ = (function () {
     if (value === Infinity) return Number.MAX_VALUE
     if (value === -Infinity) return Number.MIN_VALUE
     let result = Number(value)
-    return isNaN(value) ? 0 : value
+    return isNaN(result) ? 0 : result
   }
 
   // _.toInteger-------------------------------------------------------------//
