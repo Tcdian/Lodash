@@ -44,7 +44,7 @@ var tcdian = window.__ = (function () {
   }
 
   // Used to map characters to HTML entities.
-  var htmlEscapes = {
+  var _htmlEscapes = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -53,14 +53,13 @@ var tcdian = window.__ = (function () {
   }
 
   // Used to map HTML entities to characters.
-  var htmlUnescapes = {
+  var _htmlUnescapes = {
     '&amp;': '&',
     '&lt;': '<',
     '&gt;': '>',
     '&quot;': '"',
     '&#39;': "'"
   }
-
   // Demilitarized zone
   var DMZ = Object.create(null)
 
@@ -93,6 +92,12 @@ var tcdian = window.__ = (function () {
     }
   }
 
+  // _baseWordSeparate
+  function _baseWordSeparate(str) {
+    let pattern = /[\-_\s]+/g
+    if (pattern.test(str)) return str.split(pattern).filter(it => it !== '')
+    return str.split(/(?=[A-Z])/)
+  }
   //------------------------------------Array-----------------------------------------
   // _.chunk-----------------------------------------------------------------//
 
@@ -3627,192 +3632,310 @@ var tcdian = window.__ = (function () {
   // _.camelCase-------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string to camel case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the camel cased string.
   **/
 
+  function camelCase(str = '') {
+    return _baseWordSeparate(str).map((item, index) => {
+      if(index === 0) return item.toLowerCase()
+      return item[0].toUpperCase() + item.slice(1).toLowerCase()
+    }).join('')
+  }
   // _.capitalize------------------------------------------------------------//
 
   /**
-    * description
+    * Converts the first character of string to upper case and the remaining to lower case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to capitalize.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the capitalized string.
   **/
+
+  function capitalize(str = '') {
+    return str[0].toUpperCase() + str.slice(1).toLowerCase()
+  }
 
   // _.deburr----------------------------------------------------------------//
 
   /**
-    * description
+    * Deburrs string by converting Latin - 1 Supplement and Latin Extended - A letters to basic Latin letters and removing combining diacritical marks.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to deburr.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the deburred string.
   **/
+
 
   // _.endsWith--------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if string ends with the given target string.
     * Arguments
-      array(Array): The
+      [string=''] (string): The string to inspect.
+      [target] (string): The string to search for.
+      [position=string.length] (number): The position to search up to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if string ends with target, else false.
   **/
+
+  function endsWith(string = '', target, position = string.length) {
+    return string.endsWith(target, position)
+  }
 
   // _.escape----------------------------------------------------------------//
 
   /**
-    * description
+    * Converts the characters "&", "<", ">", '"', and "'" in string to their corresponding HTML entities.
+
+      Note: No other characters are escaped. To escape additional characters use a third-party library like he.
+
+      Though the ">" character is escaped for symmetry, characters like ">" and "/" don't need escaping in HTML and have no special meaning unless they're part of
+      a tag or unquoted attribute value. See Mathias Bynens's article (under "semi-related fun fact") for more details.
+
+      When working with HTML you should always quote attribute values to reduce XSS vectors.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to escape.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the escaped string.
   **/
+
+  function escape(str = '') {
+    return str.replace(/[&<>"']/g, $0 => _htmlEscapes[$0])
+  }
 
   // _.escapeRegExp----------------------------------------------------------//
 
   /**
-    * description
+    * Escapes the RegExp special characters "^", "$", "", ".", "*", "+", "?", "(", ")", "[", "]", "{", "}", and "|" in string.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to escape.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the escaped string.
   **/
+
+  function escapeRegExp(str = '') {
+    //"^", "$", "", ".", "*", "+", "?", "(", ")", "[", "]", "{", "}", and "|"
+    return str.replace(/[\^\$\.\*\+\?\(\)\[\]\{\}\|]/g, $0 => '\\' + $0)
+  }
 
   // _.kebabCase-------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string to kebab case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the kebab cased string.
   **/
+
+  function kebabCase(str = '') {
+    return _baseWordSeparate(str).map(item => {
+      return item.toLowerCase()
+    }).join('-')
+  }
 
   // _.lowerCase-------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string, as space separated words, to lower case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the lower cased string.
   **/
 
+  function lowerCase(str = '') {
+    return _baseWordSeparate(str).map(item => {
+      return item.toLowerCase()
+    }).join(' ')
+  }
   // _.lowerFirst------------------------------------------------------------//
 
   /**
-    * description
+    * Converts the first character of string to lower case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the converted string.
   **/
+
+  function lowerFirst(str = '') {
+    return str[0].toLowerCase() + str.slice(1)
+  }
 
   // _.pad-------------------------------------------------------------------//
 
   /**
-    * description
+    * Pads string on the left and right sides if it's shorter than length. Padding characters are truncated if they can't be evenly divided by length.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to pad.
+      [length = 0](number): The padding length.
+      [chars = ' '](string): The string used as padding.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the padded string.
   **/
+
+  function pad(str = '', targetLen = 0, chars = ' ') {
+    let strLen = str.length
+    let addLen = targetLen - strLen > 0 ? targetLen - strLen : 0
+    if (addLen === 0) return str
+    let leftLen = Math.floor(addLen / 2)
+    return padEnd(padStart(str, leftLen + strLen, chars), targetLen, chars)
+  }
 
   // _.padEnd----------------------------------------------------------------//
 
   /**
-    * description
+    * Pads string on the right side if it's shorter than length. Padding characters are truncated if they exceed length.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to pad.
+      [length = 0](number): The padding length.
+      [chars = ' '](string): The string used as padding.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the padded string.
   **/
+
+  function padEnd(str = '', targetLen = 0, chars = ' ') {
+    return str.padEnd(targetLen, chars)
+  }
 
   // _.padStart--------------------------------------------------------------//
 
   /**
-    * description
+    * Pads string on the left side if it's shorter than length. Padding characters are truncated if they exceed length.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to pad.
+      [length = 0](number): The padding length.
+      [chars = ' '](string): The string used as padding.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the padded string.
   **/
+
+  function padStart(str = '', targetLen = 0, chars = ' ') {
+    return str.padStart(targetLen, chars)
+  }
 
   // _.parseInt--------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string to an integer of the specified radix. If radix is undefined or 0, a radix of 10 is used unless value is a hexadecimal, in which case a radix of 16 is used.
+
+      Note: This method aligns with the ES5 implementation of parseInt.
     * Arguments
-      array(Array): The
+      string(string): The string to convert.
+      [radix = 10](number): The radix to interpret value by.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the converted integer.
   **/
+
+  function parseInt(str, radix = 10, guard) {
+    if (guard) radix = 10
+    return window.parseInt(str, radix)
+  }
 
   // _.repeat----------------------------------------------------------------//
 
   /**
-    * description
+    * Repeats the given string n times.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to repeat.
+      [n = 1](number): The number of times to repeat the string.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the repeated string.
   **/
+
+  function repeat(str = '', timers = 1, guard) {
+    if (guard) timers = 1
+    return str.repeat(timers)
+  }
 
   // _.replace---------------------------------------------------------------//
 
   /**
-    * description
+    * Replaces matches for pattern in string with replacement.
+
+      Note: This method is based on String#replace.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to modify.
+      pattern(RegExp | string): The pattern to replace.
+      replacement(Function | string): The match replacement.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the modified string.
   **/
+
+  function replace(str = '', pattern, replacement) {
+    return str.replace(pattern, replacement)
+  }
 
   // _.snakeCase-------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string to snake case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the snake cased string.
   **/
+
+  function snakeCase(str = '') {
+    return _baseWordSeparate(str).map(item => {
+      return item.toLowerCase()
+    }).join('_')
+  }
 
   // _.split-----------------------------------------------------------------//
 
   /**
-    * description
+    * Splits string by separator.
+
+      Note: This method is based on String# split.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to split.
+      separator(RegExp | string): The separator pattern to split by.
+      [limit](number): The length to truncate results to.
     * Returns
       (Array): Returns the new array of chunks.
   **/
+
+  function split(str = '', separator, limit) {
+    return str.split(separator, limit)
+  }
 
   // _.startCase-------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string to start case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the start cased string.
   **/
+
+  function startCase(str = '') {
+    return _baseWordSeparate(str).map(item => {
+      return item[0].toUpperCase() + item.slice(1)
+    }).join(' ')
+  }
 
   // _.startsWith------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if string starts with the given target string.
     * Arguments
-      array(Array): The
+      [string=''] (string): The string to inspect.
+      [target] (string): The string to search for.
+      [position=0] (number): The position to search from.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if string starts with target, else false.
   **/
+
+  function startsWith(str = '', target, position = 0) {
+    return str.startsWith(target, position)
+  }
 
   // _.template--------------------------------------------------------------//
 
@@ -3827,52 +3950,91 @@ var tcdian = window.__ = (function () {
   // _.toLower---------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string, as a whole, to lower case just like String#toLowerCase.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the lower cased string.
   **/
+
+  function toLower(str = '') {
+    return str.toLowerCase()
+  }
 
   // _.toUpper---------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string, as a whole, to upper case just like String#toUpperCase.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the upper cased string.
   **/
+
+  function toUpper(str = '') {
+    return str.toUpperCase()
+  }
 
   // _.trim------------------------------------------------------------------//
 
   /**
-    * description
+    * Removes leading and trailing whitespace or specified characters from string.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to trim.
+      [chars = whitespace](string): The characters to trim.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the trimmed string.
   **/
+
+  function trim(str = '', chars = ' ', guard) {
+    if (guard) chars = ' '
+    if (chars === ' ') return str.trim()
+    return trimStart(trimEnd(str, chars), chars)
+  }
 
   // _.trimEnd---------------------------------------------------------------//
 
   /**
-    * description
+    * Removes trailing whitespace or specified characters from string.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to trim.
+      [chars = whitespace](string): The characters to trim.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the trimmed string.
   **/
+
+  function trimEnd(str = '', chars = ' ', guard) {
+    if (guard) chars = ' '
+    if(chars === ' ') return str.trimRight()
+    for(var i = str.length - 1; i >= 0; i--) {
+      if(!chars.includes(str[i])) {
+        break
+      }
+    }
+    return i === -1 ? str : str.slice(0, i + 1)
+  }
 
   // _.trimStart-------------------------------------------------------------//
 
   /**
-    * description
+    * Removes leading whitespace or specified characters from string.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to trim.
+      [chars = whitespace](string): The characters to trim.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the trimmed string.
   **/
+
+  function trimStart(str = '', chars = ' ', guard) {
+    if (guard) chars = ' '
+    if(chars === ' ') return str.trimLeft()
+    for(var i = 0; i < str.length; i++) {
+      if(!chars.includes(str[i])) {
+        break
+      }
+    }
+    return i === str.length ? str : str.slice(i)
+  }
 
   // _.truncate--------------------------------------------------------------//
 
@@ -3887,42 +4049,64 @@ var tcdian = window.__ = (function () {
   // _.unescape--------------------------------------------------------------//
 
   /**
-    * description
+    * The inverse of _.escape; this method converts the HTML entities &amp;, &lt;, &gt;, &quot;, and &#39; in string to their corresponding characters.
+
+      Note: No other HTML entities are unescaped. To unescape additional HTML entities use a third-party library like he.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to unescape.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the unescaped string.
   **/
+
+  function unescape(str = '') {
+    return str.replace(/(&amp;|&lt;|&gt;|&quot;|&#39;)/g, $0 => _htmlUnescapes[$0])
+  }
 
   // _.upperCase-------------------------------------------------------------//
 
   /**
-    * description
+    * Converts string, as space separated words, to upper case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the upper cased string.
   **/
+
+  function upperCase(str = '') {
+    return _baseWordSeparate(str).map(item => {
+      return item.toUpperCase()
+    }).join(' ')
+  }
 
   // _.upperFirst------------------------------------------------------------//
 
   /**
-    * description
+    * Converts the first character of string to upper case.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to convert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the converted string.
   **/
+
+  function upperFirst(str = '') {
+    return str[0].toUpperCase() + str.slice(1)
+  }
 
   // _.words-----------------------------------------------------------------//
 
   /**
-    * description
+    * Splits string into an array of its words.
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to inspect.
+      [pattern](RegExp | string): The pattern to match words.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the words of string.
   **/
+
+  function words(str = '', pattern, guard) {
+    if (guard || !pattern) pattern = /[a-zA-Z0-9]+/g
+    return str.match(pattern)
+  }
 
   //------------------------------------Util------------------------------------------
   // _.attempt---------------------------------------------------------------//
@@ -4759,35 +4943,62 @@ var tcdian = window.__ = (function () {
     /* _.prototype.valueOf -> value----------- */
     //------------------------------------String----------------------------------------
     /* _.camelCase---------------------------- */
+    camelCase,
     /* _.capitalize--------------------------- */
+    capitalize,
     /* _.deburr------------------------------- */
     /* _.endsWith----------------------------- */
+    endsWith,
     /* _.escape------------------------------- */
+    escape,
     /* _.escapeRegExp------------------------- */
+    escapeRegExp,
     /* _.kebabCase---------------------------- */
+    kebabCase,
     /* _.lowerCase---------------------------- */
+    lowerCase,
     /* _.lowerFirst--------------------------- */
+    lowerFirst,
     /* _.pad---------------------------------- */
+    pad,
     /* _.padEnd------------------------------- */
+    padEnd,
     /* _.padStart----------------------------- */
+    padStart,
     /* _.parseInt----------------------------- */
+    parseInt,
     /* _.repeat------------------------------- */
+    repeat,
     /* _.replace------------------------------ */
+    replace,
     /* _.snakeCase---------------------------- */
+    snakeCase,
     /* _.split-------------------------------- */
+    split,
     /* _.startCase---------------------------- */
+    startCase,
     /* _.startsWith--------------------------- */
+    startsWith,
     /* _.template----------------------------- */
     /* _.toLower------------------------------ */
+    toLower,
     /* _.toUpper------------------------------ */
+    toUpper,
     /* _.trim--------------------------------- */
+    trim,
     /* _.trimEnd------------------------------ */
+    trimEnd,
     /* _.trimStart---------------------------- */
+    trimStart,
     /* _.truncate----------------------------- */
     /* _.unescape----------------------------- */
+    unescape,
     /* _.upperCase---------------------------- */
+    upperCase,
     /* _.upperFirst--------------------------- */
+    upperFirst,
     /* _.words-------------------------------- */
+    words,
     //------------------------------------Util------------------------------------------
     /* _.attempt------------------------------ */
     /* _.bindAll------------------------------ */
