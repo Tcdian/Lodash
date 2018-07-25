@@ -15,6 +15,7 @@ var tcdian = window.__ = (function () {
     DOMException: '[object DOMException]',
     Error: '[object Error]',
     Function: '[object Function]',
+    HTMLCollection: "[object HTMLCollection]",
     GeneratorFunction: '[object GeneratorFunction]',
     Map: '[object Map]',
     Number: '[object Number]',
@@ -1282,7 +1283,7 @@ var tcdian = window.__ = (function () {
   **/
 
   function sample(collection) {
-    let initialCollection = isArrayLike(obj) ? collection : values(collection)
+    let initialCollection = isArrayLike(collection) ? collection : values(collection)
     return initialCollection[Math.floor(Math.random() * initialCollection.length)]
   }
 
@@ -1831,35 +1832,95 @@ var tcdian = window.__ = (function () {
   // _.castArray-------------------------------------------------------------//
 
   /**
-    * description
+    * Casts value as an array if it's not one.
     * Arguments
-      array(Array): The
+      value( * ): The value to inspect.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the cast array.
   **/
-
+  function castArray(...values) {
+    if(values.length === 0) return []
+    let val = values[0]
+    return isArray(val) ? val : [val]
+  }
   // _.clone-----------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
-    * Returns
-      (Array): Returns the new array of chunks.
-  **/
+    * Creates a shallow clone of value.
 
+      Note: This method is loosely based on the structured clone algorithm and supports cloning arrays, array buffers, booleans, date objects, maps, numbers, Object objects, regexes, sets, strings,
+      symbols, and typed arrays. The own enumerable properties of arguments objects are cloned as plain objects. An empty object is returned for uncloneable values such as error objects, functions, DOM nodes, and WeakMaps.
+    * Arguments
+      value( * ): The value to clone.
+    * Returns
+      ( * ): Returns the cloned value.
+  **/
+  function clone(value) {
+    if (!isObject(value)) {
+      return value
+    }
+    if (isElement(value) || isFunction(value) || isWeakMap(value) || isWeakSet(value) || isError(value) || _objectProto.toString.call(value) === _typeMap.HTMLCollection) {
+      return {}
+    }
+    if (isArray(value) || isTypedArray(value) || isArrayBuffer(value) || isArguments(value)) {
+      return _arrayProto.slice.call(value)
+    }
+    if (isMap(value)) {
+      let result = new Map()
+      value.forEach((item, key) => {
+        result.set(key) = item
+      })
+      return result
+    }
+    if(isSet(value)) {
+      return new Set(value)
+    }
+    let result = Object.create(Object.getPrototypeOf(value))
+    return Object.assign(result, value)
+  }
   // _.cloneDeep-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.clone except that it recursively clones value.
     * Arguments
-      array(Array): The
+      value( * ): The value to recursively clone.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the deep cloned value.
   **/
-
+  function cloneDeep(value) {
+    if (!isObject(value)) {
+      return value
+    }
+    if (isElement(value) || isFunction(value) || isWeakMap(value) || isWeakSet(value) || isError(value) || _objectProto.toString.call(value) === _typeMap.HTMLCollection) {
+      return {}
+    }
+    if (isTypedArray(value) || isArrayBuffer(value)) {
+      return _arrayProto.slice.call(value)
+    }
+    if (isArray(value) || isArguments(value)) {
+      return _arrayProto.map.call(value, item => cloneDeep(item))
+    }
+    if (isMap(value)) {
+      let map = new Map()
+      value.forEach((item, key) => {
+        map.set(cloneDeep(key)) = cloneDeep(item)
+      })
+      return map
+    }
+    if (isSet(value)) {
+      let set = new Set()
+      value.forEach(item => {
+        set.add(cloneDeep(item))
+      })
+      return set
+    }
+    let obj = Object.create(Object.getPrototypeOf(value))
+    Object.keys(value).forEach(key => {
+      obj[key] = _.cloneDeep(value[key])
+    })
+    return obj
+  }
   // _.cloneDeepWith---------------------------------------------------------//
-
   /**
     * description
     * Arguments
@@ -2314,6 +2375,8 @@ var tcdian = window.__ = (function () {
   **/
 
   function isPlainObject(obj) {
+    if (!isObjectLike(obj) || _objectProto.toString.call(obj) !== _typeMap.Object)
+      return false
     let proto = Object.getPrototypeOf(obj)
     return proto === null || proto === Object.prototype
   }
@@ -4275,7 +4338,9 @@ var tcdian = window.__ = (function () {
     //------------------------------------Lang------------------------------------------
     /* _.castArray---------------------------- */
     /* _.clone-------------------------------- */
+    clone,
     /* _.cloneDeep---------------------------- */
+    cloneDeep,
     /* _.cloneDeepWith------------------------ */
     /* _.cloneWith---------------------------- */
     /* _.conformsTo--------------------------- */
