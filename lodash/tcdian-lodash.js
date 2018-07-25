@@ -1838,11 +1838,13 @@ var tcdian = window.__ = (function () {
     * Returns
       (Array): Returns the cast array.
   **/
+
   function castArray(...values) {
     if(values.length === 0) return []
     let val = values[0]
     return isArray(val) ? val : [val]
   }
+
   // _.clone-----------------------------------------------------------------//
 
   /**
@@ -1855,6 +1857,7 @@ var tcdian = window.__ = (function () {
     * Returns
       ( * ): Returns the cloned value.
   **/
+
   function clone(value) {
     if (!isObject(value)) {
       return value
@@ -1878,6 +1881,7 @@ var tcdian = window.__ = (function () {
     let result = Object.create(Object.getPrototypeOf(value))
     return Object.assign(result, value)
   }
+
   // _.cloneDeep-------------------------------------------------------------//
 
   /**
@@ -1887,6 +1891,7 @@ var tcdian = window.__ = (function () {
     * Returns
       ( * ): Returns the deep cloned value.
   **/
+
   function cloneDeep(value) {
     if (!isObject(value)) {
       return value
@@ -1920,6 +1925,7 @@ var tcdian = window.__ = (function () {
     })
     return obj
   }
+
   // _.cloneDeepWith---------------------------------------------------------//
   /**
     * description
@@ -4337,6 +4343,7 @@ var tcdian = window.__ = (function () {
     /* _.wrap--------------------------------- */
     //------------------------------------Lang------------------------------------------
     /* _.castArray---------------------------- */
+    castArray,
     /* _.clone-------------------------------- */
     clone,
     /* _.cloneDeep---------------------------- */
