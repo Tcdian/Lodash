@@ -2758,52 +2758,79 @@ var tcdian = window.__ = (function () {
   // _.add-------------------------------------------------------------------//
 
   /**
-    * description
+    * Adds two numbers.
     * Arguments
-      array(Array): The
+      augend(number): The first number in an addition.
+      addend(number): The second number in an addition.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the total.
   **/
+
+  function add(augend, addend) {
+    return augend + addend
+  }
 
   // _.ceil------------------------------------------------------------------//
 
   /**
-    * description
+    * Computes number rounded up to precision.
     * Arguments
-      array(Array): The
+      number(number): The number to round up.
+      [precision = 0](number): The precision to round up to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the rounded up number.
   **/
+
+  function ceil(number, precision = 0)) {
+    var digit = Math.pow(10, precision)
+    return Math.ceil(number * digit) / digit
+  }
 
   // _.divide----------------------------------------------------------------//
 
   /**
-    * description
+    * Divide two numbers.
     * Arguments
-      array(Array): The
+      dividend(number): The first number in a division.
+      divisor(number): The second number in a division.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the quotient.
   **/
+
+  function divide(dividend, dividor) {
+    return dividend / dividor
+  }
 
   // _.floor-----------------------------------------------------------------//
 
   /**
-    * description
+    * Computes number rounded down to precision.
     * Arguments
-      array(Array): The
+      number(number): The number to round down.
+      [precision = 0](number): The precision to round down to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the rounded down number.
   **/
+
+  function floor(number, precision = 0) {
+    var digit = Math.pow(10, precision)
+    return Math.floor(number * digit) / digit
+  }
 
   // _.max-------------------------------------------------------------------//
 
   /**
-    * description
+    * Computes the maximum value of array.If array is empty or falsey, undefined is returned.
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the maximum value.
   **/
+
+  function max(arr) {
+    var max = Math.max(...arr)
+    return max === -Infinity ? undefined : max
+  }
 
   // _.maxBy-----------------------------------------------------------------//
 
@@ -2818,32 +2845,42 @@ var tcdian = window.__ = (function () {
   // _.mean------------------------------------------------------------------//
 
   /**
-    * description
+    * Computes the mean of the values in array.
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the mean.
   **/
+
+  function mean(arr) {
+    return arr.reduce((accumulator, currentVal) => accumulator + currentVal) / arr.length
+  }
 
   // _.meanBy----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.mean except that it accepts iteratee which is invoked for each element in array to generate the value to be averaged. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the mean.
   **/
 
   // _.min-------------------------------------------------------------------//
 
   /**
-    * description
+    * Computes the minimum value of array.If array is empty or falsey, undefined is returned.
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the minimum value.
   **/
+
+  function min(arr) {
+    var min = Math.min(...arr)
+    return min === Infinity ? undefined : min
+  }
 
   // _.minBy-----------------------------------------------------------------//
 
@@ -2858,42 +2895,62 @@ var tcdian = window.__ = (function () {
   // _.multiply--------------------------------------------------------------//
 
   /**
-    * description
+    * Multiply two numbers.
     * Arguments
-      array(Array): The
+      multiplier(number): The first number in a multiplication.
+      multiplicand(number): The second number in a multiplication.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the product.
   **/
+
+  function multiply(multiplier, multiplicand) {
+    return multiplier * multiplicand
+  }
 
   // _.round-----------------------------------------------------------------//
 
   /**
-    * description
+    * Computes number rounded to precision.
     * Arguments
-      array(Array): The
+      number(number): The number to round.
+      [precision = 0](number): The precision to round to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the rounded number.
   **/
+
+  function round(number, precision = 0) {
+    var digit = Math.pow(10, precision)
+    return Math.round(number * digit) / digit
+  }
 
   // _.subtract--------------------------------------------------------------//
 
   /**
-    * description
+    * Subtract two numbers.
     * Arguments
-      array(Array): The
+      minuend(number): The first number in a subtraction.
+      subtrahend(number): The second number in a subtraction.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the difference.
   **/
+
+  function subtract(minuend, subtrahend) {
+    return minuend - subtrahend
+  }
 
   // _.sum-------------------------------------------------------------------//
 
   /**
-    * description
+    * Computes the sum of the values in array.
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the sum.
   **/
+
+  function sum(arr) {
+    return arr.reduce((accumulator, currentVal) => accumulator + currentVal)
+  }
 
   // _.sumBy-----------------------------------------------------------------//
 
@@ -4605,19 +4662,30 @@ var tcdian = window.__ = (function () {
     toString,
     //------------------------------------Math------------------------------------------
     /* _.add---------------------------------- */
+    add,
     /* _.ceil--------------------------------- */
+    ceil,
     /* _.divide------------------------------- */
+    divide,
     /* _.floor-------------------------------- */
+    floor,
     /* _.max---------------------------------- */
+    max,
     /* _.maxBy-------------------------------- */
     /* _.mean--------------------------------- */
+    mean,
     /* _.meanBy------------------------------- */
     /* _.min---------------------------------- */
+    min,
     /* _.minBy-------------------------------- */
     /* _.multiply----------------------------- */
+    multiply,
     /* _.round-------------------------------- */
+    round,
     /* _.subtract----------------------------- */
+    subtract,
     /* _.sum---------------------------------- */
+    sum,
     /* _.sumBy-------------------------------- */
     //------------------------------------Number----------------------------------------
     /* _.clamp-------------------------------- */
