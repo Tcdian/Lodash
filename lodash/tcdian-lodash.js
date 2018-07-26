@@ -1,4 +1,11 @@
-var tcdian = window.__ = (function () {
+var tcdian = __ = (function () {
+
+  // Used to restore the original `_` reference in `_.noConflict`.
+  var root = this
+  var _tcdian = root
+
+  // idCounter
+  var idCounter = 0
 
   // Used for built-in method references.
   var _arrayProto = Array.prototype,
@@ -105,6 +112,12 @@ var tcdian = window.__ = (function () {
       for (let key in items) {
         let value = items[key]
 
+        //是否有customizer
+        if (customizer) {
+          let customizeResult = customizer(obj[key], value, key, obj, items)
+          if (customizeResult) value = customizeResult
+        }
+
         //是否深度复制
         if (deep && isObject(obj[key])) {
           value = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [value])
@@ -113,12 +126,6 @@ var tcdian = window.__ = (function () {
         //是非覆盖已有属性
         if (!coverDefalult && obj.hasOwnProperty(key)) {
           continue
-        }
-
-        //是否有customizer
-        if (customizer) {
-          let customizeResult = customizer(obj[key], value, key, obj, items)
-          if (customizeResult) value = customizeResult
         }
 
         //是否复制source原型链上属性
@@ -3173,42 +3180,74 @@ var tcdian = window.__ = (function () {
   // _.entries -> toPairs----------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the key - value pairs.
   **/
+
+  function entries(obj) {
+    if (!isObject(obj)) return []
+    if (isSet(obj) || isMap(obj)) return obj.entries()
+    return Object.entries(obj)
+  }
 
   // _.entriesIn -> toPairsIn------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of own and inherited enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the key - value pairs.
   **/
+
+  function entriesIn(obj) {
+    if (!isObject(obj)) return []
+    if (isSet(obj) || isMap(obj)) return obj.entries()
+    let result = []
+    for( let key in obj) {
+      result.push([key, obj[key]])
+    }
+    return result
+  }
 
   // _.extend -> assignIn----------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.assign except that it iterates over own and inherited source properties.
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object(Object): The destination object.
+      [sources](...Object): The source objects.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function extend(obj, ...sources) {
+    return assignIn(obj, ...sources)
+  }
 
   // _.extendWith -> assignInWith--------------------------------------------//
 
   /**
-    * description
+    * This method is like _.assignIn except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined,
+      assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The destination object.
+      sources (...Object): The source objects.
+      [customizer] (Function): The function to customize assigned values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function extendWith(obj, ...sources) {
+    return assignInWith(obj, ...sources)
+  }
 
   // _.findKey---------------------------------------------------------------//
 
@@ -3273,22 +3312,42 @@ var tcdian = window.__ = (function () {
   // _.functions-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of function property names from own enumerable properties of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to inspect.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the function names.
   **/
+
+  function functions(obj) {
+    let result = []
+    for(let key in obj) {
+      if(obj.hasOwnProperty(key) && isFunction(obj[key])) {
+        result.push(key)
+      }
+    }
+    return result
+  }
 
   // _.functionsIn-----------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of function property names from own and inherited enumerable properties of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to inspect.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the function names.
   **/
+
+  function functionsIn(obj) {
+    let result = []
+    for(let key in obj) {
+      if(isFunction(obj[key])) {
+        result.push(key)
+      }
+    }
+    return result
+  }
 
   // _.get-------------------------------------------------------------------//
 
@@ -3323,12 +3382,23 @@ var tcdian = window.__ = (function () {
   // _.invert----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of the inverted keys and values of object.If object contains duplicate values, subsequent values overwrite property assignments of previous values.
     * Arguments
-      array(Array): The
+      object(Object): The object to invert.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new inverted object.
   **/
+
+  function invert(obj) {
+    let pairs = Object.entries(obj)
+    let result = Object.create(Object.getPrototypeOf(obj))
+    pairs.forEach(pair => {
+      if (!isObject(pair[1])) {
+        result[pair[1]] = pair[0]
+      }
+    })
+    return result
+  }
 
   // _.invertBy--------------------------------------------------------------//
 
@@ -3368,12 +3438,22 @@ var tcdian = window.__ = (function () {
   // _.keysIn----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of the own and inherited enumerable property names of object.
+
+      Note: Non - object values are coerced to objects.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the array of property names.
   **/
+
+  function keysIn(obj) {
+    let result = []
+    for(let key in obj) {
+      result.push(key)
+    }
+    return result
+  }
 
   // _.mapKeys---------------------------------------------------------------//
 
@@ -3398,22 +3478,44 @@ var tcdian = window.__ = (function () {
   // _.merge-----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.assign except that it recursively merges own and inherited enumerable string keyed properties of source objects into the destination object. Source properties that resolve to undefined are
+      skipped if a destination value exists. Array and plain object properties are merged recursively. Other objects and value types are overridden by assignment. Source objects are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object(Object): The destination object.
+      [sources](...Object): The source objects.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function merge(obj, ...sources) {
+    return _baseAssign(obj, true, true, true, void 0, sources)
+  }
 
   // _.mergeWith-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.merge except that it accepts customizer which is invoked to produce the merged values of the destination and source properties. If customizer returns undefined, merging is handled by the method instead. The customizer is invoked with six arguments:
+      (objValue, srcValue, key, object, source, stack).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The destination object.
+      sources (...Object): The source objects.
+      customizer (Function): The function to customize assigned values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function mergeWith(obj, ...sources) {
+    if (isFunction(sources[sources.length - 1])) {
+      customizer = sources.pop()
+    } else {
+      customizer = void 0
+    }
+    return _baseAssign(obj, true, true, true, customizer, sources)
+  }
 
   // _.omit------------------------------------------------------------------//
 
@@ -3488,22 +3590,30 @@ var tcdian = window.__ = (function () {
   // _.toPairs---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the key - value pairs.
   **/
+
+  function toPairs(obj) {
+    return entries(obj)
+  }
 
   // _.toPairsIn-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of own and inherited enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the key - value pairs.
   **/
+
+  function toPairsIn(obj) {
+    return entriesIn(obj)
+  }
 
   // _.transform-------------------------------------------------------------//
 
@@ -3564,12 +3674,23 @@ var tcdian = window.__ = (function () {
   // _.valuesIn--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of the own and inherited enumerable string keyed property values of object.
+
+      Note: Non - object values are coerced to objects.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the array of property values.
   **/
+
+  function valuesIn(obj) {
+    let result = []
+    for(let key in obj) {
+      result.push(obj[key])
+    }
+    return result
+  }
+
 
   //------------------------------------Seq-------------------------------------------
   // _-----------------------------------------------------------------------//
@@ -3918,7 +4039,7 @@ var tcdian = window.__ = (function () {
 
   function parseInt(str, radix = 10, guard) {
     if (guard) radix = 10
-    return window.parseInt(str, radix)
+    return root.parseInt(str, radix)
   }
 
   // _.repeat----------------------------------------------------------------//
@@ -4265,42 +4386,66 @@ var tcdian = window.__ = (function () {
   // _.constant--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that returns value.
     * Arguments
-      array(Array): The
+      value (*): The value to return from the new function.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new constant function.
   **/
+
+  function constant(val) {
+    return function () {
+      return val
+    }
+  }
 
   // _.defaultTo-------------------------------------------------------------//
 
   /**
-    * description
+    * Checks value to determine whether a default value should be returned in its place. The defaultValue is returned if value is NaN, null, or undefined.
     * Arguments
-      array(Array): The
+      value (*): The value to check.
+      defaultValue (*): The default value.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the resolved value.
   **/
+
+  function defaultTo(value, defaultValue) {
+    return isNil(value) || isNaN(value) ? defaultValue : val
+  }
 
   // _.flow------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that returns the result of invoking the given functions with the this binding of the created function, where each successive invocation is supplied the return value of the previous.
     * Arguments
-      array(Array): The
+      [funcs](...(Function | Function[])): The functions to invoke.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new composite function.
   **/
+
+  function flow(funcs) {
+    return function (...args) {
+      return funcs.reduce((accumulator, currentVal, index) => {
+        if (index === 0) return currentVal.apply(DMZ, accumulator)
+        return currentVal.call(DMZ, accumulator)
+      }, args)
+    }
+  }
 
   // _.flowRight-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.flow except that it creates a function that invokes the given functions from right to left.
     * Arguments
-      array(Array): The
+      [funcs](...(Function | Function[])): The functions to invoke.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new composite function.
   **/
+
+  function flowRight(funcs) {
+    return flow(funcs.reverse())
+  }
 
   // _.identity--------------------------------------------------------------//
 
@@ -4329,12 +4474,22 @@ var tcdian = window.__ = (function () {
   // _.matches---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that performs a partial deep comparison between a given object and source, returning true if the given object has equivalent property values, else false.
+
+      Note: The created function is equivalent to _.isMatch with source partially applied.
+
+      Partial comparisons will match empty array and empty object source values against any array or object value, respectively. See _.isEqual for a list of supported value comparisons.
     * Arguments
-      array(Array): The
+      source(Object): The object of property values to match.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new spec function.
   **/
+
+  function matches(source) {
+    return function (obj) {
+      return isMatch(obj, source)
+    }
+  }
 
   // _.matchesProperty-------------------------------------------------------//
 
@@ -4379,32 +4534,43 @@ var tcdian = window.__ = (function () {
   // _.noConflict------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * Reverts the _ variable to its previous value and returns a reference to the lodash function.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the lodash function.
   **/
+
+  function noConflict() {
+    if (root.__ === this) {
+      root.__ = _tcdian
+    }
+    return this
+  }
 
   // _.noop------------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
-    * Returns
-      (Array): Returns the new array of chunks.
+    * This method returns undefined.
   **/
+
+  function noop() {
+    return void 0
+  }
 
   // _.nthArg----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that gets the argument at index n. If n is negative, the nth argument from the end is returned.
     * Arguments
-      array(Array): The
+      [n=0] (number): The index of the argument to return.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new pass-thru function.
   **/
+
+  function nthArg(n = 0) {
+    return function (...args) {
+      return args[n < 0 ? args.length + n : n]
+    }
+  }
 
   // _.over------------------------------------------------------------------//
 
@@ -4489,52 +4655,62 @@ var tcdian = window.__ = (function () {
   // _.stubArray-------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * This method returns a new empty array.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new empty array.
   **/
+
+  function stubArray() {
+    return []
+  }
 
   // _.stubFalse-------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * This method returns false.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns false.
   **/
+
+  function stubFalse() {
+    return false
+  }
 
   // _.stubObject------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * This method returns a new empty object.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new empty object.
   **/
+
+  function stubObject() {
+    return {}
+  }
 
   // _.stubString------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * This method returns an empty string.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the empty string.
   **/
+
+  function stubString() {
+    return ''
+  }
 
   // _.stubTrue--------------------------------------------------------------//
 
   /**
-    * description
-    * Arguments
-      array(Array): The
+    * This method returns true.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true.
   **/
+
+  function stubTrue() {
+    return true
+  }
 
   // _.times-----------------------------------------------------------------//
 
@@ -4564,12 +4740,16 @@ var tcdian = window.__ = (function () {
   // _.uniqueId--------------------------------------------------------------//
 
   /**
-    * description
+    * Generates a unique ID.If prefix is given, the ID is appended to it.
     * Arguments
-      array(Array): The
+      [prefix = ''](string): The value to prefix the ID with.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the unique ID.
   **/
+
+  function uniqueId(prefix) {
+    return toString(prefix) + idCounter
+  }
 
   //------------------------------------Properties------------------------------------
   // _.VERSION---------------------------------------------------------------//
@@ -4997,9 +5177,13 @@ var tcdian = window.__ = (function () {
     /* _.defaultsDeep------------------------- */
     defaultsDeep,
     /* _.entries -> toPairs------------------- */
+    entries,
     /* _.entriesIn -> toPairsIn--------------- */
+    entriesIn,
     /* _.extend -> assignIn------------------- */
+    extend,
     /* _.extendWith -> assignInWith----------- */
+    extendWith,
     /* _.findKey------------------------------ */
     /* _.findLastKey-------------------------- */
     /* _.forIn-------------------------------- */
@@ -5007,20 +5191,26 @@ var tcdian = window.__ = (function () {
     /* _.forOwn------------------------------- */
     /* _.forOwnRight-------------------------- */
     /* _.functions---------------------------- */
+    functions,
     /* _.functionsIn-------------------------- */
+    functionsIn,
     /* _.get---------------------------------- */
     /* _.has---------------------------------- */
     /* _.hasIn-------------------------------- */
     /* _.invert------------------------------- */
+    invert,
     /* _.invertBy----------------------------- */
     /* _.invoke------------------------------- */
     /* _.keys--------------------------------- */
     keys,
     /* _.keysIn------------------------------- */
+    keysIn,
     /* _.mapKeys------------------------------ */
     /* _.mapValues---------------------------- */
     /* _.merge-------------------------------- */
+    merge,
     /* _.mergeWith---------------------------- */
+    mergeWith,
     /* _.omit--------------------------------- */
     /* _.omitBy------------------------------- */
     /* _.pick--------------------------------- */
@@ -5029,7 +5219,9 @@ var tcdian = window.__ = (function () {
     /* _.set---------------------------------- */
     /* _.setWith------------------------------ */
     /* _.toPairs------------------------------ */
+    toPairs,
     /* _.toPairsIn---------------------------- */
+    toPairsIn,
     /* _.transform---------------------------- */
     /* _.unset-------------------------------- */
     /* _.update------------------------------- */
@@ -5037,6 +5229,7 @@ var tcdian = window.__ = (function () {
     /* _.values------------------------------- */
     values,
     /* _.valuesIn----------------------------- */
+    valuesIn,
     //------------------------------------Seq-------------------------------------------
     /* _-------------------------------------- */
     /* _.chain-------------------------------- */
@@ -5119,20 +5312,28 @@ var tcdian = window.__ = (function () {
     /* _.conforms----------------------------- */
     conforms,
     /* _.constant----------------------------- */
+    constant,
     /* _.defaultTo---------------------------- */
+    defaultTo,
     /* _.flow--------------------------------- */
+    flow,
     /* _.flowRight---------------------------- */
+    flowRight,
     /* _.identity----------------------------- */
     identity,
     /* _.iteratee----------------------------- */
     /* _.matches------------------------------ */
+    matches,
     /* _.matchesProperty---------------------- */
     /* _.method------------------------------- */
     /* _.methodOf----------------------------- */
     /* _.mixin-------------------------------- */
     /* _.noConflict--------------------------- */
+    noConflict,
     /* _.noop--------------------------------- */
+    noop,
     /* _.nthArg------------------------------- */
+    nthArg,
     /* _.over--------------------------------- */
     /* _.overEvery---------------------------- */
     /* _.overSome----------------------------- */
@@ -5142,13 +5343,19 @@ var tcdian = window.__ = (function () {
     /* _.rangeRight--------------------------- */
     /* _.runInContext------------------------- */
     /* _.stubArray---------------------------- */
+    stubArray,
     /* _.stubFalse---------------------------- */
+    stubFalse,
     /* _.stubObject--------------------------- */
+    stubObject,
     /* _.stubString--------------------------- */
+    stubString,
     /* _.stubTrue----------------------------- */
+    stubTrue,
     /* _.times-------------------------------- */
     /* _.toPath------------------------------- */
     /* _.uniqueId----------------------------- */
+    uniqueId,
     //------------------------------------Properties------------------------------------
     /* _.VERSION------------------------------ */
     /* _.templateSettings--------------------- */
