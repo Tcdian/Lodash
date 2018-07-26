@@ -4,8 +4,11 @@ var tcdian = __ = (function () {
   var root = this
   var _tcdian = root
 
-  // idCounter
-  var idCounter = 0
+  // unique id : idCounter
+  var idCounter = 1
+
+  // unique value : Symbol(0)
+  var  _flagSymbol = Symbol(0)
 
   // Used for built-in method references.
   var _arrayProto = Array.prototype,
@@ -70,35 +73,6 @@ var tcdian = __ = (function () {
   // Demilitarized zone
   var DMZ = Object.create(null)
 
-  // _optimizeCb
-  function _optimizeCb(func, context, argCount) {
-    if (context === void 0)
-      return func
-    if (argCount === 1) {
-      return function (value) {
-        return func.call(context, value)
-      }
-    }
-    if (argCount === 2) {
-      return function (value, index) {
-        return func.call(context, value, index)
-      }
-    }
-    if (argCount === 3) {
-      return function (value, index, Collection) {
-        return func.call(context, value, index, Collection)
-      }
-    }
-    if (argCount === 4) {
-      return function (accumulator, value, index, Collection) {
-        return func.call(context, accumulator, value, index, Collection)
-      }
-    }
-    return function (...args) {
-      return func.apply(context, args)
-    }
-  }
-
   // _baseWordSeparate
   function _baseWordSeparate(str) {
     let pattern = /[\-_\s]+/g
@@ -138,6 +112,57 @@ var tcdian = __ = (function () {
     })
     return obj
   }
+
+  // _baseGet
+  function _baseGet(obj, path, prototypeChain, defaultValue) {
+    let pathArr = toPath(path)
+    let result = obj
+    let flag = pathArr.every(item => {
+      let tmpResult = prototypeChain && (item in result) || result.hasOwnProperty(item)
+      result = result[item]
+      return tmpResult
+    })
+    return flag ? result : defaultValue
+  }
+
+  // _optimizeCb
+  function _optimizeCb(func, context, argCount) {
+    if (context === void 0)
+      return func
+    if (argCount === 1) {
+      return function (value) {
+        return func.call(context, value)
+      }
+    }
+    if (argCount === 2) {
+      return function (value, index) {
+        return func.call(context, value, index)
+      }
+    }
+    if (argCount === 3) {
+      return function (value, index, Collection) {
+        return func.call(context, value, index, Collection)
+      }
+    }
+    if (argCount === 4) {
+      return function (accumulator, value, index, Collection) {
+        return func.call(context, accumulator, value, index, Collection)
+      }
+    }
+    return function (...args) {
+      return func.apply(context, args)
+    }
+  }
+
+  // _cb
+  function _cb(value, context, argCount) {
+    if (isNil(value)) return identity
+    if (isFunction(value)) return _optimizeCb(value, context, argCount)
+    if (isObject(value)) {
+      return isArray(value)
+    }
+  }
+
   //------------------------------------Array-----------------------------------------
   // _.chunk-----------------------------------------------------------------//
 
@@ -1071,12 +1096,17 @@ var tcdian = __ = (function () {
   // _.zipObjectDeep---------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.zipObject except that it supports property paths.
     * Arguments
-      array(Array): The
+      [props = []](Array): The property identifiers.
+      [values = []](Array): The property values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new object.
   **/
+
+  function zipObjectDeep(props = [], values = []) {
+
+  }
 
   // _.zipWith---------------------------------------------------------------//
 
@@ -3352,32 +3382,48 @@ var tcdian = __ = (function () {
   // _.get-------------------------------------------------------------------//
 
   /**
-    * description
+    * Gets the value at path of object.If the resolved value is undefined, the defaultValue is returned in its place.
     * Arguments
-      array(Array): The
+      object (Object): The object to query.
+      path (Array|string): The path of the property to get.
+      [defaultValue] (*): The value returned for undefined resolved values.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the resolved value.
   **/
+
+  function get(obj, path, defaultValue) {
+    return _baseGet(obj, path, true, defaultValue)
+  }
 
   // _.has-------------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if path is a direct property of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
+      path(Array | string): The path to check.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if path exists, else false.
   **/
+
+  function has(obj, path) {
+    return _baseGet(obj, path, false, _flagSymbol) !== _flagSymbol
+  }
 
   // _.hasIn-----------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if path is a direct or inherited property of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
+      path(Array | string): The path to check.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if path exists, else false.
   **/
+
+  function hasIn(obj, path) {
+    return _baseGet(obj, path, true, _flagSymbol) !== _flagSymbol
+  }
 
   // _.invert----------------------------------------------------------------//
 
@@ -3413,12 +3459,24 @@ var tcdian = __ = (function () {
   // _.invoke----------------------------------------------------------------//
 
   /**
-    * description
+    * Invokes the method at path of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
+      path(Array | string): The path of the method to invoke.
+      [args](... * ): The arguments to invoke the method with.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the result of the invoked method.
   **/
+
+  function invoke(obj, path, ...args) {
+    let pathArr = toPath(path)
+    let funcName = pathArr.pop()
+    let context = _baseGet(obj, pathArr, true, _flagSymbol)
+    if (context === _flagSymbol) throw new Error('can not find value in obj')
+    let func = Object.getPrototypeOf(context)[funcName]
+    if (!isFunction(func)) throw new Error('invoke must be passed function names')
+    return func.call(context, ...args)
+  }
 
   // _.keys------------------------------------------------------------------//
 
@@ -4411,7 +4469,7 @@ var tcdian = __ = (function () {
   **/
 
   function defaultTo(value, defaultValue) {
-    return isNil(value) || isNaN(value) ? defaultValue : val
+    return isNil(value) || isNaN(value) ? defaultValue : value
   }
 
   // _.flow------------------------------------------------------------------//
@@ -4494,11 +4552,11 @@ var tcdian = __ = (function () {
   // _.matchesProperty-------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that returns the value at path of a given object.
     * Arguments
-      array(Array): The
+      path(Array | string): The path of the property to get.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new accessor function.
   **/
 
   // _.method----------------------------------------------------------------//
@@ -4605,22 +4663,36 @@ var tcdian = __ = (function () {
   // _.property--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that returns the value at path of a given object.
     * Arguments
-      array(Array): The
+      path(Array | string): The path of the property to get.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new accessor function.
   **/
+
+  function property(path) {
+    return function (obj) {
+      let result = _baseGet(obj, path, true, _flagSymbol)
+      return result === _flagSymbol ? void 0 : result
+    }
+  }
 
   // _.propertyOf------------------------------------------------------------//
 
   /**
-    * description
+    * The opposite of _.property; this method creates a function that returns the value at a given path of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new accessor function.
   **/
+
+  function propertyOf(obj) {
+    return function (path) {
+      let result = _baseGet(obj, path, true, _flagSymbol)
+      return result === _flagSymbol ? void 0 : result
+    }
+  }
 
   // _.range-----------------------------------------------------------------//
 
@@ -4732,11 +4804,11 @@ var tcdian = __ = (function () {
       (Array): Returns the new array of chunks.
   **/
 
-  // function toPath(val) {
-  //   if(isSymbol(val)) return [val]
-  //   if(isArray(val)) return val
-  //   return toString(val).split(/[\[\]\.]+/).filter(it => it !== '')
-  // }
+  function toPath(val) {
+    if(isSymbol(val)) return [val]
+    if(isArray(val)) return val
+    return toString(val).split(/[\[\]\.]+/).filter(it => it !== '')
+  }
   // _.uniqueId--------------------------------------------------------------//
 
   /**
@@ -4748,7 +4820,7 @@ var tcdian = __ = (function () {
   **/
 
   function uniqueId(prefix) {
-    return toString(prefix) + idCounter
+    return toString(prefix) + idCounter++
   }
 
   //------------------------------------Properties------------------------------------
@@ -5195,12 +5267,16 @@ var tcdian = __ = (function () {
     /* _.functionsIn-------------------------- */
     functionsIn,
     /* _.get---------------------------------- */
+    get,
     /* _.has---------------------------------- */
+    has,
     /* _.hasIn-------------------------------- */
+    hasIn,
     /* _.invert------------------------------- */
     invert,
     /* _.invertBy----------------------------- */
     /* _.invoke------------------------------- */
+    invoke,
     /* _.keys--------------------------------- */
     keys,
     /* _.keysIn------------------------------- */
@@ -5338,7 +5414,9 @@ var tcdian = __ = (function () {
     /* _.overEvery---------------------------- */
     /* _.overSome----------------------------- */
     /* _.property----------------------------- */
+    property,
     /* _.propertyOf--------------------------- */
+    propertyOf,
     /* _.range-------------------------------- */
     /* _.rangeRight--------------------------- */
     /* _.runInContext------------------------- */
@@ -5354,6 +5432,7 @@ var tcdian = __ = (function () {
     stubTrue,
     /* _.times-------------------------------- */
     /* _.toPath------------------------------- */
+    toPath,
     /* _.uniqueId----------------------------- */
     uniqueId,
     //------------------------------------Properties------------------------------------
