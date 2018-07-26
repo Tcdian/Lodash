@@ -98,6 +98,39 @@ var tcdian = window.__ = (function () {
     if (pattern.test(str)) return str.split(pattern).filter(it => it !== '')
     return str.split(/(?=[A-Z])/)
   }
+
+  // _baseAssign
+  function _baseAssign(obj, coverDefalult, prototypeChain, deep, customizer, sources) {
+    sources.forEach(items => {
+      for (let key in items) {
+        let value = items[key]
+
+        //是否深度复制
+        if (deep && isObject(obj[key])) {
+          value = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [value])
+        }
+
+        //是非覆盖已有属性
+        if (!coverDefalult && obj.hasOwnProperty(key)) {
+          continue
+        }
+
+        //是否有customizer
+        if (customizer) {
+          let customizeResult = customizer(obj[key], value, key, obj, items)
+          if (customizeResult) value = customizeResult
+        }
+
+        //是否复制source原型链上属性
+        if (prototypeChain) {
+          obj[key] = value
+        } else if (items.hasOwnProperty(key)) {
+          obj[key] = value
+        }
+      }
+    })
+    return obj
+  }
   //------------------------------------Array-----------------------------------------
   // _.chunk-----------------------------------------------------------------//
 
@@ -1726,13 +1759,12 @@ var tcdian = window.__ = (function () {
   function partialRight(func, ...partivals) {
     return function (...args) {
       if (!isFunction(func)) throw new Error('partialRight must be called on a function')
-      let funcLen = func.length
       let separator = 0
-      let argsList = new Array(Math.max(0, funcLen - partivals.length)).fill(__).concat(partivals)
-      let finalArgs = argsList.map(item => {
-        if (item === __) return args[separator++]
-        return item
-      }).concat(args.slice(separator))
+      args.reverse()
+      let finalArgs = partivals.reverse().map(partial => {
+        if(partial === __) return args[separator++]
+        return partial
+      }).concat(args.slice(separator)).reverse()
       return func.call(this, ...finalArgs)
     }
   }
@@ -3013,38 +3045,71 @@ var tcdian = window.__ = (function () {
   **/
 
   function assign(obj, ...sources) {
-    return Object.assign(obj, ...sources)
+    return _baseAssign(obj, true, false, false, void 0, sources)
   }
 
   // _.assignIn--------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.assign except that it iterates over own and inherited source properties.
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object(Object): The destination object.
+      [sources](...Object): The source objects.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function assignIn(obj, ...sources) {
+    return _baseAssign(obj, true, true, false, void 0, sources)
+  }
 
   // _.assignInWith----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.assignIn except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined, assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The destination object.
+      sources (...Object): The source objects.
+      [customizer] (Function): The function to customize assigned values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function assignInWith(obj, ...sources) {
+    if (isFunction(sources[sources.length - 1])) {
+      customizer = sources.pop()
+    } else {
+      customizer = void 0
+    }
+    return _baseAssign(obj, true, true, false, customizer, sources)
+  }
 
   // _.assignWith------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.assign except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined, assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The destination object.
+      sources (...Object): The source objects.
+      [customizer] (Function): The function to customize assigned values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function assignWith(obj, ...sources) {
+    if (isFunction(sources[sources.length - 1])) {
+      customizer = sources.pop()
+    } else {
+      customizer = void 0
+    }
+    return _baseAssign(obj, true, false, false, customizer, sources)
+  }
 
   // _.at--------------------------------------------------------------------//
 
@@ -3059,32 +3124,51 @@ var tcdian = window.__ = (function () {
   // _.create----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object that inherits from the prototype object.If a properties object is given, its own enumerable string keyed properties are assigned to the created object.
     * Arguments
-      array(Array): The
+      prototype(Object): The object to inherit from.
+      [properties](Object): The properties to assign to the object.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new object.
   **/
+
+  function create(prororype, properties) {
+    return Object.create(prororype, properties)
+  }
 
   // _.defaults--------------------------------------------------------------//
 
   /**
-    * description
+    * Assigns own and inherited enumerable string keyed properties of source objects to the destination object for all destination properties that resolve to undefined.
+      Source objects are applied from left to right. Once a property is set, additional values of the same property are ignored.
+
     * Arguments
-      array(Array): The
+      object(Object): The destination object.
+      [sources](...Object): The source objects.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function defaults(obj, ...sources) {
+    return _baseAssign(obj, false, true, false, void 0, sources)
+  }
 
   // _.defaultsDeep----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.defaults except that it recursively assigns default properties.
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object(Object): The destination object.
+      [sources](...Object): The source objects.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function defaultsDeep(obj, ...sources) {
+    return _baseAssign(obj, false, true, true, void 0, sources)
+  }
 
   // _.entries -> toPairs----------------------------------------------------//
 
@@ -4112,22 +4196,43 @@ var tcdian = window.__ = (function () {
   // _.attempt---------------------------------------------------------------//
 
   /**
-    * description
+    * Attempts to invoke func, returning either the result or the caught error object.Any additional arguments are provided to func when it 's invoked.
     * Arguments
-      array(Array): The
+      func (Function): The function to attempt.
+      [args] (...*): The arguments to invoke func with.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the func result or error object.
   **/
+
+  function attempt(func, ...args) {
+    try {
+      return func.call(DMZ, ...args)
+    } catch (err) {
+      return isError(err) ? err : new Error(err)
+    }
+  }
 
   // _.bindAll---------------------------------------------------------------//
 
   /**
-    * description
+    * Binds methods of an object to the object itself, overwriting the existing method.
+
+      Note: This method doesn 't set the "length" property of bound functions.
     * Arguments
-      array(Array): The
+      object(Object): The object to bind and assign the bound methods to.
+      methodNames(...(string | string[])): The object method names to bind.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function bindAll(obj, methodNames) {
+    if (!methodNames) throw new Error('bindAll must be passed function names')
+    methodNames = isArray(methodNames) ? methodNames : [methodNames]
+    methodNames.forEach(methodName => {
+      obj[methodName] = bind(obj[methodName], obj)
+    })
+    return obj
+  }
 
   // _.cond------------------------------------------------------------------//
 
@@ -4879,12 +4984,18 @@ var tcdian = window.__ = (function () {
     /* _.assign------------------------------- */
     assign,
     /* _.assignIn----------------------------- */
+    assignIn,
     /* _.assignInWith------------------------- */
+    assignInWith,
     /* _.assignWith--------------------------- */
+    assignWith,
     /* _.at----------------------------------- */
     /* _.create------------------------------- */
+    create,
     /* _.defaults----------------------------- */
+    defaults,
     /* _.defaultsDeep------------------------- */
+    defaultsDeep,
     /* _.entries -> toPairs------------------- */
     /* _.entriesIn -> toPairsIn--------------- */
     /* _.extend -> assignIn------------------- */
@@ -5001,7 +5112,9 @@ var tcdian = window.__ = (function () {
     words,
     //------------------------------------Util------------------------------------------
     /* _.attempt------------------------------ */
+    attempt,
     /* _.bindAll------------------------------ */
+    bindAll,
     /* _.cond--------------------------------- */
     /* _.conforms----------------------------- */
     conforms,
