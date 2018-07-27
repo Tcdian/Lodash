@@ -269,7 +269,7 @@ var tcdian = __ = (function () {
 
   function differenceBy(array, ...values) {
     let iteratee = last(values)
-    if (isArray(iteratee)) return difference(array, ...values)
+    if (isArrayLikeObject(iteratee)) return difference(array, ...values)
     iteratee = _cb(iteratee, DMZ, 1)
     let compareArr = flatten(initial(values))
     return array.filter(item => !compareArr.some(val => iteratee(val) === iteratee(item)))
@@ -278,12 +278,23 @@ var tcdian = __ = (function () {
   // _.differenceWith--------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.difference except that it accepts comparator which is invoked to compare elements of array to values.The order and references of result values are determined by the first array.The comparator is invoked with two arguments: (arrVal, othVal).
+
+      Note: Unlike _.pullAllWith, this method returns a new array.
     * Arguments
-      array(Array): The
+      array(Array): The array to inspect.
+      [values](...Array): The values to exclude.
+      [comparator](Function): The comparator invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of filtered values.
   **/
+
+  function differenceWith(array, ...values) {
+    let comparator = last(values)
+    if (isArrayLikeObject(comparator)) return difference(array, ...values)
+    let compareArr = flatten(initial(values))
+    return array.filter(item => !compareArr.some(val => comparator(item, val)))
+  }
 
   // _.drop------------------------------------------------------------------//
 
@@ -321,22 +332,34 @@ var tcdian = __ = (function () {
   // _.dropRightWhile--------------------------------------------------------//
 
   /**
-    * description
+    * Creates a slice of array excluding elements dropped from the end.Elements are dropped until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
     * Arguments
-      array(Array): The
+      array (Array): The array to query.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the slice of array.
   **/
+
+  function dropRightWhile(arr, predicate = identity) {
+    let tmp = arr.slice()
+    return dropWhile(tmp.reverse(), predicate).reverse()
+  }
 
   // _.dropWhile-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a slice of array excluding elements dropped from the beginning.Elements are dropped until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
     * Arguments
-      array(Array): The
+      array (Array): The array to query.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the slice of array.
   **/
+
+  function dropWhile(arr, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    return arr.slice(arr.findIndex((item, index, collection) => !predicate(item, index, collection)))
+  }
 
   // _.fill------------------------------------------------------------------//
 
@@ -363,22 +386,54 @@ var tcdian = __ = (function () {
   // _.findIndex-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.find except that it returns the index of the first element predicate returns truthy for instead of the element itself.
     * Arguments
-      array(Array): The
+      array (Array): The array to inspect.
+      [predicate=_.identity] (Function): The function invoked per iteration.
+      [fromIndex=0] (number): The index to search from.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the index of the found element, else -1.
   **/
+
+  function findIndex(array, predicate = identity, fromIndex = 0) {
+    predicate = _cb(predicate, DMZ, 3)
+    let pos = -1
+    let len = array.length
+    fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex
+    for (let i = fromIndex; i < array.length; i++) {
+      if (predicate(array[i], i, array)) {
+        pos = i
+        break
+      }
+    }
+    return pos
+  }
 
   // _.findLastIndex---------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.findIndex except that it iterates over elements of collection from right to left.
     * Arguments
-      array(Array): The
+      array (Array): The array to inspect.
+      [predicate=_.identity] (Function): The function invoked per iteration.
+      [fromIndex=array.length-1] (number): The index to search from.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the index of the found element, else -1.
   **/
+
+  function findLastIndex(array, predicate = identity, fromIndex = array.length - 1) {
+    predicate = _cb(predicate, DMZ, 3)
+    let pos = -1
+    let len = array.length
+    fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex
+    for (let i = fromIndex; i >= 0; i--) {
+      if (predicate(array[i], i, array)) {
+        pos = i
+        break
+      }
+    }
+    return pos
+  }
 
   // _.first - > head--------------------------------------------------------//
 
@@ -526,7 +581,6 @@ var tcdian = __ = (function () {
   **/
 
   function intersection(...arrays) {
-    let result = []
     let initialArr = arrays[0]
     let otherArrs = arrays.slice(1)
     return initialArr.filter((item, index, collection) => {
@@ -537,22 +591,48 @@ var tcdian = __ = (function () {
   // _.intersectionBy--------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.intersection except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which they're compared.
+      The order and references of result values are determined by the first array. The iteratee is invoked with one argument:(value).
     * Arguments
-      array(Array): The
+      [arrays](...Array): The arrays to inspect.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of intersecting values.
   **/
+
+  function intersectionBy(...arrays) {
+    let iteratee = last(arrays)
+    if (isArrayLikeObject(iteratee)) return intersection(...arrays)
+    let initialArr = first(arrays)
+    let otherArrs = tail(initial(arrays))
+    iteratee = _cb(iteratee, DMZ, 1)
+    return initialArr.filter((item, index, collection) => {
+      return collection.indexOf(item) === index
+        && otherArrs.every(otherArr => otherArr.some(it => iteratee(it) === iteratee(item)))
+    })
+  }
 
   // _.intersectionWith------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.intersection except that it accepts comparator which is invoked to compare elements of arrays.The order and references of result values are determined by the first array.The comparator is invoked with two arguments: (arrVal, othVal).
     * Arguments
-      array(Array): The
+      [arrays](...Array): The arrays to inspect.
+      [comparator](Function): The comparator invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of intersecting values.
   **/
+
+  function intersectionWith(...arrays) {
+    let comparator = last(arrays)
+    if (isArrayLikeObject(comparator)) return intersection(...arrays)
+    let initialArr = first(arrays)
+    let otherArrs = tail(initial(arrays))
+    return initialArr.filter((item, index, collection) => {
+      return collection.indexOf(item) === index &&
+        otherArrs.every(otherArr => otherArr.some(it => comparator(item, it)))
+    })
+  }
 
   // _.join------------------------------------------------------------------//
 
@@ -657,22 +737,52 @@ var tcdian = __ = (function () {
   // _.pullAllBy-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.pullAll except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The iteratee is invoked with one argument: (value).
+
+      Note: Unlike _.differenceBy, this method mutates array.
     * Arguments
-      array(Array): The
+      array(Array): The array to modify.
+      values(Array): The values to remove.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns array.
   **/
+
+  function pullAllBy(array, values, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    for (let i = 0; i < array.length; i++) {
+      if (values.some(val => iteratee(val) === iteratee(array[i]))) {
+        array.splice(i, 1)
+        i--
+      }
+    }
+    return array
+  }
 
   // _.pullAllWith-----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.pullAll except that it accepts comparator which is invoked to compare elements of array to values.The comparator is invoked with two arguments: (arrVal, othVal).
+
+      Note: Unlike _.differenceWith, this method mutates array.
     * Arguments
-      array(Array): The
+      array(Array): The array to modify.
+      values(Array): The values to remove.
+      [comparator](Function): The comparator invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns array.
   **/
+
+  function pullAllWith(array, values, comparator) {
+    if (comparator === void 0) return pullAll(array, values)
+    for (let i = 0; i < array.length; i++) {
+      if (values.some(val => comparator(array[i], val))) {
+        array.splice(i, 1)
+        i--
+      }
+    }
+    return array
+  }
 
   // _.pullAt----------------------------------------------------------------//
 
@@ -702,12 +812,27 @@ var tcdian = __ = (function () {
   // _.remove----------------------------------------------------------------//
 
   /**
-    * description
+    * Removes all elements from array that predicate returns truthy
+      for and returns an array of the removed elements.The predicate is invoked with three arguments: (value, index, array).
+
+      Note: Unlike _.filter, this method mutates array.Use _.pull to pull elements from an array by value.
     * Arguments
-      array(Array): The
+      array (Array): The array to modify.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of removed elements.
   **/
+
+  function remove(arr, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let result = []
+    for(let i = 0; i < arr.length; i++) {
+      if(predicate(arr[i], i, arr)) {
+        result.push(...arr.splice(i--, 1))
+      }
+    }
+    return result
+  }
 
   // _.reverse---------------------------------------------------------------//
 
@@ -721,8 +846,8 @@ var tcdian = __ = (function () {
       (Array): Returns array.
   **/
 
-  function reverse(arr) {
-    return arr == null ? array : arr.reverse()
+  function reverse(array) {
+    return array == null ? array : array.reverse()
   }
 
   // _.slice-----------------------------------------------------------------//
@@ -771,12 +896,29 @@ var tcdian = __ = (function () {
   // _.sortedIndexBy---------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.sortedIndex except that it accepts iteratee which is invoked for value and each element of array to compute their sort ranking. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      array(Array): The sorted array to inspect.
+      value( * ): The value to evaluate.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
       (Array): Returns the new array of chunks.
   **/
+
+  function sortedIndexBy(arr, val, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let left = 0
+    let right = arr.length - 1
+    while (left < right) {
+      let mid = Math.floor((left + right) / 2)
+      if (iteratee(arr[mid]) < iteratee(val)) {
+        left = mid + 1
+      } else {
+        right = mid
+      }
+    }
+    return left
+  }
 
   // _.sortedIndexOf---------------------------------------------------------//
 
@@ -822,12 +964,30 @@ var tcdian = __ = (function () {
   // _.sortedLastIndexBy-----------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.sortedLastIndex except that it accepts iteratee which is invoked
+      for value and each element of array to compute their sort ranking.The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      array (Array): The sorted array to inspect.
+      value (*): The value to evaluate.
+      [iteratee=_.identity] (Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the index at which value should be inserted into array.
   **/
+
+  function sortedLastIndexBy(arr, val, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let left = 0
+    let right = arr.length - 1
+    while (left < right) {
+      let mid = Math.ceil((left + right) / 2)
+      if (iteratee(arr[mid]) > iteratee(val)) {
+        right = mid - 1
+      } else {
+        left = mid
+      }
+    }
+    return left + 1
+  }
 
   // _.sortedLastIndexOf-----------------------------------------------------//
 
@@ -862,12 +1022,18 @@ var tcdian = __ = (function () {
   // _.sortedUniqBy----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.uniqBy except that it 's designed and optimized for sorted arrays.
     * Arguments
-      array(Array): The
+      array(Array): The array to inspect.
+      [iteratee](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new duplicate free array.
   **/
+
+  function sortedUniqBy(arr, iteratee) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    return arr.filter((item, index, collection) => iteratee(item) !== iteratee(collection[index - 1]))
+  }
 
   // _.tail------------------------------------------------------------------//
 
@@ -911,28 +1077,42 @@ var tcdian = __ = (function () {
   **/
 
   function takeRight(arr, n = 1) {
-    return (arr && arr.length) ? arr.slice(arr.length - n < 0 ? 0 : arr.length - n, arr.length) : []
+    return (arr && arr.length)
+      ? arr.slice(arr.length - n < 0 ? 0 : arr.length - n, arr.length)
+      : []
   }
 
   // _.takeRightWhile--------------------------------------------------------//
 
   /**
-    * description
+    * Creates a slice of array with elements taken from the end.Elements are taken until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
     * Arguments
-      array(Array): The
+      array (Array): The array to query.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the slice of array.
   **/
+
+  function takeRightWhile(arr, predicate = identity) {
+    let tmp = arr.slice()
+    return takeWhile(tmp.reverse(), predicate).reverse()
+  }
 
   // _.takeWhile-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a slice of array with elements taken from the beginning.Elements are taken until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
     * Arguments
-      array(Array): The
+      array (Array): The array to query.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the slice of array.
   **/
+
+  function takeWhile(arr, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    return arr.slice(0, arr.findIndex((item, index, collection) => !predicate(item, index, collection)))
+  }
 
   // _.union-----------------------------------------------------------------//
 
@@ -951,22 +1131,39 @@ var tcdian = __ = (function () {
   // _.unionBy---------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.union except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which uniqueness is computed.
+      Result values are chosen from the first array in which the value occurs. The iteratee is invoked with one argument:(value).
     * Arguments
-      array(Array): The
+      [arrays](...Array): The arrays to inspect.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of combined values.
   **/
+
+  function unionBy(...args) {
+    let iteratee = last(args)
+    if(isArrayLikeObject(iteratee)) return union(...args)
+    let arrays = initial(args)
+    return uniqBy(flatten(arrays), iteratee)
+  }
 
   // _.unionWith-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array.The order of result values is determined by the order they occur in the array.The comparator is invoked with two arguments: (arrVal, othVal).
     * Arguments
-      array(Array): The
+      array(Array): The array to inspect.
+      [comparator](Function): The comparator invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new duplicate free array.
   **/
+
+  function unionWith(...args) {
+    let comparator = last(args)
+    if(isArrayLikeObject(comparator)) return union(...args)
+    let arrays = initial(args)
+    return uniqWith(flatten(arrays), comparator)
+  }
 
   // _.uniq------------------------------------------------------------------//
 
@@ -986,22 +1183,39 @@ var tcdian = __ = (function () {
   // _.uniqBy----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.uniq except that it accepts iteratee which is invoked for each element in array to generate the criterion by which uniqueness is computed. The order of result
+      values is determined by the order they occur in the array. The iteratee is invoked with one argument:(value).
     * Arguments
-      array(Array): The
+      array(Array): The array to inspect.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new duplicate free array.
   **/
+
+  function uniqBy(arr, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    return arr.filter((item, index, collection) => {
+      return collection.findIndex(it => iteratee(it) === iteratee(item)) === index
+    })
+  }
 
   // _.uniqWith--------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array.The order of result values is determined by the order they occur in the array.The comparator is invoked with two arguments: (arrVal, othVal).
     * Arguments
-      array(Array): The
+      array(Array): The array to inspect.
+      [comparator](Function): The comparator invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new duplicate free array.
   **/
+
+  function uniqWith(arr, comparator) {
+    if (comparator === void 0) return uniq(arr)
+    return arr.filter((item, index, collection) => {
+      return collection.findIndex(it => comparator(item, it)) === index
+    })
+  }
 
   // _.unzip-----------------------------------------------------------------//
 
@@ -1020,12 +1234,18 @@ var tcdian = __ = (function () {
   // _.unzipWith-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.unzip except that it accepts iteratee to specify how regrouped values should be combined.The iteratee is invoked with the elements of each group: (...group).
     * Arguments
-      array(Array): The
+      array (Array): The array of grouped elements to process.
+      [iteratee=_.identity] (Function): The function to combine regrouped values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of regrouped elements.
   **/
+
+  function unzipWith(arr, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ)
+    return unzip(arr).map(it => iteratee(...it))
+  }
 
   // _.without---------------------------------------------------------------//
 
@@ -1065,22 +1285,60 @@ var tcdian = __ = (function () {
   // _.xorBy-----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.xor except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which by which they're compared. The order of result values
+      is determined by the order they occur in the arrays. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      [arrays](...Array): The arrays to inspect.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of filtered values.
   **/
+
+  function xorBy(...args) {
+    let iteratee = last(args)
+    if(isArrayLikeObject(iteratee)) return xor(...args)
+    iteratee = _cb(iteratee, DMZ, 1)
+    let arrays = initial(args)
+    let flatArr = flatten(arrays.map(arr => {
+      return arr.filter((item, index, collection) => {
+        return collection.findIndex(it => iteratee(it) === iteratee(item)) === index
+      })
+    }))
+    let compareArr = flatArr.filter((item, index, collection) => {
+      return collection.findIndex(it => iteratee(it) === iteratee(item)) !== index
+    })
+    return flatArr.filter(item => {
+      return compareArr.every(it => iteratee(it) !== iteratee(item))
+    })
+  }
 
   // _.xorWith---------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.xor except that it accepts comparator which is invoked to compare elements of arrays.The order of result values is determined by the order they occur in the arrays.The comparator is invoked with two arguments: (arrVal, othVal).
     * Arguments
-      array(Array): The
+      [arrays](...Array): The arrays to inspect.
+      [comparator](Function): The comparator invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of filtered values.
   **/
+
+  function xorWith(...args) {
+    let comparator = last(args)
+    if (isArrayLikeObject(comparator)) return xor(...args)
+    let arrays = initial(args)
+    let flatArr = flatten(arrays.map(arr => {
+      return arr.filter((item, index, collection) => {
+        return collection.findIndex(it => comparator(item, it)) === index
+      })
+    }))
+    let compareArr = flatArr.filter((item, index, collection) => {
+      return collection.findIndex(it => comparator(item, it)) !== index
+    })
+    return flatArr.filter(item => {
+      return compareArr.every(it => !comparator(item, it))
+    })
+  }
 
   // _.zip-------------------------------------------------------------------//
 
@@ -1140,12 +1398,21 @@ var tcdian = __ = (function () {
   // _.zipWith---------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.zip except that it accepts iteratee to specify how grouped values should be combined.The iteratee is invoked with the elements of each group: (...group).
     * Arguments
-      array(Array): The
+      [arrays] (...Array): The arrays to process.
+      [iteratee=_.identity] (Function): The function to combine grouped values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of grouped elements.
   **/
+
+  function zipWith(...args) {
+    let iteratee = last(args)
+    if(isArrayLikeObject(iteratee)) return zip(...args)
+    iteratee = _cb(iteratee, DMZ)
+    let arrays = initial(args)
+    return zip(...arrays).map(it => iteratee(...it))
+  }
 
   //------------------------------------Collection------------------------------------
   // _.countBy---------------------------------------------------------------//
@@ -4955,16 +5222,21 @@ var tcdian = __ = (function () {
     /* _.differenceBy------------------------- */
     differenceBy,
     /* _.differenceWith----------------------- */
+    differenceWith,
     /* _.drop--------------------------------- */
     drop,
     /* _.dropRight---------------------------- */
     dropRight,
     /* _.dropRightWhile----------------------- */
+    dropRightWhile,
     /* _.dropWhile---------------------------- */
+    dropWhile,
     /* _.fill--------------------------------- */
     fill,
     /* _.findIndex---------------------------- */
+    findIndex,
     /* _.findLastIndex------------------------ */
+    findLastIndex,
     /* _.first - > head----------------------- */
     first,
     /* _.flatten------------------------------ */
@@ -4984,7 +5256,9 @@ var tcdian = __ = (function () {
     /* _.intersection------------------------- */
     intersection,
     /* _.intersectionBy----------------------- */
+    intersectionBy,
     /* _.intersectionWith--------------------- */
+    intersectionWith,
     /* _.join--------------------------------- */
     join,
     /* _.last--------------------------------- */
@@ -4998,10 +5272,13 @@ var tcdian = __ = (function () {
     /* _.pullAll------------------------------ */
     pullAll,
     /* _.pullAllBy---------------------------- */
+    pullAllBy,
     /* _.pullAllWith-------------------------- */
+    pullAllWith,
     /* _.pullAt------------------------------- */
     pullAt,
     /* _.remove------------------------------- */
+    remove,
     /* _.reverse------------------------------ */
     reverse,
     /* _.slice-------------------------------- */
@@ -5009,16 +5286,19 @@ var tcdian = __ = (function () {
     /* _.sortedIndex-------------------------- */
     sortedIndex,
     /* _.sortedIndexBy------------------------ */
+    sortedIndexBy,
     /* _.sortedIndexOf------------------------ */
     sortedIndexOf,
     /* _.sortedLastIndex---------------------- */
     sortedLastIndex,
     /* _.sortedLastIndexBy-------------------- */
+    sortedLastIndexBy,
     /* _.sortedLastIndexOf-------------------- */
     sortedLastIndexOf,
     /* _.sortedUniq--------------------------- */
     sortedUniq,
     /* _.sortedUniqBy------------------------- */
+    sortedUniqBy,
     /* _.tail--------------------------------- */
     tail,
     /* _.take--------------------------------- */
@@ -5026,24 +5306,33 @@ var tcdian = __ = (function () {
     /* _.takeRight---------------------------- */
     takeRight,
     /* _.takeRightWhile----------------------- */
+    takeRightWhile,
     /* _.takeWhile---------------------------- */
+    takeWhile,
     /* _.union-------------------------------- */
     union,
     /* _.unionBy------------------------------ */
+    unionBy,
     /* _.unionWith---------------------------- */
+    unionWith,
     /* _.uniq--------------------------------- */
     uniq,
     /* _.uniqBy------------------------------- */
+    uniqBy,
     /* _.uniqWith----------------------------- */
+    uniqWith,
     /* _.unzip-------------------------------- */
     unzip,
     /* _.unzipWith---------------------------- */
+    unzipWith,
     /* _.without------------------------------ */
     without,
     /* _.xor---------------------------------- */
     xor,
     /* _.xorBy-------------------------------- */
+    xorBy,
     /* _.xorWith------------------------------ */
+    xorWith,
     /* _.zip---------------------------------- */
     zip,
     /* _.zipObject---------------------------- */
@@ -5051,6 +5340,7 @@ var tcdian = __ = (function () {
     /* _.zipObjectDeep------------------------ */
     // zipObjectDeep,
     /* _.zipWith------------------------------ */
+    zipWith,
     //------------------------------------Collection------------------------------------
     /* _.countBy------------------------------ */
     /* _.each -> forEach---------------------- */
