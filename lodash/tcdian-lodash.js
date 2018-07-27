@@ -268,7 +268,9 @@ var tcdian = __ = (function () {
   **/
 
   function differenceBy(array, ...values) {
-    let iteratee = _cb(last(values), DMZ, 1)
+    let iteratee = last(values)
+    if (isArray(iteratee)) return difference(array, ...values)
+    iteratee = _cb(iteratee, DMZ, 1)
     let compareArr = flatten(initial(values))
     return array.filter(item => !compareArr.some(val => iteratee(val) === iteratee(item)))
   }
