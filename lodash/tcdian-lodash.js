@@ -154,13 +154,30 @@ var tcdian = __ = (function () {
     }
   }
 
+  // _baseMatchesProperty
+  function _baseMatchesProperty(path, value) {
+    return function (obj) {
+      return _baseGet(obj, path, true, _flagSymbol) === value
+    }
+  }
+
+  // 正则 test
+  function _baseregexpTest(value) {
+    return function (obj) {
+      return value.test(obj)
+    }
+  }
+
   // _cb
   function _cb(value, context, argCount) {
     if (isNil(value)) return identity
     if (isFunction(value)) return _optimizeCb(value, context, argCount)
     if (isObject(value)) {
-      return isArray(value)
+      if (isArray(value)) return _baseMatchesProperty(value[0], value[1])
+      if (isRegExp(value)) return _baseregexpTest(value)
+      return matches(value)
     }
+    return property(value)
   }
 
   //------------------------------------Array-----------------------------------------
@@ -239,12 +256,22 @@ var tcdian = __ = (function () {
   // _.differenceBy----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.difference except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The order and references of result values are determined by the first array. The iteratee is invoked with one argument:(value).
+
+      Note: Unlike _.pullAllBy, this method returns a new array.
     * Arguments
-      array(Array): The
+      array(Array): The array to inspect.
+      [values](...Array): The values to exclude.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new array of filtered values.
   **/
+
+  function differenceBy(array, ...values) {
+    let iteratee = _cb(last(values), DMZ, 1)
+    let compareArr = flatten(initial(values))
+    return array.filter(item => !compareArr.some(val => iteratee(val) === iteratee(item)))
+  }
 
   // _.differenceWith--------------------------------------------------------//
 
@@ -2267,6 +2294,9 @@ var tcdian = __ = (function () {
         }
         return false
       })
+    }
+    if (isRegExp(value)) {
+      return toString(value) === toString(other)
     }
     let valueKeys = Object.keys(value)
     let otherKeys = Object.keys(other)
@@ -4522,12 +4552,17 @@ var tcdian = __ = (function () {
   // _.iteratee--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with the arguments of the created function. If func is a property name, the created function returns the property value for a given element.
+      If func is an array or object, the created function returns true for elements that contain the equivalent source properties, otherwise it returns false.
     * Arguments
-      array(Array): The
+      [func = _.identity]( * ): The value to convert to a callback.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the callback.
   **/
+
+  function iterate(value) {
+    return _cb(value, DMZ, Infinity)
+  }
 
   // _.matches---------------------------------------------------------------//
 
@@ -4916,6 +4951,7 @@ var tcdian = __ = (function () {
     /* _.difference--------------------------- */
     difference,
     /* _.differenceBy------------------------- */
+    differenceBy,
     /* _.differenceWith----------------------- */
     /* _.drop--------------------------------- */
     drop,
@@ -5398,6 +5434,7 @@ var tcdian = __ = (function () {
     /* _.identity----------------------------- */
     identity,
     /* _.iteratee----------------------------- */
+    iterate,
     /* _.matches------------------------------ */
     matches,
     /* _.matchesProperty---------------------- */
