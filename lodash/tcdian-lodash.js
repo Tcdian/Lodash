@@ -118,7 +118,7 @@ var tcdian = __ = (function () {
     let pathArr = toPath(path)
     let result = obj
     let flag = pathArr.every(item => {
-      let tmpResult = prototypeChain && (item in result) || result.hasOwnProperty(item)
+      let tmpResult = prototypeChain && (item in root.Object(result)) || result.hasOwnProperty(item)
       result = result[item]
       return tmpResult
     })
@@ -1418,132 +1418,268 @@ var tcdian = __ = (function () {
   // _.countBy---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of keys generated from the results of running each element of collection thru iteratee.The corresponding value of each key is the number of times the key was returned by iteratee.The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to iterate over.
+      [iteratee = _.identity](Function): The iteratee to transform keys.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the composed aggregate object.
   **/
+
+  function countBy(collection, iteratee = identity) {
+    let result = {}
+    let values = Object.values(collection)
+    iteratee = _cb(iteratee, DMZ, 1)
+    values.forEach(val => {
+      val = iteratee(val)
+      if (result.hasOwnProperty(val)) {
+        result[val] += 1
+      } else {
+        result[val] = 1
+      }
+    })
+    return result
+  }
 
   // _.each - > forEach------------------------------------------------------//
 
   /**
-    * description
+    * Iterates over elements of collection and invokes iteratee for each element. The iteratee is invoked with three arguments: (value, index|key, collection). Iteratee functions may exit iteration early by explicitly returning false.
+
+      Note: As with other "Collections" methods, objects with a "length" property are iterated like arrays. To avoid this behavior use _.forIn or _.forOwn for object iteration.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns collection.
   **/
+
+  function each(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection)
+    keys.every(key => {
+      return iteratee(collection[key], isArr ? Number(key) : key, collection) !== false
+    })
+    return collection
+  }
 
   // _.eachRight - > forEachRight--------------------------------------------//
 
   /**
-    * description
+    * This method is like _.forEach except that it iterates over elements of collection from right to left.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns collection.
   **/
+
+  function eachRight(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection).reverse()
+    keys.every(key => {
+      return iteratee(collection[key], isArr ? Number(key) : key, collection) !== false
+    })
+    return collection
+  }
 
   // _.every-----------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if predicate returns truthy for all elements of collection. Iteration is stopped once predicate returns falsey. The predicate is invoked with three arguments: (value, index|key, collection).
+
+      Note: This method returns true for empty collections because everything is true of elements of empty collections.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if all elements pass the predicate check, else false.
   **/
+
+  function every(collection, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection)
+    return keys.every(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+  }
 
   // _.filter----------------------------------------------------------------//
 
   /**
-    * description
+    * Iterates over elements of collection, returning an array of all elements predicate returns truthy
+      for.The predicate is invoked with three arguments: (value, index | key, collection).
+
+      Note: Unlike _.remove, this method returns a new array.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new filtered array.
   **/
+
+  function filter(collection, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection)
+    return keys.filter(key => predicate(collection[key], isArr ? Number(key) : key, collection)).map(key => collection[key])
+  }
 
   // _.find------------------------------------------------------------------//
 
   /**
-    * description
+    * Iterates over elements of collection, returning the first element predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to inspect.
+      [predicate=_.identity] (Function): The function invoked per iteration.
+      [fromIndex=0] (number): The index to search from.
     * Returns
-      (Array): Returns the new array of chunks.
+      (*): Returns the matched element, else undefined.
   **/
+
+  function find(collection, predicate = identity, fromIndex = 0) {
+    predicate = _cb(predicate, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection).slice(fromIndex)
+    let resultKey = keys.find(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+    return collection[resultKey]
+  }
 
   // _.findLast--------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.find except that it iterates over elements of collection from right to left.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to inspect.
+      [predicate=_.identity] (Function): The function invoked per iteration.
+      [fromIndex=collection.length-1] (number): The index to search from.
     * Returns
-      (Array): Returns the new array of chunks.
+      (*): Returns the matched element, else undefined.
   **/
+
+  function findLast(collection, predicate = identity, fromIndex = collection.length - 1) {
+    predicate = _cb(predicate, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection).slice(0, fromIndex + 1).reverse()
+    let resultKey = keys.find(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+    return collection[resultKey]
+  }
 
   // _.flatMap---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a flattened array of values by running each element in collection thru iteratee and flattening the mapped results.The iteratee is invoked with three arguments: (value, index | key, collection).
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new flattened array.
   **/
+
+  function flatMap(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection)
+    return flatten(keys.map(key => iteratee(collection[key], isArr ? Number(key) : key, collection)))
+  }
 
   // _.flatMapDeep-----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.flatMap except that it recursively flattens the mapped results.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new flattened array.
   **/
+
+  function flatMapDeep(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection)
+    return flattenDeep(keys.map(key => iteratee(collection[key], isArr ? Number(key) : key, collection)))
+  }
 
   // _.flatMapDepth----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.flatMap except that it recursively flattens the mapped results up to depth times.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
+      [depth=1] (number): The maximum recursion depth.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new flattened array.
   **/
+
+  function flatMapDepth(collection, iteratee = identity, depth = 1) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(collection)
+    let keys = Object.keys(collection)
+    return flattenDepth(keys.map(key => iteratee(collection[key], isArr ? Number(key) : key, collection)), depth)
+  }
 
   // _.forEach---------------------------------------------------------------//
 
   /**
-    * description
+    * Iterates over elements of collection and invokes iteratee for each element. The iteratee is invoked with three arguments: (value, index|key, collection). Iteratee functions may exit iteration early by explicitly returning false.
+
+      Note: As with other "Collections" methods, objects with a "length" property are iterated like arrays. To avoid this behavior use _.forIn or _.forOwn for object iteration.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns collection.
   **/
+
+  function forEach(collection, iteratee = identity) {
+    return each(collection, iteratee)
+  }
 
   // _.forEachRight----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.forEach except that it iterates over elements of collection from right to left.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns collection.
   **/
+
+  function forEachRight(collection, iteratee = identity) {
+    return eachRight(collection, iteratee)
+  }
 
   // _.groupBy---------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The order of grouped values is determined by the order they occur in collection.
+      The corresponding value of each key is an array of elements responsible for generating the key. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to iterate over.
+      [iteratee = _.identity](Function): The iteratee to transform keys.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the composed aggregate object.
   **/
+
+  function groupBy(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let isArr = isArray(collection)
+    let values = Object.values(collection)
+    let result = {}
+    values.forEach(val => {
+      let resultKey = iteratee(val)
+      if (result.hasOwnProperty(resultKey)) {
+        result[resultKey].push(val)
+      } else {
+        result[resultKey] = [val]
+      }
+    })
+    return result
+  }
 
   // _.includes--------------------------------------------------------------//
 
@@ -1566,12 +1702,28 @@ var tcdian = __ = (function () {
   // _.invokeMap-------------------------------------------------------------//
 
   /**
-    * description
+    * Invokes the method at path of each element in collection, returning an array of the results of each invoked method.Any additional arguments are provided to each invoked method.If path is a
+      function, it 's invoked for, and this bound to, each element in collection.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      path (Array|Function|string): The path of the method to invoke or the function invoked per iteration.
+      [args] (...*): The arguments to invoke each method with.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the array of results.
   **/
+
+  function invokeMap(collection, path, ...args) {
+    let values = Object.values(collection)
+    if (isFunction(path)) {
+      return values.map(val => path.call(val, ...args))
+    } else {
+      return values.map(val => {
+        let method = _baseGet(val, path, true, _flagSymbol)
+        if (method === _flagSymbol) throw new Error('invokeMap must call on a function')
+        return method.call(val, ...args)
+      })
+    }
+  }
 
   // _.keyBy-----------------------------------------------------------------//
 
@@ -5343,21 +5495,35 @@ var tcdian = __ = (function () {
     zipWith,
     //------------------------------------Collection------------------------------------
     /* _.countBy------------------------------ */
+    countBy,
     /* _.each -> forEach---------------------- */
+    each,
     /* _.eachRight -> forEachRight------------ */
+    eachRight,
     /* _.every-------------------------------- */
+    every,
     /* _.filter------------------------------- */
+    filter,
     /* _.find--------------------------------- */
+    find,
     /* _.findLast----------------------------- */
+    findLast,
     /* _.flatMap------------------------------ */
+    flatMap,
     /* _.flatMapDeep-------------------------- */
+    flatMapDeep,
     /* _.flatMapDepth------------------------- */
+    flatMapDepth,
     /* _.forEach------------------------------ */
+    forEach,
     /* _.forEachRight------------------------- */
+    forEachRight,
     /* _.groupBy------------------------------ */
+    groupBy,
     /* _.includes----------------------------- */
     includes,
     /* _.invokeMap---------------------------- */
+    invokeMap,
     /* _.keyBy-------------------------------- */
     /* _.map---------------------------------- */
     /* _.orderBy------------------------------ */
