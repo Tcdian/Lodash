@@ -272,7 +272,7 @@ var tcdian = __ = (function () {
     if (isArrayLikeObject(iteratee)) return difference(array, ...values)
     iteratee = _cb(iteratee, DMZ, 1)
     let compareArr = flatten(initial(values))
-    return array.filter(item => !compareArr.some(val => iteratee(val) === iteratee(item)))
+    return filter(array, item => !compareArr.some(val => iteratee(val) === iteratee(item)))
   }
 
   // _.differenceWith--------------------------------------------------------//
@@ -293,7 +293,7 @@ var tcdian = __ = (function () {
     let comparator = last(values)
     if (isArrayLikeObject(comparator)) return difference(array, ...values)
     let compareArr = flatten(initial(values))
-    return array.filter(item => !compareArr.some(val => comparator(item, val)))
+    return filter(array,item => !compareArr.some(val => comparator(item, val)))
   }
 
   // _.drop------------------------------------------------------------------//
@@ -358,7 +358,7 @@ var tcdian = __ = (function () {
 
   function dropWhile(arr, predicate = identity) {
     predicate = _cb(predicate, DMZ, 3)
-    return arr.slice(arr.findIndex((item, index, collection) => !predicate(item, index, collection)))
+    return arr.slice(findIndex(arr, (item, index, collection) => !predicate(item, index, collection)))
   }
 
   // _.fill------------------------------------------------------------------//
@@ -583,8 +583,8 @@ var tcdian = __ = (function () {
   function intersection(...arrays) {
     let initialArr = arrays[0]
     let otherArrs = arrays.slice(1)
-    return initialArr.filter((item, index, collection) => {
-      return collection.indexOf(item) === index && otherArrs.every(otherArr => otherArr.includes(item))
+    return filter(initialArr, (item, index, collection) => {
+      return collection.indexOf(item) === index && every(otherArrs, otherArr => otherArr.includes(item))
     })
   }
 
@@ -606,9 +606,9 @@ var tcdian = __ = (function () {
     let initialArr = first(arrays)
     let otherArrs = tail(initial(arrays))
     iteratee = _cb(iteratee, DMZ, 1)
-    return initialArr.filter((item, index, collection) => {
+    return filter(initialArr, (item, index, collection) => {
       return collection.indexOf(item) === index
-        && otherArrs.every(otherArr => otherArr.some(it => iteratee(it) === iteratee(item)))
+        && every(otherArrs, otherArr => some(otherArr, it => iteratee(it) === iteratee(item)))
     })
   }
 
@@ -628,9 +628,9 @@ var tcdian = __ = (function () {
     if (isArrayLikeObject(comparator)) return intersection(...arrays)
     let initialArr = first(arrays)
     let otherArrs = tail(initial(arrays))
-    return initialArr.filter((item, index, collection) => {
+    return filter(initialArr, (item, index, collection) => {
       return collection.indexOf(item) === index &&
-        otherArrs.every(otherArr => otherArr.some(it => comparator(item, it)))
+        every(otherArrs, otherArr => otherArr.some(it => comparator(item, it)))
     })
   }
 
@@ -751,7 +751,7 @@ var tcdian = __ = (function () {
   function pullAllBy(array, values, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 1)
     for (let i = 0; i < array.length; i++) {
-      if (values.some(val => iteratee(val) === iteratee(array[i]))) {
+      if (some(values, val => iteratee(val) === iteratee(array[i]))) {
         array.splice(i, 1)
         i--
       }
@@ -776,7 +776,7 @@ var tcdian = __ = (function () {
   function pullAllWith(array, values, comparator) {
     if (comparator === void 0) return pullAll(array, values)
     for (let i = 0; i < array.length; i++) {
-      if (values.some(val => comparator(array[i], val))) {
+      if (some(values, val => comparator(array[i], val))) {
         array.splice(i, 1)
         i--
       }
@@ -1111,7 +1111,7 @@ var tcdian = __ = (function () {
 
   function takeWhile(arr, predicate = identity) {
     predicate = _cb(predicate, DMZ, 3)
-    return arr.slice(0, arr.findIndex((item, index, collection) => !predicate(item, index, collection)))
+    return arr.slice(0, findIndex(arr, (item, index, collection) => !predicate(item, index, collection)))
   }
 
   // _.union-----------------------------------------------------------------//
@@ -1177,7 +1177,7 @@ var tcdian = __ = (function () {
   **/
 
   function uniq(arr) {
-    return arr.filter((item, index, collection) => collection.indexOf(item) === index)
+    return filter(arr, (item, index, collection) => collection.indexOf(item) === index)
   }
 
   // _.uniqBy----------------------------------------------------------------//
@@ -1194,8 +1194,8 @@ var tcdian = __ = (function () {
 
   function uniqBy(arr, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 1)
-    return arr.filter((item, index, collection) => {
-      return collection.findIndex(it => iteratee(it) === iteratee(item)) === index
+    return filter(arr, (item, index, collection) => {
+      return findIndex(collection, it => iteratee(it) === iteratee(item)) === index
     })
   }
 
@@ -1212,8 +1212,8 @@ var tcdian = __ = (function () {
 
   function uniqWith(arr, comparator) {
     if (comparator === void 0) return uniq(arr)
-    return arr.filter((item, index, collection) => {
-      return collection.findIndex(it => comparator(item, it)) === index
+    return filter(arr, (item, index, collection) => {
+      return findIndex(collection, it => comparator(item, it)) === index
     })
   }
 
@@ -1244,7 +1244,7 @@ var tcdian = __ = (function () {
 
   function unzipWith(arr, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ)
-    return unzip(arr).map(it => iteratee(...it))
+    return map(unzip(arr), it => iteratee(...it))
   }
 
   // _.without---------------------------------------------------------------//
@@ -1275,11 +1275,11 @@ var tcdian = __ = (function () {
   **/
 
   function xor(...arrays) {
-    let flatArr = flatten(arrays.map(arr => {
-      return arr.filter((item, index, collection) => collection.indexOf(item) === index)
+    let flatArr = flatten(map(arrays, arr => {
+      return filter(arr, (item, index, collection) => collection.indexOf(item) === index)
     }))
-    let compareArr = flatArr.filter((item, index, collection) => collection.indexOf(item) !== index)
-    return flatArr.filter(item => !compareArr.includes(item))
+    let compareArr = filter(flatArr, (item, index, collection) => collection.indexOf(item) !== index)
+    return filter(flatArr, item => !compareArr.includes(item))
   }
 
   // _.xorBy-----------------------------------------------------------------//
@@ -1299,16 +1299,16 @@ var tcdian = __ = (function () {
     if(isArrayLikeObject(iteratee)) return xor(...args)
     iteratee = _cb(iteratee, DMZ, 1)
     let arrays = initial(args)
-    let flatArr = flatten(arrays.map(arr => {
-      return arr.filter((item, index, collection) => {
-        return collection.findIndex(it => iteratee(it) === iteratee(item)) === index
+    let flatArr = flatten(map(arrays, arr => {
+      return filter(arr, (item, index, collection) => {
+        return findIndex(collection, it => iteratee(it) === iteratee(item)) === index
       })
     }))
-    let compareArr = flatArr.filter((item, index, collection) => {
-      return collection.findIndex(it => iteratee(it) === iteratee(item)) !== index
+    let compareArr = filter(flatArr, (item, index, collection) => {
+      return findIndex(collection, it => iteratee(it) === iteratee(item)) !== index
     })
-    return flatArr.filter(item => {
-      return compareArr.every(it => iteratee(it) !== iteratee(item))
+    return filter(flatArr, item => {
+      return every(compareArr, it => iteratee(it) !== iteratee(item))
     })
   }
 
@@ -1327,16 +1327,16 @@ var tcdian = __ = (function () {
     let comparator = last(args)
     if (isArrayLikeObject(comparator)) return xor(...args)
     let arrays = initial(args)
-    let flatArr = flatten(arrays.map(arr => {
-      return arr.filter((item, index, collection) => {
-        return collection.findIndex(it => comparator(item, it)) === index
+    let flatArr = flatten(map(arrays, arr => {
+      return filter(arr, (item, index, collection) => {
+        return findIndex(collection, it => comparator(item, it)) === index
       })
     }))
-    let compareArr = flatArr.filter((item, index, collection) => {
-      return collection.findIndex(it => comparator(item, it)) !== index
+    let compareArr = filter(flatArr, (item, index, collection) => {
+      return findIndex(collection, it => comparator(item, it)) !== index
     })
-    return flatArr.filter(item => {
-      return compareArr.every(it => !comparator(item, it))
+    return filter(flatArr, item => {
+      return every(compareArr, it => !comparator(item, it))
     })
   }
 
@@ -1411,7 +1411,7 @@ var tcdian = __ = (function () {
     if(isArrayLikeObject(iteratee)) return zip(...args)
     iteratee = _cb(iteratee, DMZ)
     let arrays = initial(args)
-    return zip(...arrays).map(it => iteratee(...it))
+    return map(zip(...arrays), it => iteratee(...it))
   }
 
   //------------------------------------Collection------------------------------------
@@ -1428,9 +1428,9 @@ var tcdian = __ = (function () {
 
   function countBy(collection, iteratee = identity) {
     let result = {}
-    let values = Object.values(collection)
+    let values = _values(collection)
     iteratee = _cb(iteratee, DMZ, 1)
-    values.forEach(val => {
+    forEach(values,val => {
       val = iteratee(val)
       if (result.hasOwnProperty(val)) {
         result[val] += 1
@@ -1456,10 +1456,9 @@ var tcdian = __ = (function () {
 
   function each(collection, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection)
+    let keys = _keys(collection)
     keys.every(key => {
-      return iteratee(collection[key], isArr ? Number(key) : key, collection) !== false
+      return iteratee(collection[key], key, collection) !== false
     })
     return collection
   }
@@ -1477,10 +1476,9 @@ var tcdian = __ = (function () {
 
   function eachRight(collection, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection).reverse()
-    keys.every(key => {
-      return iteratee(collection[key], isArr ? Number(key) : key, collection) !== false
+    let keys = _keys(collection)
+    keys.reverse().every(key => {
+      return iteratee(collection[key], key, collection) !== false
     })
     return collection
   }
@@ -1500,9 +1498,8 @@ var tcdian = __ = (function () {
 
   function every(collection, predicate = identity) {
     predicate = _cb(predicate, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection)
-    return keys.every(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+    let keys = _keys(collection)
+    return keys.every(key => predicate(collection[key], key, collection))
   }
 
   // _.filter----------------------------------------------------------------//
@@ -1521,9 +1518,8 @@ var tcdian = __ = (function () {
 
   function filter(collection, predicate = identity) {
     predicate = _cb(predicate, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection)
-    return keys.filter(key => predicate(collection[key], isArr ? Number(key) : key, collection)).map(key => collection[key])
+    let keys = _keys(collection)
+    return keys.filter(key => predicate(collection[key], key, collection)).map(key => collection[key])
   }
 
   // _.find------------------------------------------------------------------//
@@ -1540,9 +1536,8 @@ var tcdian = __ = (function () {
 
   function find(collection, predicate = identity, fromIndex = 0) {
     predicate = _cb(predicate, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection).slice(fromIndex)
-    let resultKey = keys.find(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+    let keys = _keys(collection)
+    let resultKey = keys.slice(fromIndex).find(key => predicate(collection[key], key, collection))
     return collection[resultKey]
   }
 
@@ -1560,9 +1555,8 @@ var tcdian = __ = (function () {
 
   function findLast(collection, predicate = identity, fromIndex = collection.length - 1) {
     predicate = _cb(predicate, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection).slice(0, fromIndex + 1).reverse()
-    let resultKey = keys.find(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+    let keys = _keys(collection)
+    let resultKey = keys.slice(0, fromIndex + 1).reverse().find(key => predicate(collection[key], isArr ? Number(key) : key, collection))
     return collection[resultKey]
   }
 
@@ -1579,9 +1573,8 @@ var tcdian = __ = (function () {
 
   function flatMap(collection, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection)
-    return flatten(keys.map(key => iteratee(collection[key], isArr ? Number(key) : key, collection)))
+    let keys = _keys(collection)
+    return flatten(keys.map(key => iteratee(collection[key], key, collection)))
   }
 
   // _.flatMapDeep-----------------------------------------------------------//
@@ -1597,9 +1590,8 @@ var tcdian = __ = (function () {
 
   function flatMapDeep(collection, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection)
-    return flattenDeep(keys.map(key => iteratee(collection[key], isArr ? Number(key) : key, collection)))
+    let keys = _keys(collection)
+    return flattenDeep(keys.map(key => iteratee(collection[key], key, collection)))
   }
 
   // _.flatMapDepth----------------------------------------------------------//
@@ -1616,9 +1608,8 @@ var tcdian = __ = (function () {
 
   function flatMapDepth(collection, iteratee = identity, depth = 1) {
     iteratee = _cb(iteratee, DMZ, 3)
-    let isArr = isArray(collection)
-    let keys = Object.keys(collection)
-    return flattenDepth(keys.map(key => iteratee(collection[key], isArr ? Number(key) : key, collection)), depth)
+    let keys = _keys(collection)
+    return flattenDepth(keys.map(key => iteratee(collection[key], key, collection)), depth)
   }
 
   // _.forEach---------------------------------------------------------------//
@@ -1667,10 +1658,8 @@ var tcdian = __ = (function () {
 
   function groupBy(collection, iteratee = identity) {
     iteratee = _cb(iteratee, DMZ, 1)
-    let isArr = isArray(collection)
-    let values = Object.values(collection)
     let result = {}
-    values.forEach(val => {
+    forEach(collection, val => {
       let resultKey = iteratee(val)
       if (result.hasOwnProperty(resultKey)) {
         result[resultKey].push(val)
@@ -1713,7 +1702,7 @@ var tcdian = __ = (function () {
   **/
 
   function invokeMap(collection, path, ...args) {
-    let values = Object.values(collection)
+    let values = _values(collection)
     if (isFunction(path)) {
       return values.map(val => path.call(val, ...args))
     } else {
@@ -1728,22 +1717,46 @@ var tcdian = __ = (function () {
   // _.keyBy-----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to iterate over.
+      [iteratee = _.identity](Function): The iteratee to transform keys.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the composed aggregate object.
   **/
+
+  function keyBy(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let values = _values(collection)
+    let result = {}
+    values.forEach(val => {
+      let resultKey = iteratee(val)
+      result[resultKey] = val
+    })
+    return result
+  }
 
   // _.map-------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with three arguments:(value, index|key, collection).
+
+      Many lodash methods are guarded to work as iteratees for methods like _.every, _.filter, _.map, _.mapValues, _.reject, and _.some.
+
+      The guarded methods are:
+        ary, chunk, curry, curryRight, drop, dropRight, every, fill, invert, parseInt, random, range, rangeRight, repeat, sampleSize, slice, some, sortBy, split, take, takeRight, template, trim, trimEnd, trimStart, and words
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new mapped array.
   **/
+
+  function map(collection, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let keys = _keys(collection)
+    return keys.map(key => iteratee(collection[key], key, collection))
+  }
 
   // _.orderBy---------------------------------------------------------------//
 
@@ -1838,7 +1851,7 @@ var tcdian = __ = (function () {
   **/
 
   function shuffle(collection) {
-    let values = Object.values(collection)
+    let values = _values(collection)
     //洗牌算法
     let len = values.length
     for (let i = 0; i < len - 1; i++) {
@@ -2442,7 +2455,7 @@ var tcdian = __ = (function () {
       return set
     }
     let obj = Object.create(Object.getPrototypeOf(value))
-    Object.keys(value).forEach(key => {
+    _keys(value).forEach(key => {
       obj[key] = _.cloneDeep(value[key])
     })
     return obj
@@ -2481,7 +2494,7 @@ var tcdian = __ = (function () {
   **/
 
   function conformsTo(obj, source) {
-    return Object.keys(source).every(item => source[item].call(DMZ, obj[item]))
+    return _keys(source).every(item => source[item].call(DMZ, obj[item]))
   }
 
   // _.eq--------------------------------------------------------------------//
@@ -2676,7 +2689,7 @@ var tcdian = __ = (function () {
     if (isMap(obj) || isSet(obj)) {
       return obj.size === 0
     }
-    return Object.keys(obj).length === 0
+    return _keys(obj).length === 0
   }
 
   // .isEqual----------------------------------------------------------------//
@@ -2719,8 +2732,8 @@ var tcdian = __ = (function () {
     if (isRegExp(value)) {
       return toString(value) === toString(other)
     }
-    let valueKeys = Object.keys(value)
-    let otherKeys = Object.keys(other)
+    let valueKeys = _keys(value)
+    let otherKeys = _keys(other)
     return valueKeys.length === otherKeys.length && valueKeys.every(key => isEqual(value[key], other[key]))
   }
 
@@ -3941,8 +3954,14 @@ var tcdian = __ = (function () {
       (Array): Returns the array of property names.
   **/
 
-  function keys(obj) {
-    return Object.keys(obj)
+  var _keys = function keys(obj) {
+    let keys
+    if (isArray(obj)) {
+      keys = new Array(obj.length).fill(1).map((it, index) => index)
+    } else {
+      keys = Object.keys(obj)
+    }
+    return keys
   }
   // _.keysIn----------------------------------------------------------------//
 
@@ -4176,8 +4195,8 @@ var tcdian = __ = (function () {
       (Array): Returns the array of property values.
   **/
 
-  function values(obj) {
-    return Object.values(obj)
+  var _values = function values(obj) {
+    return _keys(obj).map(key => obj[key])
   }
 
   // _.valuesIn--------------------------------------------------------------//
@@ -5525,7 +5544,9 @@ var tcdian = __ = (function () {
     /* _.invokeMap---------------------------- */
     invokeMap,
     /* _.keyBy-------------------------------- */
+    keyBy,
     /* _.map---------------------------------- */
+    map,
     /* _.orderBy------------------------------ */
     /* _.partition---------------------------- */
     /* _.reduce------------------------------- */
