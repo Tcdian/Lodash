@@ -73,6 +73,22 @@ var tcdian = __ = (function () {
   // Demilitarized zone
   var DMZ = Object.create(null)
 
+  // keys
+  function _keys(obj) {
+    let keys
+    if (isArray(obj)) {
+      keys = new Array(obj.length).fill(1).map((it, index) => index)
+    } else {
+      keys = Object.keys(obj)
+    }
+    return keys
+  }
+
+  //values
+  function _values(obj) {
+    return _keys(obj).map(key => obj[key])
+  }
+
   // _baseWordSeparate
   function _baseWordSeparate(str) {
     let pattern = /[\-_\s]+/g
@@ -178,6 +194,42 @@ var tcdian = __ = (function () {
       return matches(value)
     }
     return property(value)
+  }
+
+  //merge sort
+  function _mergeSort(arr, left = 0, right = arr.length - 1, iteratee = identity, order = 'asc') {
+    if (left === right) {
+      return arr.slice(left, left + 1)
+    }
+    let mid = Math.floor((left + right) / 2)
+    let leftArr = _mergeSort(arr, left, mid, iteratee, order)
+    let rightArr = _mergeSort(arr, mid + 1, right, iteratee, order)
+    let resultArr = []
+    let leftLen = leftArr.length
+    let rightLen = rightArr.length
+    let leftIndex = 0
+    let rightIndex = 0
+    while (leftIndex < leftLen && rightIndex < rightLen) {
+      if (order !== 'desc') {
+        if (iteratee(leftArr[leftIndex]) <= iteratee(rightArr[rightIndex])) {
+          resultArr.push(leftArr[leftIndex])
+          leftIndex ++
+        } else {
+          resultArr.push(rightArr[rightIndex])
+          rightIndex ++
+        }
+      } else {
+        if (iteratee(leftArr[leftIndex]) >= iteratee(rightArr[rightIndex])) {
+          resultArr.push(leftArr[leftIndex])
+          leftIndex++
+        } else {
+          resultArr.push(rightArr[rightIndex])
+          rightIndex++
+        }
+      }
+    }
+    resultArr.push(...leftArr.slice(leftIndex), ...rightArr.slice(rightIndex))
+    return resultArr
   }
 
   //------------------------------------Array-----------------------------------------
@@ -1556,7 +1608,7 @@ var tcdian = __ = (function () {
   function findLast(collection, predicate = identity, fromIndex = collection.length - 1) {
     predicate = _cb(predicate, DMZ, 3)
     let keys = _keys(collection)
-    let resultKey = keys.slice(0, fromIndex + 1).reverse().find(key => predicate(collection[key], isArr ? Number(key) : key, collection))
+    let resultKey = keys.slice(0, fromIndex + 1).reverse().find(key => predicate(collection[key], key, collection))
     return collection[resultKey]
   }
 
@@ -1761,52 +1813,106 @@ var tcdian = __ = (function () {
   // _.orderBy---------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.sortBy except that it allows specifying the sort orders of the iteratees to sort by. If orders is unspecified, all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values.
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to iterate over.
+      [iteratees = [_.identity]](Array[] | Function[] | Object[] | string[]): The iteratees to sort by.
+      [orders](string[]): The sort orders of iteratees.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new sorted array.
   **/
+
+  function orderBy(collection, iteratees = [identity], orders = ['asc']) {
+    let values = _values(collection)
+    let valuesLen = values.length
+    let iterateesCopy = iteratees.slice()
+    let ordersCopy = orders.slice().reverse()
+    iterateesCopy.reverse().forEach((iteratee, index) => {
+      iteratee = _cb(iteratee, DMZ, 1)
+      values = _mergeSort(values, 0, valuesLen - 1, iteratee, ordersCopy[index])
+    })
+    return values
+  }
 
   // _.partition-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for, the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the array of grouped elements.
   **/
+
+  function partition(collection, predicate = identity) {
+    let filterArr = filter(collection, predicate)
+    let rejectArr = reject(collection, predicate)
+    return [filterArr, rejectArr]
+  }
 
   // _.reduce----------------------------------------------------------------//
 
   /**
-    * description
+    * Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element
+      of collection is used as the initial value. The iteratee is invoked with four arguments:(accumulator, value, index|key, collection).
+
+    Many lodash methods are guarded to work as iteratees for methods like _.reduce, _.reduceRight, and _.transform.
+
+    The guarded methods are:
+      assign, defaults, defaultsDeep, includes, merge, orderBy, and sortBy
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
+      [accumulator] (*): The initial value.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the accumulated value.
   **/
+
+  function reduce(collection, iteratee = identity, initialVal) {
+    iteratee = _cb(iteratee, DMZ, 4)
+    let keys = _keys(collection)
+    if (initialVal === void 0)
+      return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection))
+    return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), initialVal)
+  }
 
   // _.reduceRight-----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.reduce except that it iterates over elements of collection from right to left.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
+      [accumulator] (*): The initial value.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the accumulated value.
   **/
+
+  function reduceRight(collection, iteratee = identity, initialVal) {
+    iteratee = _cb(iteratee, DMZ, 4)
+    let keys = _keys(collection).reverse()
+    if (initialVal === void 0)
+      return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection))
+    return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), initialVal)
+  }
 
   // _.reject----------------------------------------------------------------//
 
   /**
-    * description
+    * The opposite of _.filter; this method returns the elements of collection that predicate does not return truthy for.
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new filtered array.
   **/
+
+  function reject(collection, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let keys = _keys(collection)
+    return keys.filter(key => !predicate(collection[key], key, collection)).map(key => collection[key])
+  }
 
   // _.sample----------------------------------------------------------------//
 
@@ -1885,22 +1991,41 @@ var tcdian = __ = (function () {
   // _.some------------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if predicate returns truthy for any element of collection. Iteration is stopped once predicate returns truthy. The predicate is invoked with three arguments: (value, index|key, collection).
     * Arguments
-      array(Array): The
+      collection (Array|Object): The collection to iterate over.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if any element passes the predicate check, else false.
   **/
+
+  function some(collection, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let keys = _keys(collection)
+    return keys.some(key => predicate(collection[key], key, collection))
+  }
 
   // _.sortBy----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of elements, sorted in ascending order by the results of running each element in a collection thru each iteratee.This method performs a stable sort, that is, it preserves the original sort order of equal elements.The iteratees are invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      collection(Array | Object): The collection to iterate over.
+      [iteratees = [_.identity]](...(Function | Function[])): The iteratees to sort by.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the new sorted array.
   **/
+
+  function sortBy(collection, iteratees = [identity]) {
+    let values = _values(collection)
+    let valuesLen = values.length
+    let iterateesCopy = iteratees.slice()
+    iterateesCopy.reverse().forEach(iteratee => {
+      iteratee = _cb(iteratee, DMZ, 1)
+      values = _mergeSort(values, 0, valuesLen - 1, iteratee, 'asc')
+    })
+    return values
+  }
 
   //------------------------------------Date------------------------------------------
   // _.now-------------------------------------------------------------------//
@@ -3954,16 +4079,6 @@ var tcdian = __ = (function () {
       (Array): Returns the array of property names.
   **/
 
-  function _keys(obj) {
-    let keys
-    if (isArray(obj)) {
-      keys = new Array(obj.length).fill(1).map((it, index) => index)
-    } else {
-      keys = Object.keys(obj)
-    }
-    return keys
-  }
-
   function keys(obj) {
     return _keys(obj)
   }
@@ -4199,10 +4314,6 @@ var tcdian = __ = (function () {
     * Returns
       (Array): Returns the array of property values.
   **/
-
-  function _values(obj) {
-    return _keys(obj).map(key => obj[key])
-  }
 
   function values(obj) {
     return _values(obj)
@@ -5557,10 +5668,15 @@ var tcdian = __ = (function () {
     /* _.map---------------------------------- */
     map,
     /* _.orderBy------------------------------ */
+    orderBy,
     /* _.partition---------------------------- */
+    partition,
     /* _.reduce------------------------------- */
+    reduce,
     /* _.reduceRight-------------------------- */
+    reduceRight,
     /* _.reject------------------------------- */
+    reject,
     /* _.sample------------------------------- */
     sample,
     /* _.sampleSize--------------------------- */
@@ -5570,7 +5686,9 @@ var tcdian = __ = (function () {
     /* _.size--------------------------------- */
     size,
     /* _.some--------------------------------- */
+    some,
     /* _.sortBy------------------------------- */
+    sortBy,
     //------------------------------------Date------------------------------------------
     /* _.now---------------------------------- */
     now,
