@@ -3954,7 +3954,7 @@ var tcdian = __ = (function () {
       (Array): Returns the array of property names.
   **/
 
-  var keys = function _keys(obj) {
+  function _keys(obj) {
     let keys
     if (isArray(obj)) {
       keys = new Array(obj.length).fill(1).map((it, index) => index)
@@ -3963,6 +3963,11 @@ var tcdian = __ = (function () {
     }
     return keys
   }
+
+  function keys(obj) {
+    return _keys(obj)
+  }
+
   // _.keysIn----------------------------------------------------------------//
 
   /**
@@ -4195,8 +4200,12 @@ var tcdian = __ = (function () {
       (Array): Returns the array of property values.
   **/
 
-  var values = function _values(obj) {
+  function _values(obj) {
     return _keys(obj).map(key => obj[key])
+  }
+
+  function values(obj) {
+    return _values(obj)
   }
 
   // _.valuesIn--------------------------------------------------------------//
