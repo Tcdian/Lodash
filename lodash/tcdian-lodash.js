@@ -1873,7 +1873,7 @@ var tcdian = __ = (function () {
     iteratee = _cb(iteratee, DMZ, 4)
     let keys = _keys(collection)
     if (initialVal === void 0)
-      return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection))
+      return keys.slice(1).reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), collection[keys[0]])
     return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), initialVal)
   }
 
@@ -1893,7 +1893,7 @@ var tcdian = __ = (function () {
     iteratee = _cb(iteratee, DMZ, 4)
     let keys = _keys(collection).reverse()
     if (initialVal === void 0)
-      return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection))
+      return keys.slice(1).reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), collection[keys[0]])
     return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), initialVal)
   }
 
