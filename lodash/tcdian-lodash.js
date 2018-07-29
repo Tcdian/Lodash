@@ -2924,7 +2924,7 @@ var tcdian = __ = (function () {
     return keys.every(key => {
       let tmp = customizer(val[key], other[key], key, val, other, loopHash)
       if (tmp === void 0)
-        return isEqual(val[key], other[key], customizer,loopHash)
+        return isEqualWith(val[key], other[key], customizer, loopHash)
       return tmp
     })
   }
