@@ -3048,12 +3048,19 @@ var tcdian = __ = (function () {
   // _.isMatchWith-----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.isMatch except that it accepts customizer which is invoked to compare values.If customizer returns undefined, comparisons are handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, index | key, object, source).
     * Arguments
-      array(Array): The
+      object (Object): The object to inspect.
+      source (Object): The object of property values to match.
+      [customizer] (Function): The function to customize comparisons.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if object is a match, else false.
   **/
+
+    function isMatchWith(obj, source, customizer) {
+      let compareObj = assign({}, obj, source)
+      return isEqualWith(obj, compareObj, customizer)
+    }
 
   // _.isNaN-----------------------------------------------------------------//
 
@@ -3561,12 +3568,27 @@ var tcdian = __ = (function () {
   // _.maxBy-----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.max except that it accepts iteratee which is invoked for each element in array to generate the criterion by which the value is ranked. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the maximum value.
   **/
+
+  function maxBy(arr, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let max = -Infinity
+    let result
+    forEach(arr, val => {
+      let tmp = iteratee(val)
+      if (max < tmp) {
+        result = val
+        max = tmp
+      }
+    })
+    return result
+  }
 
   // _.mean------------------------------------------------------------------//
 
@@ -3592,6 +3614,11 @@ var tcdian = __ = (function () {
     * Returns
       (number): Returns the mean.
   **/
+
+  function meanBy(arr, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    return arr.reduce((accumulator, item) => iteratee(item) + accumulator, 0) / arr.length
+  }
 
   // _.min-------------------------------------------------------------------//
 
@@ -3681,12 +3708,18 @@ var tcdian = __ = (function () {
   // _.sumBy-----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.sum except that it accepts iteratee which is invoked for each element in array to generate the value to be summed. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the sum.
   **/
+
+  function sumBy(arr, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    return arr.reduce((accumulator, item) => iteratee(item) + accumulator, 0)
+  }
 
   //------------------------------------Number----------------------------------------
   // _.clamp-----------------------------------------------------------------//
@@ -5857,6 +5890,7 @@ var tcdian = __ = (function () {
     /* _.isMatch------------------------------ */
     isMatch,
     /* _.isMatchWith-------------------------- */
+    isMatchWith,
     /* _.isNaN-------------------------------- */
     isNaN,
     /* _.isNative----------------------------- */
@@ -5923,9 +5957,11 @@ var tcdian = __ = (function () {
     /* _.max---------------------------------- */
     max,
     /* _.maxBy-------------------------------- */
+    maxBy,
     /* _.mean--------------------------------- */
     mean,
     /* _.meanBy------------------------------- */
+    meanBy,
     /* _.min---------------------------------- */
     min,
     /* _.minBy-------------------------------- */
@@ -5938,6 +5974,7 @@ var tcdian = __ = (function () {
     /* _.sum---------------------------------- */
     sum,
     /* _.sumBy-------------------------------- */
+    sumBy,
     //------------------------------------Number----------------------------------------
     /* _.clamp-------------------------------- */
     /* _.inRange------------------------------ */
