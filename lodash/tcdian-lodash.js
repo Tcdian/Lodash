@@ -2581,7 +2581,7 @@ var tcdian = __ = (function () {
       }
       loopHash.set(val, 'exist')
       let keys = _keys(val)
-      let result = Object.create(Object.getPrototypeOf(val))
+      let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
       keys.forEach(key => {
         if (loopHash.has(val[key])) {
           result[key] = val[key]
@@ -2617,7 +2617,8 @@ var tcdian = __ = (function () {
       }
       loopHash.set(val, 'exist')
       let keys = _keys(val)
-      let result = Object.create(Object.getPrototypeOf(val))
+
+      let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
       keys.forEach(key => {
         if (loopHash.has(val[key])) {
           result[key] = val[key]
