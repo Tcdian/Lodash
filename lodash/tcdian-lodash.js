@@ -2573,11 +2573,14 @@ var tcdian = __ = (function () {
     //非enumerable问题 ?
     //原型链问题 ?
 
-    //避免过于复杂,仅考虑 普通值, 数组, 对象
+    //避免过于复杂,仅考虑 普通值, 数组, 对象, 正则
     let loopHash = new Map()
     function clone(val) {
-      if(!isObject(val)) {
+      if (!isObject(val)) {
         return val
+      }
+      if (isRegExp(val)) {
+        return new RegExp(val)
       }
       loopHash.set(val, 'exist')
       let keys = _keys(val)
@@ -2607,12 +2610,12 @@ var tcdian = __ = (function () {
 
   function cloneDeepWith(val, customizer) {
     if (customizer === void 0 || customizer(val) === void 0) return cloneDeep(val)
-    //避免过于复杂,仅考虑 普通值, 数组, 对象
+    //避免过于复杂,仅考虑 普通值, 数组, 对象, 正则
     let loopHash = new Map()
     function clone(val) {
       let customizerResult = customizer(val)
       if (customizerResult !== void 0) return customizerResult
-      if (!isObject(val)) {
+      if (!isObject(val) || isRegExp(val)) {
         return val
       }
       loopHash.set(val, 'exist')
