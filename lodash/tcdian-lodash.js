@@ -89,6 +89,14 @@ var tcdian = __ = (function () {
     return _keys(obj).map(key => obj[key])
   }
 
+  // entries
+  function _entries(obj) {
+    if (!isObject(obj)) return []
+    if (isSet(obj) || isMap(obj)) return obj.entries()
+    if (isArray(obj)) return obj.map((item, index) => [index, item])
+    return Object.entries(obj)
+  }
+
   // _baseWordSeparate
   function _baseWordSeparate(str) {
     let pattern = /[\-_\s]+/g
@@ -3836,12 +3844,17 @@ var tcdian = __ = (function () {
   // _.at--------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of values corresponding to paths of object.
     * Arguments
-      array(Array): The
+      object(Object): The object to iterate over.
+      [paths](...(string | string[])): The property paths to pick.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the picked values.
   **/
+
+  function at(obj, paths) {
+    return paths.map(path => _baseGet(obj, path, true, void 0))
+  }
 
   // _.create----------------------------------------------------------------//
 
@@ -3903,9 +3916,7 @@ var tcdian = __ = (function () {
   **/
 
   function entries(obj) {
-    if (!isObject(obj)) return []
-    if (isSet(obj) || isMap(obj)) return obj.entries()
-    return Object.entries(obj)
+    return _entries(obj)
   }
 
   // _.entriesIn -> toPairsIn------------------------------------------------//
@@ -3922,8 +3933,9 @@ var tcdian = __ = (function () {
     if (!isObject(obj)) return []
     if (isSet(obj) || isMap(obj)) return obj.entries()
     let result = []
+    let isArr = isArray(obj)
     for( let key in obj) {
-      result.push([key, obj[key]])
+      result.push([isArr ? Number(key) : key, obj[key]])
     }
     return result
   }
@@ -3967,62 +3979,116 @@ var tcdian = __ = (function () {
   // _.findKey---------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.find except that it returns the key of the first element predicate returns truthy for instead of the element itself.
     * Arguments
-      array(Array): The
+      object (Object): The object to inspect.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (*): Returns the key of the matched element, else undefined.
   **/
+
+  function findKey(obj, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let keys = _keys(obj)
+    return keys.find(key => predicate(obj[key], key, obj))
+  }
 
   // _.findLastKey-----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.findKey except that it iterates over elements of a collection in the opposite order.
     * Arguments
-      array(Array): The
+      object (Object): The object to inspect.
+      [predicate=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (*): Returns the key of the matched element, else undefined.
   **/
+
+  function findLastKey(obj, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 3)
+    let keys = _keys(obj).reverse()
+    return keys.find(key => predicate(obj[key], key, obj))
+  }
 
   // _.forIn-----------------------------------------------------------------//
 
   /**
-    * description
+    * Iterates over own and inherited enumerable string keyed properties of an object and invokes iteratee
+      for each property.The iteratee is invoked with three arguments: (value, key, object).Iteratee functions may exit iteration early by explicitly returning false.
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function forIn(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(obj)
+    for (let key in obj) {
+      var status = iteratee(obj[key], isArr ? Number(key) : key, obj)
+      if (status === false) return obj
+    }
+    return obj
+  }
 
   // _.forInRight------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.forIn except that it iterates over properties of object in the opposite order.
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function forInRight(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let isArr = isArray(obj)
+    let keys = []
+    for(let key in obj) {
+      keys.push(key)
+    }
+    keys.reverse().some(key => iteratee(obj[key], isArr ? Number(key) : key, obj) === false)
+    return obj
+  }
 
   // _.forOwn----------------------------------------------------------------//
 
   /**
-    * description
+    * Iterates over own enumerable string keyed properties of an object and invokes iteratee for each property. The iteratee is invoked with three arguments: (value, key, object). Iteratee functions may exit iteration early by explicitly returning false.
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function forOwn(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let keys = _keys(obj)
+    keys.some(key => iteratee(obj[key], key, obj) === false)
+    return obj
+  }
 
   // _.forOwnRight-----------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.forOwn except that it iterates over properties of object in the opposite order.
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function forOwnRight(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let keys = _keys(obj).reverse()
+    keys.some(key => iteratee(obj[key], key, obj) === false)
+    return obj
+  }
 
   // _.functions-------------------------------------------------------------//
 
@@ -4121,11 +4187,11 @@ var tcdian = __ = (function () {
   **/
 
   function invert(obj) {
-    let pairs = Object.entries(obj)
-    let result = Object.create(Object.getPrototypeOf(obj))
-    pairs.forEach(pair => {
-      if (!isObject(pair[1])) {
-        result[pair[1]] = pair[0]
+    let entries = _entries(obj)
+    let result = {}
+    entries.forEach(item => {
+      if (!isObject(item[1])) {
+        result[item[1]] = item[0]
       }
     })
     return result
@@ -4134,12 +4200,30 @@ var tcdian = __ = (function () {
   // _.invertBy--------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.invert except that the inverted object is generated from the results of running each element of object thru iteratee. The corresponding inverted value of each inverted key is an array of keys responsible for generating the inverted value. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      object(Object): The object to invert.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new inverted object.
   **/
+
+  function invertBy(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let entries = _entries(obj)
+    let result = {}
+    entries.forEach(item => {
+      let tmp = iteratee(item[1])
+      if (!isObject(tmp)) {
+        if(result.hasOwnProperty(tmp)) {
+          result[tmp].push(item[0])
+        } else {
+          result[tmp] = [item[0]]
+        }
+      }
+    })
+    return result
+  }
 
   // _.invoke----------------------------------------------------------------//
 
@@ -4193,8 +4277,9 @@ var tcdian = __ = (function () {
 
   function keysIn(obj) {
     let result = []
+    let isArr = isArray(obj)
     for(let key in obj) {
-      result.push(key)
+      result.push(isArr ? Number(key) : key)
     }
     return result
   }
@@ -4202,22 +4287,46 @@ var tcdian = __ = (function () {
   // _.mapKeys---------------------------------------------------------------//
 
   /**
-    * description
+    * The opposite of _.mapValues; this method creates an object with the same values as object and keys generated by running each own enumerable string keyed property of object thru iteratee. The iteratee is invoked with three arguments: (value, key, object).
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new mapped object.
   **/
+
+  function mapKeys(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let keys = _keys(obj)
+    let result = {}
+    keys.forEach(key => {
+      let newKey = iteratee(obj[key], key, obj)
+      result[newKey] = obj[key]
+    })
+    return result
+  }
 
   // _.mapValues-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object with the same keys as object and values generated by running each own enumerable string keyed property of object thru iteratee. The iteratee is invoked with three arguments:(value, key, object).
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new mapped object.
   **/
+
+  function mapValues(obj, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 3)
+    let keys = _keys(obj)
+    let result = {}
+    keys.forEach(key => {
+      let newVal = iteratee(obj[key], key, obj)
+      result[key] = newVal
+    })
+    return result
+  }
 
   // _.merge-----------------------------------------------------------------//
 
@@ -4342,7 +4451,7 @@ var tcdian = __ = (function () {
   **/
 
   function toPairs(obj) {
-    return entries(obj)
+    return _entries(obj)
   }
 
   // _.toPairsIn-------------------------------------------------------------//
@@ -5989,6 +6098,7 @@ var tcdian = __ = (function () {
     /* _.assignWith--------------------------- */
     assignWith,
     /* _.at----------------------------------- */
+    at,
     /* _.create------------------------------- */
     create,
     /* _.defaults----------------------------- */
@@ -6004,11 +6114,17 @@ var tcdian = __ = (function () {
     /* _.extendWith -> assignInWith----------- */
     extendWith,
     /* _.findKey------------------------------ */
+    findKey,
     /* _.findLastKey-------------------------- */
+    findLastKey,
     /* _.forIn-------------------------------- */
+    forIn,
     /* _.forInRight--------------------------- */
+    forInRight,
     /* _.forOwn------------------------------- */
+    forOwn,
     /* _.forOwnRight-------------------------- */
+    forOwnRight,
     /* _.functions---------------------------- */
     functions,
     /* _.functionsIn-------------------------- */
@@ -6022,6 +6138,7 @@ var tcdian = __ = (function () {
     /* _.invert------------------------------- */
     invert,
     /* _.invertBy----------------------------- */
+    invertBy,
     /* _.invoke------------------------------- */
     invoke,
     /* _.keys--------------------------------- */
@@ -6029,7 +6146,9 @@ var tcdian = __ = (function () {
     /* _.keysIn------------------------------- */
     keysIn,
     /* _.mapKeys------------------------------ */
+    mapKeys,
     /* _.mapValues---------------------------- */
+    mapValues,
     /* _.merge-------------------------------- */
     merge,
     /* _.mergeWith---------------------------- */
