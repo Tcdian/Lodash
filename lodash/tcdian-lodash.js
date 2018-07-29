@@ -2535,6 +2535,8 @@ var tcdian = __ = (function () {
   **/
 
   function clone(val) {
+
+    //原型问题没考虑~
     if (!isObject(val)) {
       return val
     }
@@ -2585,7 +2587,8 @@ var tcdian = __ = (function () {
     }
     loopHash.set(val, 'exist')
     let keys = _keys(val)
-    let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
+    let result = isArray(val) ? [] : {}
+    Object.setPrototypeOf(result, Object.getPrototypeOf(val))
     keys.forEach(key => {
       result[key] = cloneDeep(val[key], loopHash)
     })
@@ -2618,7 +2621,8 @@ var tcdian = __ = (function () {
     }
     loopHash.set(val, 'exist')
     let keys = _keys(val)
-    let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
+    let result = isArray(val) ? [] : {}
+    Object.setPrototypeOf(result, Object.getPrototypeOf(val))
     keys.forEach(key => {
       let tmp = customizer(val[key], key, val, loopHash)
       if(tmp === void 0)
@@ -2887,7 +2891,8 @@ var tcdian = __ = (function () {
     }
     loopHash.set(val, 'exist')
     let keys = _keys(val)
-    return keys.every(key => isEqual(val[key], other[key], loopHash))
+    let otherKeys = _keys(val)
+    return keys.length === otherKeys.length && otherkeys.every(key => isEqual(val[key], other[key], loopHash))
   }
 
   // .isEqualWith------------------------------------------------------------//
@@ -2921,7 +2926,8 @@ var tcdian = __ = (function () {
     }
     loopHash.set(val, 'exist')
     let keys = _keys(val)
-    return keys.every(key => {
+    let otherKeys = _keys(other)
+    return keys === otherKeys && keys.every(key => {
       let tmp = customizer(val[key], other[key], key, val, other, loopHash)
       if (tmp === void 0)
         return isEqualWith(val[key], other[key], customizer, loopHash)
