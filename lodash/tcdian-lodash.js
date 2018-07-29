@@ -2568,34 +2568,28 @@ var tcdian = __ = (function () {
       ( * ): Returns the deep cloned value.
   **/
 
-  function cloneDeep(val) {
+  function cloneDeep(val, loopHash = new Map()) {
     //循环引用问题 ?
     //非enumerable问题 ?
     //原型链问题 ?
 
-    //避免过于复杂,仅考虑 普通值, 数组, 对象, 正则
-    let loopHash = new Map()
-    function clone(val) {
-      if (!isObject(val)) {
-        return val
-      }
-      if (isRegExp(val)) {
-        return new RegExp(val)
-      }
-      loopHash.set(val, 'exist')
-      let keys = _keys(val)
-      let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
-      keys.forEach(key => {
-        if (loopHash.has(val[key])) {
-          result[key] = val[key]
-        } else {
-          result[key] = clone(val[key])
-        }
-      })
-      return result
+    //避免过于复杂,仅考虑基础类型, 数组, 对象, 正则
+    if (!isObject(val)) {
+      return val
     }
-
-    return clone(val)
+    if (isRegExp(val)) {
+      return new RegExp(val)
+    }
+    if (loopHash.has(val)) {
+      return val
+    }
+    loopHash.set(val, 'exist')
+    let keys = _keys(val)
+    let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
+    keys.forEach(key => {
+      result[key] = cloneDeep(val[key], loopHash)
+    })
+    return result
   }
 
   // _.cloneDeepWith---------------------------------------------------------//
@@ -2608,31 +2602,31 @@ var tcdian = __ = (function () {
       ( * ): Returns the deep cloned value.
   **/
 
-  function cloneDeepWith(val, customizer) {
-    if (customizer === void 0 || customizer(val) === void 0) return cloneDeep(val)
+  function cloneDeepWith(val, customizer, loopHash = new Map()) {
+    if (customizer === void 0) return cloneDeep(val)
     //避免过于复杂,仅考虑 普通值, 数组, 对象, 正则
-    let loopHash = new Map()
-    function clone(val) {
-      let customizerResult = customizer(val)
-      if (customizerResult !== void 0) return customizerResult
-      if (!isObject(val) || isRegExp(val)) {
-        return val
-      }
-      loopHash.set(val, 'exist')
-      let keys = _keys(val)
-
-      let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
-      keys.forEach(key => {
-        if (loopHash.has(val[key])) {
-          result[key] = val[key]
-        } else {
-          result[key] = clone(val[key])
-        }
-      })
-      return result
+    let customizerResult = customizer(val)
+    if (customizerResult !== void 0) return customizerResult
+    if (!isObject(val)) {
+      return val
     }
+    if (isRegExp(val)) {
+      return new RegExp(val)
+    }
+    if (loopHash.has(val)) {
+      return val
+    }
+    loopHash.set(val, 'exist')
+    let keys = _keys(val)
+    let result = isArray(val) ? [] : Object.create(Object.getPrototypeOf(val))
+    keys.forEach(key => {
+      let tmp = customizer(val[key], key, val, loopHash)
+      if(tmp === void 0)
+        result[key] = cloneDeepWith(val[key], customizer, loopHash)
+      result[key] = tmp
+    })
+    return result
 
-    return clone(val)
   }
 
   // _.cloneWith-------------------------------------------------------------//
@@ -2877,35 +2871,23 @@ var tcdian = __ = (function () {
       (boolean): Returns true if the values are equivalent, else false.
   **/
 
-  function isEqual(value, other) {
-    if (_objectProto.toString.call(value) != _objectProto.toString.call(other)) {
+  function isEqual(val, other, loopHash = new Map()) {
+    if (_objectProto.toString.call(val) != _objectProto.toString.call(other)) {
       return false
     }
-    if (!isObject(value) || isFunction(value) || _objectProto.toString.call(value) === _typeMap.DOMException) {
-      return eq(value, other)
+    //简单考虑, 只考虑 基本类型 , 数组, 正则, 对象
+    if (!isObject(val)) {
+      return val === other
     }
-    if (isTypedArray(value) || isArrayBuffer(value) || isArray(value)) {
-      return value.length === other.length ? value.every((item, index) => isEqual(item, other[index])) : false
+    if (isRegExp(val)) {
+      return val.toString() === other.toString()
     }
-    if (isSet(value) || isMap(value)) {
-      if(value.size !== other.size) return false
-      let valueKeys = Array.from(value.keys())
-      let otherKeys = Array.from(other.keys())
-      return valueKeys.every(key => {
-        for(let i = 0; i < otherKeys.length; i++) {
-          if (isEqual(key, otherKeys[i])) {
-            return isEqual(value[key], other[otherKeys[i]])
-          }
-        }
-        return false
-      })
+    if (loopHash.has(val)) {
+      return true
     }
-    if (isRegExp(value)) {
-      return toString(value) === toString(other)
-    }
-    let valueKeys = _keys(value)
-    let otherKeys = _keys(other)
-    return valueKeys.length === otherKeys.length && valueKeys.every(key => isEqual(value[key], other[key]))
+    loopHash.set(val, 'exist')
+    let keys = _keys(val)
+    return keys.every(key => isEqual(val[key], other[key], loopHash))
   }
 
   // .isEqualWith------------------------------------------------------------//
@@ -2920,35 +2902,31 @@ var tcdian = __ = (function () {
       (boolean): Returns true if the values are equivalent, else false.
   **/
 
-  function isEqualWith(val, other, customizer) {
-    if (_objectProto.toString.call(value) != _objectProto.toString.call(other)) {
+  function isEqualWith(val, other, customizer, loopHash = new Map()) {
+    if (customizer === void 0) return isEqual(val, other, loopHash)
+    let result = customizer(val, other)
+    if (result !== void 0) return result
+    if (_objectProto.toString.call(val) != _objectProto.toString.call(other)) {
       return false
     }
-    if (!isObject(value) || isFunction(value) || _objectProto.toString.call(value) === _typeMap.DOMException) {
-      return eq(value, other)
+    //简单考虑, 只考虑 基本类型 , 数组, 正则, 对象
+    if (!isObject(val)) {
+      return val === other
     }
-    if (isTypedArray(value) || isArrayBuffer(value) || isArray(value)) {
-      return value.length === other.length ? value.every((item, index) => isEqual(item, other[index])) : false
+    if (isRegExp(val)) {
+      return val.toString() === other.toString()
     }
-    if (isSet(value) || isMap(value)) {
-      if (value.size !== other.size) return false
-      let valueKeys = Array.from(value.keys())
-      let otherKeys = Array.from(other.keys())
-      return valueKeys.every(key => {
-        for (let i = 0; i < otherKeys.length; i++) {
-          if (isEqual(key, otherKeys[i])) {
-            return isEqual(value[key], other[otherKeys[i]])
-          }
-        }
-        return false
-      })
+    if (loopHash.has(val)) {
+      return true
     }
-    if (isRegExp(value)) {
-      return toString(value) === toString(other)
-    }
-    let valueKeys = _keys(value)
-    let otherKeys = _keys(other)
-    return valueKeys.length === otherKeys.length && valueKeys.every(key => isEqual(value[key], other[key]))
+    loopHash.set(val, 'exist')
+    let keys = _keys(val)
+    return keys.every(key => {
+      let tmp = customizer(val[key], other[key], key, val, other, loopHash)
+      if (tmp === void 0)
+        return isEqual(val[key], other[key], loopHash)
+      return tmp
+    })
   }
 
   // _.isError---------------------------------------------------------------//
@@ -5857,6 +5835,7 @@ var tcdian = __ = (function () {
     /* _.isEqual------------------------------ */
     isEqual,
     /* _.isEqualWith-------------------------- */
+    isEqualWith,
     /* _.isError------------------------------ */
     isError,
     /* _.isFinite----------------------------- */
