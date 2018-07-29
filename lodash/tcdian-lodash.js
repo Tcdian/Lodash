@@ -2927,7 +2927,7 @@ var tcdian = __ = (function () {
     loopHash.set(val, 'exist')
     let keys = _keys(val)
     let otherKeys = _keys(other)
-    return keys === otherKeys && keys.every(key => {
+    return keys.length === otherKeys.length && keys.every(key => {
       let tmp = customizer(val[key], other[key], key, val, other, loopHash)
       if (tmp === void 0)
         return isEqualWith(val[key], other[key], customizer, loopHash)
