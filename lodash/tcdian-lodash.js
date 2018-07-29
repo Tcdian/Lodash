@@ -232,6 +232,13 @@ var tcdian = __ = (function () {
     return resultArr
   }
 
+  // _exchange
+  function _exchange(arr, x, y) {
+    let tmp = arr[x]
+    arr[x] = arr[y]
+    arr[y] = tmp
+  }
+
   //------------------------------------Array-----------------------------------------
   // _.chunk-----------------------------------------------------------------//
 
@@ -1962,13 +1969,7 @@ var tcdian = __ = (function () {
     let len = values.length
     for (let i = 0; i < len - 1; i++) {
       let randomIndex = Math.floor(Math.random() * (len - i)) + i
-      exchange(values, i, randomIndex)
-    }
-
-    function exchange(arr, x, y) {
-      let tmp = arr[x]
-      arr[x] = arr[y]
-      arr[y] = tmp
+      _exchange(values, i, randomIndex)
     }
     return values
   }
@@ -2331,12 +2332,20 @@ var tcdian = __ = (function () {
   // _.overArgs--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes func with its arguments transformed.
     * Arguments
-      array(Array): The
+      func (Function): The function to wrap.
+      [transforms=[_.identity]] (...(Function|Function[])): The argument transforms.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function overArgs(func, transforms) {
+    return function (...args) {
+      let finalArgs = args.map((arg, index) => transforms[index](arg))
+      return func.call(this, ...finalArgs)
+    }
+  }
 
   // _.partial---------------------------------------------------------------//
 
@@ -2481,12 +2490,19 @@ var tcdian = __ = (function () {
   // _.wrap------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that provides value to wrapper as its first argument. Any additional arguments provided to the function are appended to those provided to the wrapper. The wrapper is invoked with the this binding of the created function.
     * Arguments
-      array(Array): The
+      value (*): The value to wrap.
+      [wrapper=identity] (Function): The wrapper function.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function wrap(val, wrapper = identity) {
+    return function (...args) {
+      return wrapper.call(this, val, ...args)
+    }
+  }
 
   //------------------------------------Lang------------------------------------------
   // _.castArray-------------------------------------------------------------//
@@ -2518,28 +2534,28 @@ var tcdian = __ = (function () {
       ( * ): Returns the cloned value.
   **/
 
-  function clone(value) {
-    if (!isObject(value)) {
-      return value
+  function clone(val) {
+    if (!isObject(val)) {
+      return val
     }
-    if (isElement(value) || isFunction(value) || isWeakMap(value) || isWeakSet(value) || isError(value) || _objectProto.toString.call(value) === _typeMap.HTMLCollection) {
+    if (isElement(val) || isFunction(val) || isWeakMap(val) || isWeakSet(val) || isError(val) || _objectProto.toString.call(val) === _typeMap.HTMLCollection) {
       return {}
     }
-    if (isArray(value) || isTypedArray(value) || isArrayBuffer(value) || isArguments(value)) {
-      return _arrayProto.slice.call(value)
+    if (isArray(val) || isTypedArray(val) || isArrayBuffer(val) || isArguments(val)) {
+      return _arrayProto.slice.call(val)
     }
-    if (isMap(value)) {
+    if (isMap(val)) {
       let result = new Map()
-      value.forEach((item, key) => {
+      val.forEach((item, key) => {
         result.set(key, item)
       })
       return result
     }
-    if(isSet(value)) {
-      return new Set(value)
+    if(isSet(val)) {
+      return new Set(val)
     }
-    let result = Object.create(Object.getPrototypeOf(value))
-    return Object.assign(result, value)
+    let result = Object.create(Object.getPrototypeOf(val))
+    return Object.assign(result, val)
   }
 
   // _.cloneDeep-------------------------------------------------------------//
@@ -2552,58 +2568,84 @@ var tcdian = __ = (function () {
       ( * ): Returns the deep cloned value.
   **/
 
-  function cloneDeep(value) {
-    if (!isObject(value)) {
-      return value
-    }
-    if (isElement(value) || isFunction(value) || isWeakMap(value) || isWeakSet(value) || isError(value) || _objectProto.toString.call(value) === _typeMap.HTMLCollection) {
-      return {}
-    }
-    if (isTypedArray(value) || isArrayBuffer(value)) {
-      return _arrayProto.slice.call(value)
-    }
-    if (isArray(value) || isArguments(value)) {
-      return _arrayProto.map.call(value, item => cloneDeep(item))
-    }
-    if (isMap(value)) {
-      let map = new Map()
-      value.forEach((item, key) => {
-        map.set(cloneDeep(key), cloneDeep(item))
+  function cloneDeep(val) {
+    //循环引用问题 ?
+    //非enumerable问题 ?
+    //原型链问题 ?
+
+    //避免过于复杂,仅考虑 普通值, 数组, 对象
+    let loopHash = new Map()
+    function clone(val) {
+      if(!isObject(val)) {
+        return val
+      }
+      loopHash.set(val, 'exist')
+      let keys = _keys(val)
+      let result = Object.create(Object.getPrototypeOf(val))
+      keys.forEach(key => {
+        if (loopHash.has(val[key])) {
+          result[key] = val[key]
+        } else {
+          result[key] = clone(val[key])
+        }
       })
-      return map
+      return result
     }
-    if (isSet(value)) {
-      let set = new Set()
-      value.forEach(item => {
-        set.add(cloneDeep(item))
-      })
-      return set
-    }
-    let obj = Object.create(Object.getPrototypeOf(value))
-    _keys(value).forEach(key => {
-      obj[key] = _.cloneDeep(value[key])
-    })
-    return obj
+
+    return clone(val)
   }
 
   // _.cloneDeepWith---------------------------------------------------------//
   /**
-    * description
+    * This method is like _.cloneWith except that it recursively clones value.
     * Arguments
-      array(Array): The
+      value (*): The value to recursively clone.
+      [customizer] (Function): The function to customize cloning.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the deep cloned value.
   **/
+
+  function cloneDeepWith(val, customizer) {
+    if (customizer === void 0 || customizer(val) === void 0) return cloneDeep(val)
+    //避免过于复杂,仅考虑 普通值, 数组, 对象
+    let loopHash = new Map()
+    function clone(val) {
+      let customizerResult = customizer(val)
+      if (customizerResult !== void 0) return customizerResult
+      if (!isObject(val)) {
+        return val
+      }
+      loopHash.set(val, 'exist')
+      let keys = _keys(val)
+      let result = Object.create(Object.getPrototypeOf(val))
+      keys.forEach(key => {
+        if (loopHash.has(val[key])) {
+          result[key] = val[key]
+        } else {
+          result[key] = clone(val[key])
+        }
+      })
+      return result
+    }
+
+    return clone(val)
+  }
 
   // _.cloneWith-------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.clone except that it accepts customizer which is invoked to produce the cloned value. If customizer returns undefined, cloning is handled by the method instead. The customizer is invoked with up to four arguments; (value [, index|key, object, stack])
     * Arguments
-      array(Array): The
+      value (*): The value to clone.
+      [customizer] (Function): The function to customize cloning.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the cloned value.
   **/
+
+  function cloneWith(val, customizer) {
+    if (customizer === void 0 || customizer(val) === void 0) return clone(val)
+    return customizer(val)
+  }
 
   // _.conformsTo------------------------------------------------------------//
 
@@ -2865,12 +2907,45 @@ var tcdian = __ = (function () {
   // .isEqualWith------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.isEqual except that it accepts customizer which is invoked to compare values.If customizer returns undefined, comparisons are handled by the method instead.The customizer is invoked with up to six arguments: (objValue, othValue[, index | key, object, other, stack]).
     * Arguments
-      array(Array): The
+      value (*): The value to compare.
+      other (*): The other value to compare.
+      [customizer] (Function): The function to customize comparisons.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if the values are equivalent, else false.
   **/
+
+  function isEqualWith(val, other, customizer) {
+    if (_objectProto.toString.call(value) != _objectProto.toString.call(other)) {
+      return false
+    }
+    if (!isObject(value) || isFunction(value) || _objectProto.toString.call(value) === _typeMap.DOMException) {
+      return eq(value, other)
+    }
+    if (isTypedArray(value) || isArrayBuffer(value) || isArray(value)) {
+      return value.length === other.length ? value.every((item, index) => isEqual(item, other[index])) : false
+    }
+    if (isSet(value) || isMap(value)) {
+      if (value.size !== other.size) return false
+      let valueKeys = Array.from(value.keys())
+      let otherKeys = Array.from(other.keys())
+      return valueKeys.every(key => {
+        for (let i = 0; i < otherKeys.length; i++) {
+          if (isEqual(key, otherKeys[i])) {
+            return isEqual(value[key], other[otherKeys[i]])
+          }
+        }
+        return false
+      })
+    }
+    if (isRegExp(value)) {
+      return toString(value) === toString(other)
+    }
+    let valueKeys = _keys(value)
+    let otherKeys = _keys(other)
+    return valueKeys.length === otherKeys.length && valueKeys.every(key => isEqual(value[key], other[key]))
+  }
 
   // _.isError---------------------------------------------------------------//
 
@@ -5721,6 +5796,7 @@ var tcdian = __ = (function () {
     /* _.once--------------------------------- */
     once,
     /* _.overArgs----------------------------- */
+    overArgs,
     /* _.partial------------------------------ */
     partial,
     /* _.partialRight------------------------- */
@@ -5735,6 +5811,7 @@ var tcdian = __ = (function () {
     /* _.unary-------------------------------- */
     unary,
     /* _.wrap--------------------------------- */
+    wrap,
     //------------------------------------Lang------------------------------------------
     /* _.castArray---------------------------- */
     castArray,
@@ -5743,7 +5820,9 @@ var tcdian = __ = (function () {
     /* _.cloneDeep---------------------------- */
     cloneDeep,
     /* _.cloneDeepWith------------------------ */
+    cloneDeepWith,
     /* _.cloneWith---------------------------- */
+    cloneWith,
     /* _.conformsTo--------------------------- */
     conformsTo,
     /* _.eq----------------------------------- */
