@@ -3646,12 +3646,27 @@ var tcdian = __ = (function () {
   // _.minBy-----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.min except that it accepts iteratee which is invoked for each element in array to generate the criterion by which the value is ranked. The iteratee is invoked with one argument: (value).
     * Arguments
-      array(Array): The
+      array(Array): The array to iterate over.
+      [iteratee = _.identity](Function): The iteratee invoked per element.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the minimum value.
   **/
+
+  function minBy(arr, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let min = Infinity
+    let result
+    forEach(arr, val => {
+      let tmp = iteratee(val)
+      if (min > tmp) {
+        result = val
+        min = tmp
+      }
+    })
+    return result
+  }
 
   // _.multiply--------------------------------------------------------------//
 
@@ -4373,12 +4388,19 @@ var tcdian = __ = (function () {
   // _.omit------------------------------------------------------------------//
 
   /**
-    * description
+    * The opposite of _.pick; this method creates an object composed of the own and inherited enumerable property paths of object that are not omitted.
+
+      Note: This method is considerably slower than _.pick.
     * Arguments
-      array(Array): The
+      object(Object): The source object.
+      [paths](...(string | string[])): The property paths to omit.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new object.
   **/
+
+  function omit(obj, paths) {
+
+  }
 
   // _.omitBy----------------------------------------------------------------//
 
@@ -4413,12 +4435,19 @@ var tcdian = __ = (function () {
   // _.result----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.get except that if the resolved value is a function it's invoked with the this binding of its parent object and its result is returned.
     * Arguments
-      array(Array): The
+      object (Object): The object to query.
+      path (Array|string): The path of the property to resolve.
+      [defaultValue] (*): The value returned for undefined resolved values.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the resolved value.
   **/
+
+  function result(obj, path, defaultValue) {
+    let tmpResult = _baseGet(obj, path, true, defaultValue)
+    return isFunction(tmpResult) ? tmpResult.call(obj) : tmpResult
+  }
 
   // _.set-------------------------------------------------------------------//
 
@@ -4471,12 +4500,26 @@ var tcdian = __ = (function () {
   // _.transform-------------------------------------------------------------//
 
   /**
-    * description
+    * An alternative to _.reduce; this method transforms object to a new accumulator object which is the result of running each of its own enumerable string keyed properties thru iteratee, with each invocation potentially mutating the accumulator object. If accumulator is not provided,
+      a new object with the same [[Prototype]] will be used. The iteratee is invoked with four arguments: (accumulator, value, key, object). Iteratee functions may exit iteration early by explicitly returning false.
     * Arguments
-      array(Array): The
+      object (Object): The object to iterate over.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
+      [accumulator] (*): The custom accumulator value.
     * Returns
-      (Array): Returns the new array of chunks.
+      ( * ): Returns the accumulated value.
   **/
+
+  function transform(obj, iteratee = identity, initialVal) {
+    iteratee = _cb(iteratee, DMZ, 4)
+    let isArr = isArray(obj)
+    initialVal = initialVal ? initialVal : isArr ? [] : {}
+    let keys = _keys(obj)
+    keys.some(key => {
+      return iteratee(initialVal, obj[key], key, obj) === false
+    })
+    return initialVal
+  }
 
   // _.unset-----------------------------------------------------------------//
 
@@ -5705,6 +5748,117 @@ var tcdian = __ = (function () {
       (Array): Returns the new array of chunks.
   **/
 
+  //_.parseJson ----------------------------------------------
+  //简易json解析器
+  function parseJson(jsonStr) {
+    var index = 0
+
+    function typeParse(jsonStr) {
+      if (jsonStr[index] === '{') {
+        return parseObject(jsonStr)
+      } else if (jsonStr[index] === '[') {
+        return parseArray(jsonStr)
+      } else if (jsonStr[index] === 'n') {
+        return parseNull(jsonStr)
+      } else if (jsonStr[index] === 't') {
+        return parseTrue(jsonStr)
+      } else if (jsonStr[index] === 'f') {
+        return parseFalse(jsonStr)
+      } else if (jsonStr[index] === '"') {
+        return parseString(jsonStr)
+      } else {
+        return parseNumber(jsonStr)
+      }
+    }
+
+    function parseObject(jsonStr) {
+      index++
+      var part = {}
+      while (jsonStr[index] !== '}') {
+        var key = typeParse(jsonStr)
+        index++
+        var val = typeParse(jsonStr)
+        part[key] = val
+        if (jsonStr[index] === '}') {
+          index++
+          break
+        }
+        index++
+      }
+      return part
+    }
+
+    function parseArray(jsonStr) {
+      index++
+      var part = []
+      while (jsonStr[index] !== ']') {
+        if (jsonStr[index] === ',') {
+          index++
+        } else {
+          part.push(typeParse(jsonStr))
+        }
+      }
+      index++
+      return part
+    }
+
+    function parseNull(jsonStr) {
+      var part = jsonStr.substr(index, 4)
+      if (part === 'null') {
+        index += 4
+        return null
+      } else {
+        throw new Error('found Error at' + index)
+      }
+    }
+
+    function parseTrue(jsonStr) {
+      var part = jsonStr.substr(index, 4)
+      if (part === 'true') {
+        index += 4
+        return true
+      } else {
+        throw new Error('found Error at' + index)
+      }
+    }
+
+    function parseFalse(jsonStr) {
+      var part = jsonStr.substr(index, 5)
+      if (part === 'false') {
+        index += 5
+        return false
+      } else {
+        throw new Error('found Error at' + index)
+      }
+    }
+
+    function parseString(jsonStr) {
+      var part = ''
+      index++
+      while (jsonStr[index] !== '"') {
+        part += jsonStr[index]
+        index++
+      }
+      index++
+      return part
+    }
+
+    function parseNumber(jsonStr) {
+      var part = ''
+      while (isNumberChar(jsonStr[index])) {
+        part += jsonStr[index]
+        index++
+      }
+      return parseFloat(part)
+    }
+
+    function isNumberChar(char) {
+      //[0-9.+\-e]/i.test(undefined) === true
+      return !!char ? (/[0-9.+\-e]/i.test(char)) : false
+    }
+    return typeParse(jsonStr)
+  }
+
   return {
     //------------------------------------Array-----------------------------------------
     /* _.chunk-------------------------------- */
@@ -6074,6 +6228,7 @@ var tcdian = __ = (function () {
     /* _.min---------------------------------- */
     min,
     /* _.minBy-------------------------------- */
+    minBy,
     /* _.multiply----------------------------- */
     multiply,
     /* _.round-------------------------------- */
@@ -6158,6 +6313,7 @@ var tcdian = __ = (function () {
     /* _.pick--------------------------------- */
     /* _.pickBy------------------------------- */
     /* _.result------------------------------- */
+    result,
     /* _.set---------------------------------- */
     /* _.setWith------------------------------ */
     /* _.toPairs------------------------------ */
@@ -6165,6 +6321,7 @@ var tcdian = __ = (function () {
     /* _.toPairsIn---------------------------- */
     toPairsIn,
     /* _.transform---------------------------- */
+    transform,
     /* _.unset-------------------------------- */
     /* _.update------------------------------- */
     /* _.updateWith--------------------------- */
@@ -6312,6 +6469,8 @@ var tcdian = __ = (function () {
     /* _.templateSettings.variable------------ */
     //------------------------------------Methods---------------------------------------
     /* _.templateSettings.imports._----------- */
+    //parseJson
+    parseJson
   }
 }) ()
 
