@@ -112,8 +112,8 @@ var tcdian = __ = (function () {
 
         //是否有customizer
         if (customizer) {
-          let customizeResult = customizer(obj[key], value, key, obj, items)
-          if (customizeResult) value = customizeResult
+          let customizerResult = customizer(obj[key], value, key, obj, items)
+          if (customizerResult = customizer) value = customizerResult = customizer
         }
 
         //是否深度复制
@@ -137,8 +137,8 @@ var tcdian = __ = (function () {
     return obj
   }
 
-  // _baseGet
-  function _baseGet(obj, path, prototypeChain, defaultValue) {
+  // _baseGetValue
+  function _baseGetValue(obj, path, prototypeChain, defaultValue) {
     let pathArr = toPath(path)
     let result = obj
     let flag = pathArr.every(item => {
@@ -147,6 +147,39 @@ var tcdian = __ = (function () {
       return tmpResult
     })
     return flag ? result : defaultValue
+  }
+
+  //_baseGetPaths
+  function _baseGetPaths(obj, prototypeChain, paths = [], path = []) {
+    // 只考虑普通对象和数组
+    for (let key in obj) {
+      if(prototypeChain || obj.hasOwnProperty(key)) {
+        path.push(key)
+        if(!isObject(obj[key])) {
+          paths.push(path.slice())
+        } else {
+          _baseGetPaths(obj[key], prototypeChain, paths, path)
+        }
+        path.pop()
+      }
+    }
+    return paths
+  }
+
+  // _baseAddProperty
+  function _baseAddProperty(prop, value, obj, updater = identity, customizer) {
+    let pathArr = toPath(prop)
+    function addProperty(obj, k = 0) {
+      if (k === pathArr.length) {
+        return updater(value)
+      }
+      let isNum = /^\d+$/.test(pathArr[k])
+      obj = obj || (isNum ? [] : {})
+      obj = (customizer && customizer(obj[pathArr[k]], pathArr[k], obj)) || obj
+      obj[pathArr[k]] = addProperty(obj[pathArr[k]], k + 1)
+      return obj
+    }
+    return addProperty(obj)
   }
 
   // _optimizeCb
@@ -181,7 +214,7 @@ var tcdian = __ = (function () {
   // _baseMatchesProperty
   function _baseMatchesProperty(path, value) {
     return function (obj) {
-      return _baseGet(obj, path, true, _flagSymbol) === value
+      return _baseGetValue(obj, path, true, _flagSymbol) === value
     }
   }
 
@@ -1459,7 +1492,9 @@ var tcdian = __ = (function () {
   **/
 
   function zipObjectDeep(props = [], values = []) {
-
+    return props.reduce((accumulator, path, index) => {
+      return _baseAddProperty(path, values[index], accumulator)
+    },null)
   }
 
   // _.zipWith---------------------------------------------------------------//
@@ -1774,7 +1809,7 @@ var tcdian = __ = (function () {
       return values.map(val => path.call(val, ...args))
     } else {
       return values.map(val => {
-        let method = _baseGet(val, path, true, _flagSymbol)
+        let method = _baseGetValue(val, path, true, _flagSymbol)
         if (method === _flagSymbol) throw new Error('invokeMap must call on a function')
         return method.call(val, ...args)
       })
@@ -2221,11 +2256,23 @@ var tcdian = __ = (function () {
   // _.debounce--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them.
+      Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.
+
+      Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only if the debounced function is invoked more than once during the wait timeout.
+
+      If wait is 0 and leading is false, func invocation is deferred until to the next tick, similar to setTimeout with a timeout of 0.
+
+      See David Corbacho's article for details over the differences between _.debounce and _.throttle.
     * Arguments
-      array(Array): The
+      func (Function): The function to debounce.
+      [wait=0] (number): The number of milliseconds to delay.
+      [options={}] (Object): The options object.
+      [options.leading=false] (boolean): Specify invoking on the leading edge of the timeout.
+      [options.maxWait] (number): The maximum time func is allowed to be delayed before it's invoked.
+      [options.trailing=true] (boolean): Specify invoking on the trailing edge of the timeout.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new debounced function.
   **/
 
   // _.defer-----------------------------------------------------------------//
@@ -3748,32 +3795,66 @@ var tcdian = __ = (function () {
   // _.clamp-----------------------------------------------------------------//
 
   /**
-    * description
+    * Clamps number within the inclusive lower and upper bounds.
     * Arguments
-      array(Array): The
+      number (number): The number to clamp.
+      [lower] (number): The lower bound.
+      upper (number): The upper bound.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the clamped number.
   **/
+
+  function clamp(number, lower, upper) {
+    let lowerBoundary = upper ? lower : -Infinity
+    let upperBoundary = upper ? upper : lower
+    return number > upperBoundary
+      ? upperBoundary
+      : number < lowerBoundary ? lowerBoundary : number
+  }
 
   // _.inRange---------------------------------------------------------------//
 
   /**
-    * description
+    * Checks if n is between start and up to, but not including, end. If end is not specified, it's set to start with start then set to 0. If start is greater than end the params are swapped to support negative ranges.
     * Arguments
-      array(Array): The
+      number (number): The number to check.
+      [start=0] (number): The start of the range.
+      end (number): The end of the range.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if number is in the range, else false.
   **/
+
+  function inRange(number, start, end) {
+    if (start === void 0 && end === void 0) {
+      return false
+    }
+    let startBoundary = end ? start : 0
+    let endBoundary = end ? end : start
+    if (startBoundary > endBoundary) {
+      [startBoundary, endBoundary] = [endBoundary, startBoundary]
+    }
+    return number < endBoundary && number > startBoundary
+  }
 
   // _.random----------------------------------------------------------------//
 
   /**
-    * description
+    * Produces a random number between the inclusive lower and upper bounds. If only one argument is provided a number between 0 and the given number is returned. If floating is true, or either lower or upper are floats, a floating-point number is returned instead of an integer.
+
+      Note: JavaScript follows the IEEE-754 standard for resolving floating-point values which can produce unexpected results.
     * Arguments
-      array(Array): The
+      [lower = 0](number): The lower bound.
+      [upper = 1](number): The upper bound.
+      [floating](boolean): Specify returning a floating - point number.
     * Returns
-      (Array): Returns the new array of chunks.
+      (number): Returns the random number.
   **/
+
+  function random(lower = 0, upper = 1, floating) {
+    let isFloat = floating || isInteger(lower) || isInteger(upper)
+    let result = Math.random() * (upper - lower) + lower
+    return isFloat ? Math.floor(result) : result
+  }
 
   //------------------------------------Object----------------------------------------
   // _.assign----------------------------------------------------------------//
@@ -3868,7 +3949,7 @@ var tcdian = __ = (function () {
   **/
 
   function at(obj, paths) {
-    return paths.map(path => _baseGet(obj, path, true, void 0))
+    return paths.map(path => _baseGetValue(obj, path, true, void 0))
   }
 
   // _.create----------------------------------------------------------------//
@@ -4158,7 +4239,7 @@ var tcdian = __ = (function () {
   **/
 
   function get(obj, path, defaultValue) {
-    return _baseGet(obj, path, true, defaultValue)
+    return _baseGetValue(obj, path, true, defaultValue)
   }
 
   // _.has-------------------------------------------------------------------//
@@ -4173,7 +4254,7 @@ var tcdian = __ = (function () {
   **/
 
   function has(obj, path) {
-    return _baseGet(obj, path, false, _flagSymbol) !== _flagSymbol
+    return _baseGetValue(obj, path, false, _flagSymbol) !== _flagSymbol
   }
 
   // _.hasIn-----------------------------------------------------------------//
@@ -4188,7 +4269,7 @@ var tcdian = __ = (function () {
   **/
 
   function hasIn(obj, path) {
-    return _baseGet(obj, path, true, _flagSymbol) !== _flagSymbol
+    return _baseGetValue(obj, path, true, _flagSymbol) !== _flagSymbol
   }
 
   // _.invert----------------------------------------------------------------//
@@ -4255,7 +4336,7 @@ var tcdian = __ = (function () {
   function invoke(obj, path, ...args) {
     let pathArr = toPath(path)
     let funcName = pathArr.pop()
-    let context = _baseGet(obj, pathArr, true, _flagSymbol)
+    let context = _baseGetValue(obj, pathArr, true, _flagSymbol)
     if (context === _flagSymbol) throw new Error('can not find value in obj')
     let func = Object.getPrototypeOf(context)[funcName]
     if (!isFunction(func)) throw new Error('invoke must be passed function names')
@@ -4399,38 +4480,70 @@ var tcdian = __ = (function () {
   **/
 
   function omit(obj, paths) {
-
+    // 只考虑 普通对象和数组
+    let objPaths = _baseGetPaths(obj, true)
+    paths = paths.map(path => toPath(path))
+    let omitPaths = objPaths.filter(objPath => !paths.some(path => isEqual(path, objPath)))
+    let objValues = omitPaths.map(objPath => _baseGetValue(obj, objPath, true, void 0))
+    return zipObjectDeep(omitPaths, objValues)
   }
 
   // _.omitBy----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of the object properties predicate returns truthy for. The predicate is invoked with two arguments: (value, key).
     * Arguments
-      array(Array): The
+      object (Object): The source object.
+      [predicate=_.identity] (Function): The function invoked per property.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new object.
   **/
+
+  function omitBy(obj, predicate) {
+    predicate = _cb(predicate, DMZ, 2)
+    let paths = _baseGetPaths(obj, true)
+    let values = paths.map(path => _baseGetValue(obj, path, true, void 0))
+    let omitPaths = paths.filter((path, index) => predicate(values[index], path) !== true)
+    let omitValues = omitPaths.map(omitPath => _baseGetValue(obj, omitPath, true, void 0))
+    return zipObjectDeep(omitPaths, omitValues)
+
+  }
 
   // _.pick------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of the picked object properties.
     * Arguments
-      array(Array): The
+      object(Object): The source object.
+      [paths](...(string | string[])): The property paths to pick.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new object.
   **/
+
+  function pick(obj, paths) {
+    let values = paths.map(path => _baseGetValue(obj, path, true, void 0))
+    return zipObjectDeep(paths, values)
+  }
 
   // _.pickBy----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an object composed of the object properties predicate returns truthy for. The predicate is invoked with two arguments: (value, key).
     * Arguments
-      array(Array): The
+      object (Object): The source object.
+      [predicate=_.identity] (Function): The function invoked per property.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns the new object.
   **/
+
+  function pickBy(obj, predicate = identity) {
+    predicate = _cb(predicate, DMZ, 2)
+    let paths = _baseGetPaths(obj, true)
+    let values = paths.map(path => _baseGetValue(obj, path, true, void 0))
+    let pickPaths = paths.filter((path, index) => predicate(values[index], path) === true)
+    let pickValues = pickPaths.map(pickPath => _baseGetValue(obj, pickPath, true, void 0))
+    return zipObjectDeep(pickPaths, pickValues)
+  }
 
   // _.result----------------------------------------------------------------//
 
@@ -4445,29 +4558,46 @@ var tcdian = __ = (function () {
   **/
 
   function result(obj, path, defaultValue) {
-    let tmpResult = _baseGet(obj, path, true, defaultValue)
+    let tmpResult = _baseGetValue(obj, path, true, defaultValue)
     return isFunction(tmpResult) ? tmpResult.call(obj) : tmpResult
   }
 
   // _.set-------------------------------------------------------------------//
 
   /**
-    * description
+    * Sets the value at path of object. If a portion of path doesn't exist, it's created. Arrays are created for missing index properties while objects are created for all other missing properties. Use _.setWith to customize path creation.
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object(Object): The object to modify.
+      path(Array | string): The path of the property to set.
+      value( * ): The value to set.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function set(obj, path, value) {
+    return _baseAddProperty(path, value, obj)
+  }
 
   // _.setWith---------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.set except that it accepts customizer which is invoked to produce the objects of path.If customizer returns undefined path creation is handled by the method instead.The customizer is invoked with three arguments: (nsValue, key, nsObject).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The object to modify.
+      path (Array|string): The path of the property to set.
+      value (*): The value to set.
+      [customizer] (Function): The function to customize assigned values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function setWith(obj, path, value, customizer) {
+    return _baseAddProperty(path, value, obj, identity, customizer)
+  }
 
   // _.toPairs---------------------------------------------------------------//
 
@@ -4524,32 +4654,72 @@ var tcdian = __ = (function () {
   // _.unset-----------------------------------------------------------------//
 
   /**
-    * description
+    * Removes the property at path of object.
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object(Object): The object to modify.
+      path(Array | string): The path of the property to unset.
     * Returns
-      (Array): Returns the new array of chunks.
+      (boolean): Returns true if the property is deleted, else false.
   **/
+
+  function unset(obj, path) {
+    let pathArr = toPath(path)
+    let tmp = obj
+    let len = pathArr.length
+    return pathArr.slice(0, len - 1).every((item, index) => {
+      let tmpReturn = item in root.Object(tmp)
+      tmp = tmp[item]
+      if (index === len - 2) {
+        if (pathArr[len - 1] in root.Object(tmp)) {
+          delete tmp[pathArr[len - 1]]
+          return true
+        }
+        return false
+      }
+      return tmpReturn
+    })
+  }
 
   // _.update----------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.set except that accepts updater to produce the value to set.Use _.updateWith to customize path creation.The updater is invoked with one argument: (value).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The object to modify.
+      path (Array|string): The path of the property to set.
+      updater (Function): The function to produce the updated value.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function update(obj, path, updater = identity) {
+    let val = _baseGetValue(obj, path, true, void 0)
+    return _baseAddProperty(path, val, obj, updater)
+  }
 
   // _.updateWith------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.update except that it accepts customizer which is invoked to produce the objects of path.If customizer returns undefined path creation is handled by the method instead.The customizer is invoked with three arguments: (nsValue, key, nsObject).
+
+      Note: This method mutates object.
     * Arguments
-      array(Array): The
+      object (Object): The object to modify.
+      path (Array|string): The path of the property to set.
+      updater (Function): The function to produce the updated value.
+      [customizer] (Function): The function to customize assigned values.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Object): Returns object.
   **/
+
+  function updateWith(obj, path, updater = identity, customizer) {
+    let val = _baseGetValue(obj, path, true, void 0)
+    return _baseAddProperty(path, val, obj, updater, customizer)
+  }
 
   // _.values----------------------------------------------------------------//
 
@@ -5140,12 +5310,29 @@ var tcdian = __ = (function () {
   // _.truncate--------------------------------------------------------------//
 
   /**
-    * description
+    * Truncates string if it's longer than the given maximum string length. The last characters of the truncated string are replaced with the omission string which defaults to "...".
     * Arguments
-      array(Array): The
+      [string = ''](string): The string to truncate.
+      [options = {}](Object): The options object.
+      [options.length = 30](number): The maximum string length.
+      [options.omission = '...'](string): The string to indicate text is omitted.
+      [options.separator](RegExp | string): The separator pattern to truncate to.
     * Returns
-      (Array): Returns the new array of chunks.
+      (string): Returns the truncated string.
   **/
+
+  function truncate(str = '', options = {}) {
+    let length = options['length'] || 30
+    let omission = options['omission'] || '...'
+    let separator = options['separator']
+    let strLen = length - omission.length > 0 ? length - omission.length : 0
+    if (separator === void 0) {
+      return str.substr(0, strLen) + omission
+    }
+    let result = str.substr(0, strLen)
+    let lastMatch = isRegExp(separator) ? result.match(new RegExp(separator, 'g')).pop() : separator
+    return result.slice(0, result.lastIndexOf(lastMatch)) + omission
+  }
 
   // _.unescape--------------------------------------------------------------//
 
@@ -5254,12 +5441,19 @@ var tcdian = __ = (function () {
   // _.cond------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that iterates over pairs and invokes the corresponding function of the first predicate to return truthy. The predicate-function pairs are invoked with the this binding and arguments of the created function.
     * Arguments
-      array(Array): The
+      pairs(Array): The predicate - function pairs.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new composite function.
   **/
+
+  function cond(pairs) {
+    return function (...args) {
+      let index = pairs.findIndex(pair => pair[0].call(this, ...args))
+      return pairs[index][1].call(this, ...args)
+    }
+  }
 
   // _.conforms--------------------------------------------------------------//
 
@@ -5395,32 +5589,57 @@ var tcdian = __ = (function () {
   // _.matchesProperty-------------------------------------------------------//
 
   /**
-    * Creates a function that returns the value at path of a given object.
+    * Creates a function that performs a partial deep comparison between the value at path of a given object to srcValue, returning true if the object value is equivalent, else false.
+
+      Note: Partial comparisons will match empty array and empty object srcValue values against any array or object value, respectively. See _.isEqual for a list of supported value comparisons.
     * Arguments
       path(Array | string): The path of the property to get.
+      srcValue( * ): The value to match.
     * Returns
-      (Function): Returns the new accessor function.
+      (Function): Returns the new spec function.
   **/
+
+  function matchesProperty(path, srcValue) {
+    return _baseMatchesProperty(path, srcValue)
+  }
 
   // _.method----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes the method at path of a given object. Any additional arguments are provided to the invoked method.
     * Arguments
-      array(Array): The
+      path(Array | string): The path of the method to invoke.
+      [args](... * ): The arguments to invoke the method with.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new invoker function.
   **/
+
+  function method(path, ...args) {
+    let pathArr = toPath(path)
+    return function (obj) {
+      let func = _baseGetValue(obj, pathArr, true, void 0)
+      return func.call(this, ...args)
+    }
+  }
 
   // _.methodOf--------------------------------------------------------------//
 
   /**
-    * description
+    * The opposite of _.method; this method creates a function that invokes the method at a given path of object. Any additional arguments are provided to the invoked method.
     * Arguments
-      array(Array): The
+      object(Object): The object to query.
+      [args](... * ): The arguments to invoke the method with.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new invoker function.
   **/
+
+  function methodOf(obj, ...args) {
+    return function (path) {
+      let pathArr = toPath(path)
+      let func = _baseGetValue(obj, pathArr, true, void 0)
+      return func.call(this, ...args)
+    }
+  }
 
   // _.mixin-----------------------------------------------------------------//
 
@@ -5515,7 +5734,7 @@ var tcdian = __ = (function () {
 
   function property(path) {
     return function (obj) {
-      let result = _baseGet(obj, path, true, _flagSymbol)
+      let result = _baseGetValue(obj, path, true, _flagSymbol)
       return result === _flagSymbol ? void 0 : result
     }
   }
@@ -5532,7 +5751,7 @@ var tcdian = __ = (function () {
 
   function propertyOf(obj) {
     return function (path) {
-      let result = _baseGet(obj, path, true, _flagSymbol)
+      let result = _baseGetValue(obj, path, true, _flagSymbol)
       return result === _flagSymbol ? void 0 : result
     }
   }
@@ -5630,12 +5849,19 @@ var tcdian = __ = (function () {
   // _.times-----------------------------------------------------------------//
 
   /**
-    * description
+    * Invokes the iteratee n times, returning an array of the results of each invocation. The iteratee is invoked with one argument; (index).
     * Arguments
-      array(Array): The
+      n (number): The number of times to invoke iteratee.
+      [iteratee=_.identity] (Function): The function invoked per iteration.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the array of results.
   **/
+
+  function times(n, iteratee = identity) {
+    iteratee = _cb(iteratee, DMZ, 1)
+    let result = map(new Array(n), (val, index) => index)
+    return result.map(item => iteratee(item))
+  }
 
   // _.toPath----------------------------------------------------------------//
 
@@ -5988,7 +6214,7 @@ var tcdian = __ = (function () {
     /* _.zipObject---------------------------- */
     zipObject,
     /* _.zipObjectDeep------------------------ */
-    // zipObjectDeep,
+    zipObjectDeep,
     /* _.zipWith------------------------------ */
     zipWith,
     //------------------------------------Collection------------------------------------
@@ -6241,8 +6467,11 @@ var tcdian = __ = (function () {
     sumBy,
     //------------------------------------Number----------------------------------------
     /* _.clamp-------------------------------- */
+    clamp,
     /* _.inRange------------------------------ */
+    inRange,
     /* _.random------------------------------- */
+    random,
     //------------------------------------Object----------------------------------------
     /* _.assign------------------------------- */
     assign,
@@ -6309,13 +6538,19 @@ var tcdian = __ = (function () {
     /* _.mergeWith---------------------------- */
     mergeWith,
     /* _.omit--------------------------------- */
+    omit,
     /* _.omitBy------------------------------- */
+    omitBy,
     /* _.pick--------------------------------- */
+    pick,
     /* _.pickBy------------------------------- */
+    pickBy,
     /* _.result------------------------------- */
     result,
     /* _.set---------------------------------- */
+    set,
     /* _.setWith------------------------------ */
+    setWith,
     /* _.toPairs------------------------------ */
     toPairs,
     /* _.toPairsIn---------------------------- */
@@ -6323,8 +6558,11 @@ var tcdian = __ = (function () {
     /* _.transform---------------------------- */
     transform,
     /* _.unset-------------------------------- */
+    unset,
     /* _.update------------------------------- */
+    update,
     /* _.updateWith--------------------------- */
+    updateWith,
     /* _.values------------------------------- */
     values,
     /* _.valuesIn----------------------------- */
@@ -6394,6 +6632,7 @@ var tcdian = __ = (function () {
     /* _.trimStart---------------------------- */
     trimStart,
     /* _.truncate----------------------------- */
+    truncate,
     /* _.unescape----------------------------- */
     unescape,
     /* _.upperCase---------------------------- */
@@ -6408,6 +6647,7 @@ var tcdian = __ = (function () {
     /* _.bindAll------------------------------ */
     bindAll,
     /* _.cond--------------------------------- */
+    cond,
     /* _.conforms----------------------------- */
     conforms,
     /* _.constant----------------------------- */
@@ -6425,8 +6665,11 @@ var tcdian = __ = (function () {
     /* _.matches------------------------------ */
     matches,
     /* _.matchesProperty---------------------- */
+    matchesProperty,
     /* _.method------------------------------- */
+    method,
     /* _.methodOf----------------------------- */
+    methodOf,
     /* _.mixin-------------------------------- */
     /* _.noConflict--------------------------- */
     noConflict,
@@ -6455,6 +6698,7 @@ var tcdian = __ = (function () {
     /* _.stubTrue----------------------------- */
     stubTrue,
     /* _.times-------------------------------- */
+    times,
     /* _.toPath------------------------------- */
     toPath,
     /* _.uniqueId----------------------------- */
