@@ -113,7 +113,7 @@ var tcdian = __ = (function () {
         //是否有customizer
         if (customizer) {
           let customizerResult = customizer(obj[key], value, key, obj, items)
-          if (customizerResult = customizer) value = customizerResult = customizer
+          if (customizerResult) value = customizerResult
         }
 
         //是否深度复制
