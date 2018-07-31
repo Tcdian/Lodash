@@ -356,7 +356,8 @@ var tcdian = __ = (function () {
   // _.differenceBy----------------------------------------------------------//
 
   /**
-    * This method is like _.difference except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The order and references of result values are determined by the first array. The iteratee is invoked with one argument:(value).
+    * This method is like _.difference except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The order and references of result values are
+      determined by the first array. The iteratee is invoked with one argument:(value).
 
       Note: Unlike _.pullAllBy, this method returns a new array.
     * Arguments
@@ -1819,7 +1820,8 @@ var tcdian = __ = (function () {
   // _.keyBy-----------------------------------------------------------------//
 
   /**
-    * Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+    * Creates an object composed of keys generated from the results of running each element of collection thru iteratee.
+      The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
     * Arguments
       collection(Array | Object): The collection to iterate over.
       [iteratee = _.identity](Function): The iteratee to transform keys.
@@ -1863,7 +1865,8 @@ var tcdian = __ = (function () {
   // _.orderBy---------------------------------------------------------------//
 
   /**
-    * This method is like _.sortBy except that it allows specifying the sort orders of the iteratees to sort by. If orders is unspecified, all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values.
+    * This method is like _.sortBy except that it allows specifying the sort orders of the iteratees to sort by. If orders is unspecified,
+      all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values.
     * Arguments
       collection(Array | Object): The collection to iterate over.
       [iteratees = [_.identity]](Array[] | Function[] | Object[] | string[]): The iteratees to sort by.
@@ -2052,7 +2055,8 @@ var tcdian = __ = (function () {
   // _.sortBy----------------------------------------------------------------//
 
   /**
-    * Creates an array of elements, sorted in ascending order by the results of running each element in a collection thru each iteratee.This method performs a stable sort, that is, it preserves the original sort order of equal elements.The iteratees are invoked with one argument: (value).
+    * Creates an array of elements, sorted in ascending order by the results of running each element in a collection thru each iteratee.
+      This method performs a stable sort, that is, it preserves the original sort order of equal elements.The iteratees are invoked with one argument: (value).
     * Arguments
       collection(Array | Object): The collection to iterate over.
       [iteratees = [_.identity]](...(Function | Function[])): The iteratees to sort by.
@@ -2203,7 +2207,8 @@ var tcdian = __ = (function () {
   // _.curry-----------------------------------------------------------------//
 
   /**
-    * Creates a function that accepts arguments of func and either invokes func returning its result, if at least arity number of arguments have been provided, or returns a function that accepts the remaining func arguments, and so on. The arity of func may be specified if func.length is not sufficient.
+    * Creates a function that accepts arguments of func and either invokes func returning its result, if at least arity number of
+      arguments have been provided, or returns a function that accepts the remaining func arguments, and so on. The arity of func may be specified if func.length is not sufficient.
 
       The _.curry.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for provided arguments.
 
@@ -2256,10 +2261,13 @@ var tcdian = __ = (function () {
   // _.debounce--------------------------------------------------------------//
 
   /**
-    * Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them.
-      Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.
+    * Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked.
+      The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them.
+      Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the
+      last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.
 
-      Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only if the debounced function is invoked more than once during the wait timeout.
+      Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only if the debounced function is invoked
+            more than once during the wait timeout.
 
       If wait is 0 and leading is false, func invocation is deferred until to the next tick, similar to setTimeout with a timeout of 0.
 
@@ -2545,7 +2553,8 @@ var tcdian = __ = (function () {
   // _.wrap------------------------------------------------------------------//
 
   /**
-    * Creates a function that provides value to wrapper as its first argument. Any additional arguments provided to the function are appended to those provided to the wrapper. The wrapper is invoked with the this binding of the created function.
+    * Creates a function that provides value to wrapper as its first argument. Any additional arguments provided to the function are appended to those provided to the wrapper.
+      The wrapper is invoked with the this binding of the created function.
     * Arguments
       value (*): The value to wrap.
       [wrapper=identity] (Function): The wrapper function.
@@ -2953,7 +2962,8 @@ var tcdian = __ = (function () {
   // .isEqualWith------------------------------------------------------------//
 
   /**
-    * This method is like _.isEqual except that it accepts customizer which is invoked to compare values.If customizer returns undefined, comparisons are handled by the method instead.The customizer is invoked with up to six arguments: (objValue, othValue[, index | key, object, other, stack]).
+    * This method is like _.isEqual except that it accepts customizer which is invoked to compare values.If customizer returns undefined,
+      comparisons are handled by the method instead.The customizer is invoked with up to six arguments: (objValue, othValue[, index | key, object, other, stack]).
     * Arguments
       value (*): The value to compare.
       other (*): The other value to compare.
@@ -3103,7 +3113,8 @@ var tcdian = __ = (function () {
   // _.isMatchWith-----------------------------------------------------------//
 
   /**
-    * This method is like _.isMatch except that it accepts customizer which is invoked to compare values.If customizer returns undefined, comparisons are handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, index | key, object, source).
+    * This method is like _.isMatch except that it accepts customizer which is invoked to compare values.If customizer returns undefined,
+      comparisons are handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, index | key, object, source).
     * Arguments
       object (Object): The object to inspect.
       source (Object): The object of property values to match.
@@ -3138,7 +3149,8 @@ var tcdian = __ = (function () {
   /**
     * Checks if value is a pristine native function.
 
-      Note: This method can't reliably detect native functions in the presence of the core-js package because core-js circumvents this kind of detection. Despite multiple requests, the core-js maintainer has made it clear: any attempt to fix the detection will be obstructed. As a result, we're left with little choice but to throw an error. Unfortunately, this also affects packages, like babel-polyfill, which rely on core-js.
+      Note: This method can't reliably detect native functions in the presence of the core-js package because core-js circumvents this kind of detection. Despite multiple requests, the core-js maintainer has made it clear: any attempt to fix the detection will be obstructed.
+            As a result, we're left with little choice but to throw an error. Unfortunately, this also affects packages, like babel-polyfill, which rely on core-js.
     * Arguments
       value( * ): The value to check.
     * Returns
@@ -3815,7 +3827,8 @@ var tcdian = __ = (function () {
   // _.inRange---------------------------------------------------------------//
 
   /**
-    * Checks if n is between start and up to, but not including, end. If end is not specified, it's set to start with start then set to 0. If start is greater than end the params are swapped to support negative ranges.
+    * Checks if n is between start and up to, but not including, end. If end is not specified,
+      it's set to start with start then set to 0. If start is greater than end the params are swapped to support negative ranges.
     * Arguments
       number (number): The number to check.
       [start=0] (number): The start of the range.
@@ -3839,7 +3852,8 @@ var tcdian = __ = (function () {
   // _.random----------------------------------------------------------------//
 
   /**
-    * Produces a random number between the inclusive lower and upper bounds. If only one argument is provided a number between 0 and the given number is returned. If floating is true, or either lower or upper are floats, a floating-point number is returned instead of an integer.
+    * Produces a random number between the inclusive lower and upper bounds. If only one argument is provided a number between 0 and the given number is returned.
+      If floating is true, or either lower or upper are floats, a floating-point number is returned instead of an integer.
 
       Note: JavaScript follows the IEEE-754 standard for resolving floating-point values which can produce unexpected results.
     * Arguments
@@ -3894,7 +3908,8 @@ var tcdian = __ = (function () {
   // _.assignInWith----------------------------------------------------------//
 
   /**
-    * This method is like _.assignIn except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined, assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+    * This method is like _.assignIn except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined,
+      assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
 
       Note: This method mutates object.
     * Arguments
@@ -3917,7 +3932,8 @@ var tcdian = __ = (function () {
   // _.assignWith------------------------------------------------------------//
 
   /**
-    * This method is like _.assign except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined, assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+    * This method is like _.assign except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined, assignment is handled by the method instead.
+      The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
 
       Note: This method mutates object.
     * Arguments
@@ -4153,7 +4169,8 @@ var tcdian = __ = (function () {
   // _.forOwn----------------------------------------------------------------//
 
   /**
-    * Iterates over own enumerable string keyed properties of an object and invokes iteratee for each property. The iteratee is invoked with three arguments: (value, key, object). Iteratee functions may exit iteration early by explicitly returning false.
+    * Iterates over own enumerable string keyed properties of an object and invokes iteratee for each property. The iteratee is
+      invoked with three arguments: (value, key, object). Iteratee functions may exit iteration early by explicitly returning false.
     * Arguments
       object (Object): The object to iterate over.
       [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -4296,7 +4313,8 @@ var tcdian = __ = (function () {
   // _.invertBy--------------------------------------------------------------//
 
   /**
-    * This method is like _.invert except that the inverted object is generated from the results of running each element of object thru iteratee. The corresponding inverted value of each inverted key is an array of keys responsible for generating the inverted value. The iteratee is invoked with one argument: (value).
+    * This method is like _.invert except that the inverted object is generated from the results of running each element of object thru iteratee.
+      The corresponding inverted value of each inverted key is an array of keys responsible for generating the inverted value. The iteratee is invoked with one argument: (value).
     * Arguments
       object(Object): The object to invert.
       [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -4484,7 +4502,7 @@ var tcdian = __ = (function () {
     let objPaths = _baseGetPaths(obj, true)
     paths = paths.map(path => toPath(path))
     let omitPaths = objPaths.filter(objPath => !paths.some(path => isEqual(path, objPath)))
-    let objValues = omitPaths.map(objPath => _baseGetValue(obj, objPath, true, void 0))
+    let objValues = omitPaths.map(objPath => _baseGetValue(obj, objPath, true, _flagSymbol))
     return zipObjectDeep(omitPaths, objValues)
   }
 
@@ -4521,8 +4539,16 @@ var tcdian = __ = (function () {
   **/
 
   function pick(obj, paths) {
-    let values = paths.map(path => _baseGetValue(obj, path, true, void 0))
-    return zipObjectDeep(paths, values)
+    let values = paths.map(path => _baseGetValue(obj, path, true, _flagSymbol))
+    let finnalPaths = paths.slice()
+    values.filter((val, index) => {
+      if (val === _flagSymbol) {
+        finnalPaths.splice(index, 1)
+        return false
+      }
+      return true
+    })
+    return zipObjectDeep(finnalPaths, values)
   }
 
   // _.pickBy----------------------------------------------------------------//
@@ -4630,8 +4656,10 @@ var tcdian = __ = (function () {
   // _.transform-------------------------------------------------------------//
 
   /**
-    * An alternative to _.reduce; this method transforms object to a new accumulator object which is the result of running each of its own enumerable string keyed properties thru iteratee, with each invocation potentially mutating the accumulator object. If accumulator is not provided,
-      a new object with the same [[Prototype]] will be used. The iteratee is invoked with four arguments: (accumulator, value, key, object). Iteratee functions may exit iteration early by explicitly returning false.
+    * An alternative to _.reduce; this method transforms object to a new accumulator object which is the result of running each of its
+      own enumerable string keyed properties thru iteratee, with each invocation potentially mutating the accumulator object. If accumulator
+      is not provided, a new object with the same [[Prototype]] will be used. The iteratee is invoked with four arguments: (accumulator, value, key, object).
+      Iteratee functions may exit iteration early by explicitly returning false.
     * Arguments
       object (Object): The object to iterate over.
       [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -4704,7 +4732,8 @@ var tcdian = __ = (function () {
   // _.updateWith------------------------------------------------------------//
 
   /**
-    * This method is like _.update except that it accepts customizer which is invoked to produce the objects of path.If customizer returns undefined path creation is handled by the method instead.The customizer is invoked with three arguments: (nsValue, key, nsObject).
+    * This method is like _.update except that it accepts customizer which is invoked to produce the objects of path.If customizer returns undefined path creation is
+      handled by the method instead.The customizer is invoked with three arguments: (nsValue, key, nsObject).
 
       Note: This method mutates object.
     * Arguments
@@ -5441,7 +5470,8 @@ var tcdian = __ = (function () {
   // _.cond------------------------------------------------------------------//
 
   /**
-    * Creates a function that iterates over pairs and invokes the corresponding function of the first predicate to return truthy. The predicate-function pairs are invoked with the this binding and arguments of the created function.
+    * Creates a function that iterates over pairs and invokes the corresponding function of the first predicate to return truthy.
+      The predicate-function pairs are invoked with the this binding and arguments of the created function.
     * Arguments
       pairs(Array): The predicate - function pairs.
     * Returns
@@ -5695,32 +5725,50 @@ var tcdian = __ = (function () {
   // _.over------------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that invokes iteratees with the arguments it receives and returns their results.
     * Arguments
-      array(Array): The
+      [iteratees = [_.identity]](...(Function | Function[])): The iteratees to invoke.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function over(iteratees = [identity]) {
+    return function (...args) {
+      return iteratees.map(iteratee => iteratee(...args))
+    }
+  }
 
   // _.overEvery-------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that checks if all of the predicates return truthy when invoked with the arguments it receives.
     * Arguments
-      array(Array): The
+      [predicates = [_.identity]](...(Function | Function[])): The predicates to check.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function overEvery(predicates = [identity]) {
+    return function (...args) {
+      return predicates.every(predicate => predicate(...args) === true)
+    }
+  }
 
   // _.overSome--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a function that checks if any of the predicates return truthy when invoked with the arguments it receives.
     * Arguments
-      array(Array): The
+      [predicates = [_.identity]](...(Function | Function[])): The predicates to check.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new function.
   **/
+
+  function overSome(predicates = [identity]) {
+    return function (...args) {
+      return predicates.some(predicate => predicate(...args) === true)
+    }
+  }
 
   // _.property--------------------------------------------------------------//
 
@@ -5759,22 +5807,56 @@ var tcdian = __ = (function () {
   // _.range-----------------------------------------------------------------//
 
   /**
-    * description
+    * Creates an array of numbers (positive and/or negative) progressing from start up to, but not including, end. A step of -1 is
+      used if a negative start is specified without an end or step. If end is not specified, it's set to start with start then set to 0.
+
+      Note: JavaScript follows the IEEE-754 standard for resolving floating-point values which can produce unexpected results.
     * Arguments
-      array(Array): The
+      [start = 0](number): The start of the range.
+      end(number): The end of the range.
+      [step = 1](number): The value to increment or decrement by.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the range of numbers.
   **/
+
+  function range(start, end, step) {
+    let endBoundary = end !== void 0 ? end : start
+    let startBoundary = end !== void 0 ? start : 0
+    step = step !== void 0
+      ? step
+      : endBoundary > startBoundary ? 1 : -1
+    if (endBoundary > startBoundary && step === 0) {
+      return new Array(endBoundary - startBoundary).fill(startBoundary)
+    }
+    if ((endBoundary - startBoundary) * step <= 0) return []
+    let result = []
+    if (endBoundary > startBoundary) {
+      for (let i = startBoundary; i < endBoundary; i += step) {
+        result.push(i)
+      }
+    } else {
+      for(let i = startBoundary; i > endBoundary; i += step) {
+        result.push(i)
+      }
+    }
+    return result
+  }
 
   // _.rangeRight------------------------------------------------------------//
 
   /**
-    * description
+    * This method is like _.range except that it populates values in descending order.
     * Arguments
-      array(Array): The
+      [start = 0](number): The start of the range.
+      end(number): The end of the range.
+      [step = 1](number): The value to increment or decrement by.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Array): Returns the range of numbers.
   **/
+
+  function rangeRight(start, end, step) {
+    return range(start, end, step).reverse()
+  }
 
   // _.runInContext----------------------------------------------------------//
 
@@ -6678,14 +6760,19 @@ var tcdian = __ = (function () {
     /* _.nthArg------------------------------- */
     nthArg,
     /* _.over--------------------------------- */
+    over,
     /* _.overEvery---------------------------- */
+    overEvery,
     /* _.overSome----------------------------- */
+    overSome,
     /* _.property----------------------------- */
     property,
     /* _.propertyOf--------------------------- */
     propertyOf,
     /* _.range-------------------------------- */
+    range,
     /* _.rangeRight--------------------------- */
+    rangeRight,
     /* _.runInContext------------------------- */
     /* _.stubArray---------------------------- */
     stubArray,
