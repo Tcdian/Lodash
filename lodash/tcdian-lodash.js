@@ -2283,6 +2283,45 @@ var tcdian = __ = (function () {
       (Function): Returns the new debounced function.
   **/
 
+  function debounce(func, wait = 0, options = {}) {
+    let leading = options.hasOwnProperty('leading') ? options.leading : true
+    let trailing = options.hasOwnProperty('trailing') ? options.trailing : true
+    let maxWait = options.hasOwnProperty('maxWait') ? options.maxWait : Infinity
+    let previous = 0
+    let timeoutID = null
+    let result
+    let context
+    let lastArgs
+    // 功能不完全,有待验添加和验证
+    return function (...args) {
+      let runtime = Date.now()
+      if (!previous && leading === false) {
+        previous = runtime
+      }
+
+      let remaining = maxWait - (runtime - previous)
+      context = this
+      lastArgs = args
+
+      if (timeoutID) {
+        clearTimeout(timeoutID)
+      }
+      timeoutID = null
+
+      if (remaining <= 0 || remaining > maxWait) {
+        previous = runtime
+        result = func.call(context, ...lastArgs)
+      } else if(trailing) {
+        timeoutID = setTimeout(() => {
+          previous = leading === false ? 0 : Date.now()
+          timeoutID = null
+          result = func.call(context, ...lastArgs)
+        }, wait)
+      }
+      return result
+    }
+  }
+
   // _.defer-----------------------------------------------------------------//
 
   /**
@@ -2529,12 +2568,63 @@ var tcdian = __ = (function () {
   // _.throttle--------------------------------------------------------------//
 
   /**
-    * description
+    * Creates a throttled function that only invokes func at most once per every wait milliseconds. The throttled function comes with a cancel method to cancel delayed func invocations and
+      a flush method to immediately invoke them. Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked
+      with the last arguments provided to the throttled function. Subsequent calls to the throttled function return the result of the last func invocation.
+
+      Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only if the throttled function is invoked more than once during the wait timeout.
+
+      If wait is 0 and leading is false, func invocation is deferred until to the next tick, similar to setTimeout with a timeout of 0.
+
+      See David Corbacho's article for details over the differences between _.throttle and _.debounce.
     * Arguments
-      array(Array): The
+      func (Function): The function to throttle.
+      [wait=0] (number): The number of milliseconds to throttle invocations to.
+      [options={}] (Object): The options object.
+      [options.leading=true] (boolean): Specify invoking on the leading edge of the timeout.
+      [options.trailing=true] (boolean): Specify invoking on the trailing edge of the timeout.
     * Returns
-      (Array): Returns the new array of chunks.
+      (Function): Returns the new throttled function.
   **/
+
+  function throttle(func, wait = 0, options = {}) {
+    let leading = options.hasOwnProperty('leading') ? options.leading : true
+    let trailing = options.hasOwnProperty('trailing') ? options.trailing : true
+    let previous = 0
+    let timeoutID = null
+    let result
+    let context
+    let lastArgs
+    return function (...args) {
+      let runtime = Date.now()
+      context = this
+      lastArgs = args
+      if (previous === 0 && leading === false) {
+        previous = runtime
+      }
+      //需要等待多长时间后可以执行
+      let remaining = wait - (runtime - previous)
+
+      //remaining > wait 说明时间被调整过
+      if (remaining <= 0 || remaining > wait) {
+        if (timeoutID) {
+          clearTimeout(timeoutID)
+          timeoutID = null
+        }
+        previous = runtime
+        result = func.call(context, ...lastArgs)
+      } else if ( !timeoutID && trailing !== false) {
+        timeoutID = setTimeout(() => {
+          //leading 为false时,每次触发后一定会延迟wait时间才会调用,如果不把previous重置
+          //为0,那么中间间隔长时间remaining就会变为负数,下一次调用就会马上触发,不会延迟
+          previous = leading === false ? 0 : Date.now()
+          timeoutID = null
+          result = func.call(context, ...lastArgs)
+        }, remaining);
+      }
+      return result
+    }
+  }
 
   // _.unary-----------------------------------------------------------------//
 
@@ -2624,7 +2714,7 @@ var tcdian = __ = (function () {
     return Object.assign(result, val)
   }
 
-  // _.cloneDeep-------------------------------------------------------------//
+  // _.en-------------------------------------------------------------//
 
   /**
     * This method is like _.clone except that it recursively clones value.
@@ -6375,6 +6465,7 @@ var tcdian = __ = (function () {
     /* _.curryRight--------------------------- */
     curryRight,
     /* _.debounce----------------------------- */
+    debounce,
     /* _.defer-------------------------------- */
     defer,
     /* _.delay-------------------------------- */
@@ -6400,6 +6491,7 @@ var tcdian = __ = (function () {
     /* _.spread------------------------------- */
     spread,
     /* _.throttle----------------------------- */
+    throttle,
     /* _.unary-------------------------------- */
     unary,
     /* _.wrap--------------------------------- */
