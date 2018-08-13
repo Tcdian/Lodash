@@ -7113,7 +7113,9 @@
 
       //方法挂在到prototype上
       __.mixin(__)
+
       return __
   }
+
   root.tcdian = root.__ = _runInContext()
 }).call(this)
