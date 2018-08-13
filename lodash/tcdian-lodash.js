@@ -4950,16 +4950,19 @@
         (Object): Returns the wrapper object.
     **/
 
-
     // _.prototype.at----------------------------------------------------------//
 
     /**
-      * description
+      * This method is the wrapper version of _.at.
       * Arguments
-        array(Array): The
+        [paths](...(string | string[])): The property paths to pick.
       * Returns
-        (Array): Returns the new array of chunks.
+        (Object): Returns the new lodash wrapper instance.
     **/
+
+    __.prototype.at = function ([paths]) {
+
+    }
 
     // _.prototype.chain-------------------------------------------------------//
 
@@ -5014,12 +5017,12 @@
     // _.prototype.toJSON -> value---------------------------------------------//
 
     /**
-      * description
-      * Arguments
-        array(Array): The
+      * Executes the chain sequence to resolve the unwrapped value.
       * Returns
-        (Array): Returns the new array of chunks.
+        ( * ): Returns the resolved unwrapped value.
     **/
+
+    __.prototype.toJSON = __.prototype.value
 
     // _.prototype.value-------------------------------------------------------//
 
@@ -5036,12 +5039,12 @@
     // _.prototype.valueOf -> value--------------------------------------------//
 
     /**
-      * description
-      * Arguments
-        array(Array): The
+      * Executes the chain sequence to resolve the unwrapped value.
       * Returns
-        (Array): Returns the new array of chunks.
+        ( * ): Returns the resolved unwrapped value.
     **/
+
+    __.prototype.valueOf = __.prototype.value
 
     //------------------------------------String----------------------------------------
     // _.camelCase-------------------------------------------------------------//
@@ -6807,8 +6810,14 @@
       /* _.prototype.plant---------------------- */
       /* _.prototype.reverse-------------------- */
       /* _.prototype.toJSON -> value------------ */
+
+      //__.prototype.toJSON
       /* _.prototype.value---------------------- */
+
+      // _.prototype.value
       /* _.prototype.valueOf -> value----------- */
+
+      // _.prototype.valueOf
       //------------------------------------String----------------------------------------
       /* _.camelCase---------------------------- */
       __.camelCase = camelCase
