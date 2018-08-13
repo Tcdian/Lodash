@@ -486,9 +486,9 @@
         (Array): Returns array.
     **/
 
-    function fill(arr, value, start = 0, end = arr.length) {
+    function fill(arr, val, start = 0, end = arr.length) {
       for(let i = start; i < end; i++) {
-        arr[i] = value
+        arr[i] = val
       }
       return arr
     }
@@ -1988,7 +1988,7 @@
     **/
 
     function sample(collection) {
-      let initialCollection = isArrayLike(collection) ? collection : values(collection)
+      let initialCollection = isArrayLike(collection) ? collection : _values(collection)
       return initialCollection[Math.floor(Math.random() * initialCollection.length)]
     }
 
