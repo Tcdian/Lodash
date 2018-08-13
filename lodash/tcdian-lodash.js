@@ -293,7 +293,8 @@
     // _.chunk-----------------------------------------------------------------//
 
     /**
-      * Creates an array of elements split into groups the length of size.If array can 't be split evenly, the final chunk will be the remaining elements.
+      * Creates an array of elements split into groups the length of size.If array can 't be split evenly,
+        the final chunk will be the remaining elements.
       * Arguments
         array(Array): The array to process.
         [size = 1](number): The length of each chunk
@@ -365,7 +366,8 @@
     // _.differenceBy----------------------------------------------------------//
 
     /**
-      * This method is like _.difference except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The order and references of result values are
+      * This method is like _.difference except that it accepts iteratee which is invoked for each element of array
+        and values to generate the criterion by which they're compared. The order and references of result values are
         determined by the first array. The iteratee is invoked with one argument:(value).
 
         Note: Unlike _.pullAllBy, this method returns a new array.
@@ -388,7 +390,9 @@
     // _.differenceWith--------------------------------------------------------//
 
     /**
-      * This method is like _.difference except that it accepts comparator which is invoked to compare elements of array to values.The order and references of result values are determined by the first array.The comparator is invoked with two arguments: (arrVal, othVal).
+      * This method is like _.difference except that it accepts comparator which is invoked to compare elements of array to values.
+        The order and references of result values are determined by the first array.
+        The comparator is invoked with two arguments: (arrVal, othVal).
 
         Note: Unlike _.pullAllWith, this method returns a new array.
       * Arguments
@@ -442,7 +446,8 @@
     // _.dropRightWhile--------------------------------------------------------//
 
     /**
-      * Creates a slice of array excluding elements dropped from the end.Elements are dropped until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
+      * Creates a slice of array excluding elements dropped from the end.Elements are dropped until predicate returns
+        falsey.The predicate is invoked with three arguments: (value, index, array).
       * Arguments
         array (Array): The array to query.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -458,7 +463,8 @@
     // _.dropWhile-------------------------------------------------------------//
 
     /**
-      * Creates a slice of array excluding elements dropped from the beginning.Elements are dropped until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
+      * Creates a slice of array excluding elements dropped from the beginning.Elements are dropped until
+        predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
       * Arguments
         array (Array): The array to query.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -496,7 +502,8 @@
     // _.findIndex-------------------------------------------------------------//
 
     /**
-      * This method is like _.find except that it returns the index of the first element predicate returns truthy for instead of the element itself.
+      * This method is like _.find except that it returns the index of the first element predicate
+        returns truthy for instead of the element itself.
       * Arguments
         array (Array): The array to inspect.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -702,8 +709,9 @@
     // _.intersectionBy--------------------------------------------------------//
 
     /**
-      * This method is like _.intersection except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which they're compared.
-        The order and references of result values are determined by the first array. The iteratee is invoked with one argument:(value).
+      * This method is like _.intersection except that it accepts iteratee which is invoked for each element
+        of each arrays to generate the criterion by which they're compared. The order and references of result
+        values are determined by the first array. The iteratee is invoked with one argument:(value).
       * Arguments
         [arrays](...Array): The arrays to inspect.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -726,7 +734,9 @@
     // _.intersectionWith------------------------------------------------------//
 
     /**
-      * This method is like _.intersection except that it accepts comparator which is invoked to compare elements of arrays.The order and references of result values are determined by the first array.The comparator is invoked with two arguments: (arrVal, othVal).
+      * This method is like _.intersection except that it accepts comparator which is invoked to compare elements of arrays.
+        The order and references of result values are determined by the first array.
+        The comparator is invoked with two arguments: (arrVal, othVal).
       * Arguments
         [arrays](...Array): The arrays to inspect.
         [comparator](Function): The comparator invoked per element.
@@ -848,7 +858,8 @@
     // _.pullAllBy-------------------------------------------------------------//
 
     /**
-      * This method is like _.pullAll except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The iteratee is invoked with one argument: (value).
+      * This method is like _.pullAll except that it accepts iteratee which is invoked for each element of
+        array and values to generate the criterion by which they're compared. The iteratee is invoked with one argument: (value).
 
         Note: Unlike _.differenceBy, this method mutates array.
       * Arguments
@@ -873,7 +884,8 @@
     // _.pullAllWith-----------------------------------------------------------//
 
     /**
-      * This method is like _.pullAll except that it accepts comparator which is invoked to compare elements of array to values.The comparator is invoked with two arguments: (arrVal, othVal).
+      * This method is like _.pullAll except that it accepts comparator which is invoked to compare
+        lements of array to values.The comparator is invoked with two arguments: (arrVal, othVal).
 
         Note: Unlike _.differenceWith, this method mutates array.
       * Arguments
@@ -1007,7 +1019,8 @@
     // _.sortedIndexBy---------------------------------------------------------//
 
     /**
-      * This method is like _.sortedIndex except that it accepts iteratee which is invoked for value and each element of array to compute their sort ranking. The iteratee is invoked with one argument: (value).
+      * This method is like _.sortedIndex except that it accepts iteratee which is invoked for value and
+        each element of array to compute their sort ranking. The iteratee is invoked with one argument: (value).
       * Arguments
         array(Array): The sorted array to inspect.
         value( * ): The value to evaluate.
@@ -1050,7 +1063,8 @@
     // _.sortedLastIndex-------------------------------------------------------//
 
     /**
-      * This method is like _.sortedIndex except that it returns the highest index at which value should be inserted into array in order to maintain its sort order.
+      * This method is like _.sortedIndex except that it returns the highest index at which value
+        should be inserted into array in order to maintain its sort order.
       * Arguments
         array(Array): The sorted array to inspect.
         value( * ): The value to evaluate.
@@ -1196,7 +1210,8 @@
     // _.takeRightWhile--------------------------------------------------------//
 
     /**
-      * Creates a slice of array with elements taken from the end.Elements are taken until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
+      * Creates a slice of array with elements taken from the end.Elements are taken until predicate returns falsey.
+        The predicate is invoked with three arguments: (value, index, array).
       * Arguments
         array (Array): The array to query.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -1212,7 +1227,8 @@
     // _.takeWhile-------------------------------------------------------------//
 
     /**
-      * Creates a slice of array with elements taken from the beginning.Elements are taken until predicate returns falsey.The predicate is invoked with three arguments: (value, index, array).
+      * Creates a slice of array with elements taken from the beginning.Elements are taken until predicate returns falsey.
+        The predicate is invoked with three arguments: (value, index, array).
       * Arguments
         array (Array): The array to query.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -1242,8 +1258,10 @@
     // _.unionBy---------------------------------------------------------------//
 
     /**
-      * This method is like _.union except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which uniqueness is computed.
-        Result values are chosen from the first array in which the value occurs. The iteratee is invoked with one argument:(value).
+      * This method is like _.union except that it accepts iteratee which is invoked for each
+        element of each arrays to generate the criterion by which uniqueness is computed.
+        Result values are chosen from the first array in which the value occurs. The iteratee
+        is invoked with one argument:(value).
       * Arguments
         [arrays](...Array): The arrays to inspect.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -1261,7 +1279,9 @@
     // _.unionWith-------------------------------------------------------------//
 
     /**
-      * This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array.The order of result values is determined by the order they occur in the array.The comparator is invoked with two arguments: (arrVal, othVal).
+      * This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array.
+        The order of result values is determined by the order they occur in the array.
+        The comparator is invoked with two arguments: (arrVal, othVal).
       * Arguments
         array(Array): The array to inspect.
         [comparator](Function): The comparator invoked per element.
@@ -1280,7 +1300,8 @@
 
     /**
       * Creates a duplicate - free version of an array, using SameValueZero
-        for equality comparisons, in which only the first occurrence of each element is kept.The order of result values is determined by the order they occur in the array.
+        for equality comparisons, in which only the first occurrence of each element is kept.
+        The order of result values is determined by the order they occur in the array.
       * Arguments
         array(Array): The array to inspect.
       * Returns
@@ -1294,7 +1315,8 @@
     // _.uniqBy----------------------------------------------------------------//
 
     /**
-      * This method is like _.uniq except that it accepts iteratee which is invoked for each element in array to generate the criterion by which uniqueness is computed. The order of result
+      * This method is like _.uniq except that it accepts iteratee which is invoked
+        for each element in array to generate the criterion by which uniqueness is computed. The order of result
         values is determined by the order they occur in the array. The iteratee is invoked with one argument:(value).
       * Arguments
         array(Array): The array to inspect.
@@ -1313,7 +1335,9 @@
     // _.uniqWith--------------------------------------------------------------//
 
     /**
-      * This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array.The order of result values is determined by the order they occur in the array.The comparator is invoked with two arguments: (arrVal, othVal).
+      * This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array.
+        The order of result values is determined by the order they occur in the array.
+        The comparator is invoked with two arguments: (arrVal, othVal).
       * Arguments
         array(Array): The array to inspect.
         [comparator](Function): The comparator invoked per element.
@@ -1331,7 +1355,8 @@
     // _.unzip-----------------------------------------------------------------//
 
     /**
-      * This method is like _.zip except that it accepts an array of grouped elements and creates an array regrouping the elements to their pre - zip configuration.
+      * This method is like _.zip except that it accepts an array of grouped elements and
+        creates an array regrouping the elements to their pre - zip configuration.
       * Arguments
         array(Array): The array of grouped elements to process.
       * Returns
@@ -1345,7 +1370,8 @@
     // _.unzipWith-------------------------------------------------------------//
 
     /**
-      * This method is like _.unzip except that it accepts iteratee to specify how regrouped values should be combined.The iteratee is invoked with the elements of each group: (...group).
+      * This method is like _.unzip except that it accepts iteratee to specify how regrouped values
+        should be combined.The iteratee is invoked with the elements of each group: (...group).
       * Arguments
         array (Array): The array of grouped elements to process.
         [iteratee=_.identity] (Function): The function to combine regrouped values.
@@ -1378,7 +1404,8 @@
     // _.xor-------------------------------------------------------------------//
 
     /**
-      * Creates an array of unique values that is the symmetric difference of the given arrays.The order of result values is determined by the order they occur in the arrays.
+      * Creates an array of unique values that is the symmetric difference of the given arrays.
+        The order of result values is determined by the order they occur in the arrays.
       * Arguments
         [arrays](...Array): The arrays to inspect.
       * Returns
@@ -1396,7 +1423,8 @@
     // _.xorBy-----------------------------------------------------------------//
 
     /**
-      * This method is like _.xor except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which by which they're compared. The order of result values
+      * This method is like _.xor except that it accepts iteratee which is invoked for each element of
+        each arrays to generate the criterion by which by which they're compared. The order of result values
         is determined by the order they occur in the arrays. The iteratee is invoked with one argument: (value).
       * Arguments
         [arrays](...Array): The arrays to inspect.
@@ -1426,7 +1454,9 @@
     // _.xorWith---------------------------------------------------------------//
 
     /**
-      * This method is like _.xor except that it accepts comparator which is invoked to compare elements of arrays.The order of result values is determined by the order they occur in the arrays.The comparator is invoked with two arguments: (arrVal, othVal).
+      * This method is like _.xor except that it accepts comparator which is invoked to compare elements of arrays.
+        The order of result values is determined by the order they occur in the arrays.The comparator is
+        invoked with two arguments: (arrVal, othVal).
       * Arguments
         [arrays](...Array): The arrays to inspect.
         [comparator](Function): The comparator invoked per element.
@@ -1454,7 +1484,8 @@
     // _.zip-------------------------------------------------------------------//
 
     /**
-      * Creates an array of grouped elements, the first of which contains the first elements of the given arrays, the second of which contains the second elements of the given arrays, and so on.
+      * Creates an array of grouped elements, the first of which contains the first elements of the given arrays,
+        the second of which contains the second elements of the given arrays, and so on.
       * Arguments
         [arrays](...Array): The arrays to process.
       * Returns
@@ -1511,7 +1542,8 @@
     // _.zipWith---------------------------------------------------------------//
 
     /**
-      * This method is like _.zip except that it accepts iteratee to specify how grouped values should be combined.The iteratee is invoked with the elements of each group: (...group).
+      * This method is like _.zip except that it accepts iteratee to specify how grouped values should be combined.
+        The iteratee is invoked with the elements of each group: (...group).
       * Arguments
         [arrays] (...Array): The arrays to process.
         [iteratee=_.identity] (Function): The function to combine grouped values.
@@ -1531,7 +1563,9 @@
     // _.countBy---------------------------------------------------------------//
 
     /**
-      * Creates an object composed of keys generated from the results of running each element of collection thru iteratee.The corresponding value of each key is the number of times the key was returned by iteratee.The iteratee is invoked with one argument: (value).
+      * Creates an object composed of keys generated from the results of running each element of collection thru iteratee.
+        The corresponding value of each key is the number of times the key was returned by iteratee.The iteratee
+        is invoked with one argument: (value).
       * Arguments
         collection(Array | Object): The collection to iterate over.
         [iteratee = _.identity](Function): The iteratee to transform keys.
@@ -1557,9 +1591,12 @@
     // _.each - > forEach------------------------------------------------------//
 
     /**
-      * Iterates over elements of collection and invokes iteratee for each element. The iteratee is invoked with three arguments: (value, index|key, collection). Iteratee functions may exit iteration early by explicitly returning false.
+      * Iterates over elements of collection and invokes iteratee for each element.
+        The iteratee is invoked with three arguments: (value, index|key, collection).
+        Iteratee functions may exit iteration early by explicitly returning false.
 
-        Note: As with other "Collections" methods, objects with a "length" property are iterated like arrays. To avoid this behavior use _.forIn or _.forOwn for object iteration.
+        Note: As with other "Collections" methods, objects with a "length" property are iterated like arrays.
+        To avoid this behavior use _.forIn or _.forOwn for object iteration.
       * Arguments
         collection (Array|Object): The collection to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -1599,7 +1636,8 @@
     // _.every-----------------------------------------------------------------//
 
     /**
-      * Checks if predicate returns truthy for all elements of collection. Iteration is stopped once predicate returns falsey. The predicate is invoked with three arguments: (value, index|key, collection).
+      * Checks if predicate returns truthy for all elements of collection. Iteration is stopped once predicate returns falsey.
+        The predicate is invoked with three arguments: (value, index|key, collection).
 
         Note: This method returns true for empty collections because everything is true of elements of empty collections.
       * Arguments
@@ -1638,7 +1676,8 @@
     // _.find------------------------------------------------------------------//
 
     /**
-      * Iterates over elements of collection, returning the first element predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
+      * Iterates over elements of collection, returning the first element predicate returns truthy for.
+        The predicate is invoked with three arguments: (value, index|key, collection).
       * Arguments
         collection (Array|Object): The collection to inspect.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -1676,7 +1715,8 @@
     // _.flatMap---------------------------------------------------------------//
 
     /**
-      * Creates a flattened array of values by running each element in collection thru iteratee and flattening the mapped results.The iteratee is invoked with three arguments: (value, index | key, collection).
+      * Creates a flattened array of values by running each element in collection thru iteratee and flattening the mapped results.
+        The iteratee is invoked with three arguments: (value, index | key, collection).
       * Arguments
         collection (Array|Object): The collection to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -1728,9 +1768,11 @@
     // _.forEach---------------------------------------------------------------//
 
     /**
-      * Iterates over elements of collection and invokes iteratee for each element. The iteratee is invoked with three arguments: (value, index|key, collection). Iteratee functions may exit iteration early by explicitly returning false.
+      * Iterates over elements of collection and invokes iteratee for each element. The iteratee is invoked with three
+        arguments: (value, index|key, collection). Iteratee functions may exit iteration early by explicitly returning false.
 
-        Note: As with other "Collections" methods, objects with a "length" property are iterated like arrays. To avoid this behavior use _.forIn or _.forOwn for object iteration.
+        Note: As with other "Collections" methods, objects with a "length" property are iterated like arrays.
+        To avoid this behavior use _.forIn or _.forOwn for object iteration.
       * Arguments
         collection (Array|Object): The collection to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -1760,8 +1802,10 @@
     // _.groupBy---------------------------------------------------------------//
 
     /**
-      * Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The order of grouped values is determined by the order they occur in collection.
-        The corresponding value of each key is an array of elements responsible for generating the key. The iteratee is invoked with one argument: (value).
+      * Creates an object composed of keys generated from the results of running each element of collection thru iteratee.
+        The order of grouped values is determined by the order they occur in collection.
+        The corresponding value of each key is an array of elements responsible for generating the key.
+        The iteratee is invoked with one argument: (value).
       * Arguments
         collection(Array | Object): The collection to iterate over.
         [iteratee = _.identity](Function): The iteratee to transform keys.
@@ -1786,7 +1830,8 @@
     // _.includes--------------------------------------------------------------//
 
     /**
-      * Checks if value is in collection. If collection is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If fromIndex is negative, it's used as the offset from the end of collection.
+      * Checks if value is in collection. If collection is a string, it's checked for a substring of value, otherwise SameValueZero
+        is used for equality comparisons. If fromIndex is negative, it's used as the offset from the end of collection.
       * Arguments
         collection (Array|Object|string): The collection to inspect.
         value (*): The value to search for.
@@ -1804,7 +1849,8 @@
     // _.invokeMap-------------------------------------------------------------//
 
     /**
-      * Invokes the method at path of each element in collection, returning an array of the results of each invoked method.Any additional arguments are provided to each invoked method.If path is a
+      * Invokes the method at path of each element in collection, returning an array of the results of
+        each invoked method.Any additional arguments are provided to each invoked method.If path is a
         function, it 's invoked for, and this bound to, each element in collection.
       * Arguments
         collection (Array|Object): The collection to iterate over.
@@ -1831,7 +1877,8 @@
 
     /**
       * Creates an object composed of keys generated from the results of running each element of collection thru iteratee.
-        The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+        The corresponding value of each key is the last element responsible for generating the key.
+        The iteratee is invoked with one argument: (value).
       * Arguments
         collection(Array | Object): The collection to iterate over.
         [iteratee = _.identity](Function): The iteratee to transform keys.
@@ -1853,12 +1900,16 @@
     // _.map-------------------------------------------------------------------//
 
     /**
-      * Creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with three arguments:(value, index|key, collection).
+      * Creates an array of values by running each element in collection thru iteratee.
+        The iteratee is invoked with three arguments:(value, index|key, collection).
 
-        Many lodash methods are guarded to work as iteratees for methods like _.every, _.filter, _.map, _.mapValues, _.reject, and _.some.
+        Many lodash methods are guarded to work as iteratees for methods like _.every, _.filter, _.map,
+        _.mapValues, _.reject, and _.some.
 
         The guarded methods are:
-          ary, chunk, curry, curryRight, drop, dropRight, every, fill, invert, parseInt, random, range, rangeRight, repeat, sampleSize, slice, some, sortBy, split, take, takeRight, template, trim, trimEnd, trimStart, and words
+          ary, chunk, curry, curryRight, drop, dropRight, every, fill, invert, parseInt, random, range,
+          rangeRight, repeat, sampleSize, slice, some, sortBy, split, take, takeRight, template,
+          trim, trimEnd, trimStart, and words
       * Arguments
         collection (Array|Object): The collection to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -1875,8 +1926,9 @@
     // _.orderBy---------------------------------------------------------------//
 
     /**
-      * This method is like _.sortBy except that it allows specifying the sort orders of the iteratees to sort by. If orders is unspecified,
-        all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values.
+      * This method is like _.sortBy except that it allows specifying the sort orders of the iteratees to sort by.
+        If orders is unspecified, all values are sorted in ascending order. Otherwise, specify an order of "desc"
+        for descending or "asc" for ascending sort order of corresponding values.
       * Arguments
         collection(Array | Object): The collection to iterate over.
         [iteratees = [_.identity]](Array[] | Function[] | Object[] | string[]): The iteratees to sort by.
@@ -1900,7 +1952,8 @@
     // _.partition-------------------------------------------------------------//
 
     /**
-      * Creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for, the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
+      * Creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for,
+        the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
       * Arguments
         collection (Array|Object): The collection to iterate over.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -1917,8 +1970,10 @@
     // _.reduce----------------------------------------------------------------//
 
     /**
-      * Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element
-        of collection is used as the initial value. The iteratee is invoked with four arguments:(accumulator, value, index|key, collection).
+      * Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee,
+        where each successive invocation is supplied the return value of the previous.
+        If accumulator is not given, the first element of collection is used as the initial value.
+        The iteratee is invoked with four arguments:(accumulator, value, index|key, collection).
 
       Many lodash methods are guarded to work as iteratees for methods like _.reduce, _.reduceRight, and _.transform.
 
@@ -2033,7 +2088,8 @@
     // _.size------------------------------------------------------------------//
 
     /**
-      * Gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
+      * Gets the size of collection by returning its length for array-like values or the
+        number of own enumerable string keyed properties for objects.
       * Arguments
         collection(Array | Object | string): The collection to inspect.
       * Returns
@@ -2048,7 +2104,8 @@
     // _.some------------------------------------------------------------------//
 
     /**
-      * Checks if predicate returns truthy for any element of collection. Iteration is stopped once predicate returns truthy. The predicate is invoked with three arguments: (value, index|key, collection).
+      * Checks if predicate returns truthy for any element of collection. Iteration is stopped once
+        predicate returns truthy. The predicate is invoked with three arguments: (value, index|key, collection).
       * Arguments
         collection (Array|Object): The collection to iterate over.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -2065,8 +2122,9 @@
     // _.sortBy----------------------------------------------------------------//
 
     /**
-      * Creates an array of elements, sorted in ascending order by the results of running each element in a collection thru each iteratee.
-        This method performs a stable sort, that is, it preserves the original sort order of equal elements.The iteratees are invoked with one argument: (value).
+      * Creates an array of elements, sorted in ascending order by the results of running each
+        element in a collection thru each iteratee. This method performs a stable sort, that is,
+        it preserves the original sort order of equal elements.The iteratees are invoked with one argument: (value).
       * Arguments
         collection(Array | Object): The collection to iterate over.
         [iteratees = [_.identity]](...(Function | Function[])): The iteratees to sort by.
@@ -2162,7 +2220,8 @@
     /**
       * Creates a function that invokes func with the this binding of thisArg and partials prepended to the arguments it receives.
 
-        The _.bind.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+        The _.bind.placeholder value, which defaults to _ in monolithic builds,
+        may be used as a placeholder for partially applied arguments.
 
         Note: Unlike native Function#bind, this method doesn't set the "length" property of bound functions.
       * Arguments
@@ -2190,9 +2249,11 @@
     /**
       * Creates a function that invokes the method at object[key] with partials prepended to the arguments it receives.
 
-        This method differs from _.bind by allowing bound functions to reference methods that may be redefined or don't yet exist. See Peter Michaux's article for more details.
+        This method differs from _.bind by allowing bound functions to reference methods that may be redefined or don't yet exist.
+        See Peter Michaux's article for more details.
 
-        The _.bindKey.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+        The _.bindKey.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder
+        for partially applied arguments.
       * Arguments
         object(Object): The object to invoke the method on.
         key(string): The key of the method.
@@ -2217,8 +2278,9 @@
     // _.curry-----------------------------------------------------------------//
 
     /**
-      * Creates a function that accepts arguments of func and either invokes func returning its result, if at least arity number of
-        arguments have been provided, or returns a function that accepts the remaining func arguments, and so on. The arity of func may be specified if func.length is not sufficient.
+      * Creates a function that accepts arguments of func and either invokes func returning its result,
+        if at least arity number of arguments have been provided, or returns a function that accepts the
+        remaining func arguments, and so on. The arity of func may be specified if func.length is not sufficient.
 
         The _.curry.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for provided arguments.
 
@@ -2244,9 +2306,11 @@
     // _.curryRight------------------------------------------------------------//
 
     /**
-      * This method is like _.curry except that arguments are applied to func in the manner of _.partialRight instead of _.partial.
+      * This method is like _.curry except that arguments are applied to func in the
+        manner of _.partialRight instead of _.partial.
 
-        The _.curryRight.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for provided arguments.
+        The _.curryRight.placeholder value, which defaults to _ in monolithic builds,
+        may be used as a placeholder for provided arguments.
 
         Note: This method doesn't set the "length" property of curried functions.
       * Arguments
@@ -2271,15 +2335,18 @@
     // _.debounce--------------------------------------------------------------//
 
     /**
-      * Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked.
-        The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them.
-        Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the
-        last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.
+      * Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the
+        last time the debounced function was invoked. The debounced function comes with a cancel method to cancel
+        delayed func invocations and a flush method to immediately invoke them. Provide options to indicate whether
+        func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the
+        last arguments provided to the debounced function. Subsequent calls to the debounced function return the
+        result of the last func invocation.
 
-        Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only if the debounced function is invoked
-              more than once during the wait timeout.
+        Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only
+              if the debounced function is invoked more than once during the wait timeout.
 
-        If wait is 0 and leading is false, func invocation is deferred until to the next tick, similar to setTimeout with a timeout of 0.
+        If wait is 0 and leading is false, func invocation is deferred until to the next tick, similar
+        to setTimeout with a timeout of 0.
 
         See David Corbacho's article for details over the differences between _.debounce and _.throttle.
       * Arguments
@@ -2386,10 +2453,12 @@
     /**
       * Creates a function that memoizes the result of func. If resolver is provided,
         it determines the cache key for storing the result based on the arguments provided to the memoized function.
-        By default, the first argument provided to the memoized function is used as the map cache key. The func is invoked with the this binding of the memoized function.
+        By default, the first argument provided to the memoized function is used as the map cache key.
+        The func is invoked with the this binding of the memoized function.
 
         Note: The cache is exposed as the cache property on the memoized function. Its creation may be customized
-        by replacing the _.memoize.Cache constructor with one whose instances implement the Map method interface of clear, delete, get, has, and set.
+        by replacing the _.memoize.Cache constructor with one whose instances implement the Map method interface
+        of clear, delete, get, has, and set.
       * Arguments
         func (Function): The function to have its output memoized.
         [resolver] (Function): The function to resolve the cache key.
@@ -2414,7 +2483,8 @@
     // _.negate----------------------------------------------------------------//
 
     /**
-      * Creates a function that negates the result of the predicate func. The func predicate is invoked with the this binding and arguments of the created function.
+      * Creates a function that negates the result of the predicate func. The func predicate is invoked with
+        the this binding and arguments of the created function.
       * Arguments
         predicate(Function): The predicate to negate.
       * Returns
@@ -2430,7 +2500,8 @@
     // _.once------------------------------------------------------------------//
 
     /**
-      * Creates a function that is restricted to invoking func once. Repeat calls to the function return the value of the first invocation. The func is invoked with the this binding and arguments of the created function.
+      * Creates a function that is restricted to invoking func once. Repeat calls to the function return the value of
+        the first invocation. The func is invoked with the this binding and arguments of the created function.
       * Arguments
         func (Function): The function to restrict.
       * Returns
@@ -2462,9 +2533,11 @@
     // _.partial---------------------------------------------------------------//
 
     /**
-      * Creates a function that invokes func with partials prepended to the arguments it receives. This method is like _.bind except it does not alter the this binding.
+      * Creates a function that invokes func with partials prepended to the arguments it receives.
+        This method is like _.bind except it does not alter the this binding.
 
-        The _.partial.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+        The _.partial.placeholder value, which defaults to _ in monolithic builds, may be used
+        as a placeholder for partially applied arguments.
 
         Note: This method doesn't set the "length" property of partially applied functions.
       * Arguments
@@ -2490,7 +2563,8 @@
     /**
       * This method is like _.partial except that partially applied arguments are appended to the arguments it receives.
 
-        The _.partialRight.placeholder value, which defaults to _ in monolithic builds, may be used as a placeholder for partially applied arguments.
+        The _.partialRight.placeholder value, which defaults to _ in monolithic builds,
+        may be used as a placeholder for partially applied arguments.
 
         Note: This method doesn't set the "length" property of partially applied functions.
       * Arguments
@@ -2538,7 +2612,8 @@
     // _.rest------------------------------------------------------------------//
 
     /**
-      * Creates a function that invokes func with the this binding of the created function and arguments from start and beyond provided as an array.
+      * Creates a function that invokes func with the this binding of the created function and arguments from
+        start and beyond provided as an array.
 
         Note: This method is based on the rest parameter.
       * Arguments
@@ -2578,11 +2653,15 @@
     // _.throttle--------------------------------------------------------------//
 
     /**
-      * Creates a throttled function that only invokes func at most once per every wait milliseconds. The throttled function comes with a cancel method to cancel delayed func invocations and
-        a flush method to immediately invoke them. Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked
-        with the last arguments provided to the throttled function. Subsequent calls to the throttled function return the result of the last func invocation.
+      * Creates a throttled function that only invokes func at most once per every wait milliseconds.
+        The throttled function comes with a cancel method to cancel delayed func invocations and
+        a flush method to immediately invoke them. Provide options to indicate whether func should be
+        invoked on the leading and/or trailing edge of the wait timeout. The func is invoked
+        with the last arguments provided to the throttled function. Subsequent calls to the throttled
+        function return the result of the last func invocation.
 
-        Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout only if the throttled function is invoked more than once during the wait timeout.
+        Note: If leading and trailing options are true, func is invoked on the trailing edge of the timeout
+        only if the throttled function is invoked more than once during the wait timeout.
 
         If wait is 0 and leading is false, func invocation is deferred until to the next tick, similar to setTimeout with a timeout of 0.
 
@@ -2653,7 +2732,8 @@
     // _.wrap------------------------------------------------------------------//
 
     /**
-      * Creates a function that provides value to wrapper as its first argument. Any additional arguments provided to the function are appended to those provided to the wrapper.
+      * Creates a function that provides value to wrapper as its first argument. Any additional arguments
+        provided to the function are appended to those provided to the wrapper.
         The wrapper is invoked with the this binding of the created function.
       * Arguments
         value (*): The value to wrap.
@@ -2690,8 +2770,10 @@
     /**
       * Creates a shallow clone of value.
 
-        Note: This method is loosely based on the structured clone algorithm and supports cloning arrays, array buffers, booleans, date objects, maps, numbers, Object objects, regexes, sets, strings,
-        symbols, and typed arrays. The own enumerable properties of arguments objects are cloned as plain objects. An empty object is returned for uncloneable values such as error objects, functions, DOM nodes, and WeakMaps.
+        Note: This method is loosely based on the structured clone algorithm and supports cloning arrays,
+        array buffers, booleans, date objects, maps, numbers, Object objects, regexes, sets, strings,
+        symbols, and typed arrays. The own enumerable properties of arguments objects are cloned as plain objects.
+        An empty object is returned for uncloneable values such as error objects, functions, DOM nodes, and WeakMaps.
       * Arguments
         value( * ): The value to clone.
       * Returns
@@ -2800,7 +2882,9 @@
     // _.cloneWith-------------------------------------------------------------//
 
     /**
-      * This method is like _.clone except that it accepts customizer which is invoked to produce the cloned value. If customizer returns undefined, cloning is handled by the method instead. The customizer is invoked with up to four arguments; (value [, index|key, object, stack])
+      * This method is like _.clone except that it accepts customizer which is invoked to produce the cloned value.
+        If customizer returns undefined, cloning is handled by the method instead. The customizer is invoked with up to
+        four arguments; (value [, index|key, object, stack])
       * Arguments
         value (*): The value to clone.
         [customizer] (Function): The function to customize cloning.
@@ -2921,7 +3005,8 @@
     // _.isArrayLike-----------------------------------------------------------//
 
     /**
-      * Checks if value is array-like. A value is considered array-like if it's not a function and has a value.length that's an integer greater than or equal to 0 and less than or equal to Number.MAX_SAFE_INTEGER.
+      * Checks if value is array-like. A value is considered array-like if it's not a function and has a value.
+        length that's an integer greater than or equal to 0 and less than or equal to Number.MAX_SAFE_INTEGER.
       * Arguments
         value( * ): The value to check.
       * Returns
@@ -3008,7 +3093,8 @@
 
         Objects are considered empty if they have no own enumerable string keyed properties.
 
-        Array-like values such as arguments objects, arrays, buffers, strings, or jQuery-like collections are considered empty if they have a length of 0. Similarly, maps and sets are considered empty if they have a size of 0.
+        Array-like values such as arguments objects, arrays, buffers, strings, or jQuery-like collections are considered
+        empty if they have a length of 0. Similarly, maps and sets are considered empty if they have a size of 0.
       * Arguments
         value( * ): The value to check.
       * Returns
@@ -3031,8 +3117,10 @@
     /**
       * Performs a deep comparison between two values to determine if they are equivalent.
 
-        Note: This method supports comparing arrays, array buffers, booleans, date objects, error objects, maps, numbers, Object objects, regexes, sets, strings, symbols, and typed arrays.
-        Object objects are compared by their own, not inherited, enumerable properties. Functions and DOM nodes are compared by strict equality, i.e. ===.
+        Note: This method supports comparing arrays, array buffers, booleans, date objects, error objects,
+        maps, numbers, Object objects, regexes, sets, strings, symbols, and typed arrays.
+        Object objects are compared by their own, not inherited, enumerable properties.
+        Functions and DOM nodes are compared by strict equality, i.e. ===.
       * Arguments
         value( * ): The value to compare.
         other( * ): The other value to compare.
@@ -3064,7 +3152,8 @@
 
     /**
       * This method is like _.isEqual except that it accepts customizer which is invoked to compare values.If customizer returns undefined,
-        comparisons are handled by the method instead.The customizer is invoked with up to six arguments: (objValue, othValue[, index | key, object, other, stack]).
+        comparisons are handled by the method instead.The customizer is invoked with up to six
+        arguments: (objValue, othValue[, index | key, object, other, stack]).
       * Arguments
         value (*): The value to compare.
         other (*): The other value to compare.
@@ -3198,7 +3287,8 @@
 
         Note: This method is equivalent to _.matches when source is partially applied.
 
-        Partial comparisons will match empty array and empty object source values against any array or object value, respectively. See _.isEqual for a list of supported value comparisons.
+        Partial comparisons will match empty array and empty object source values against any array or object value,
+        respectively. See _.isEqual for a list of supported value comparisons.
       * Arguments
         object(Object): The object to inspect.
         source(Object): The object of property values to match.
@@ -3215,7 +3305,8 @@
 
     /**
       * This method is like _.isMatch except that it accepts customizer which is invoked to compare values.If customizer returns undefined,
-        comparisons are handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, index | key, object, source).
+        comparisons are handled by the method instead.The customizer is invoked with five arguments:
+        (objValue, srcValue, index | key, object, source).
       * Arguments
         object (Object): The object to inspect.
         source (Object): The object of property values to match.
@@ -3234,7 +3325,8 @@
     /**
       * Checks if value is NaN.
 
-        Note: This method is based on Number.isNaN and is not the same as global isNaN which returns true for undefined and other non-number values.
+        Note: This method is based on Number.isNaN and is not the same as global isNaN which returns true
+        for undefined and other non-number values.
       * Arguments
         value( * ): The value to check.
       * Returns
@@ -3250,8 +3342,11 @@
     /**
       * Checks if value is a pristine native function.
 
-        Note: This method can't reliably detect native functions in the presence of the core-js package because core-js circumvents this kind of detection. Despite multiple requests, the core-js maintainer has made it clear: any attempt to fix the detection will be obstructed.
-              As a result, we're left with little choice but to throw an error. Unfortunately, this also affects packages, like babel-polyfill, which rely on core-js.
+        Note: This method can't reliably detect native functions in the presence of the core-js package because core-js circumvents
+        this kind of detection. Despite multiple requests, the core-js maintainer has made it clear:
+        any attempt to fix the detection will be obstructed.
+        As a result, we're left with little choice but to throw an error. Unfortunately, this also affects packages,
+        like babel-polyfill, which rely on core-js.
       * Arguments
         value( * ): The value to check.
       * Returns
@@ -3369,7 +3464,8 @@
     // _.isSafeInteger---------------------------------------------------------//
 
     /**
-      * Checks if value is a safe integer. An integer is safe if it's an IEEE-754 double precision number which isn't the result of a rounded unsafe integer.
+      * Checks if value is a safe integer. An integer is safe if it's an IEEE-754 double precision
+        number which isn't the result of a rounded unsafe integer.
 
         Note: This method is based on Number.isSafeInteger.
       * Arguments
@@ -3736,7 +3832,8 @@
     // _.maxBy-----------------------------------------------------------------//
 
     /**
-      * This method is like _.max except that it accepts iteratee which is invoked for each element in array to generate the criterion by which the value is ranked. The iteratee is invoked with one argument: (value).
+      * This method is like _.max except that it accepts iteratee which is invoked for each element
+        in array to generate the criterion by which the value is ranked. The iteratee is invoked with one argument: (value).
       * Arguments
         array(Array): The array to iterate over.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -3775,7 +3872,8 @@
     // _.meanBy----------------------------------------------------------------//
 
     /**
-      * This method is like _.mean except that it accepts iteratee which is invoked for each element in array to generate the value to be averaged. The iteratee is invoked with one argument: (value).
+      * This method is like _.mean except that it accepts iteratee which is invoked for each element in array
+        to generate the value to be averaged. The iteratee is invoked with one argument: (value).
       * Arguments
         array(Array): The array to iterate over.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -3806,7 +3904,8 @@
     // _.minBy-----------------------------------------------------------------//
 
     /**
-      * This method is like _.min except that it accepts iteratee which is invoked for each element in array to generate the criterion by which the value is ranked. The iteratee is invoked with one argument: (value).
+      * This method is like _.min except that it accepts iteratee which is invoked for each element in array to generate
+        the criterion by which the value is ranked. The iteratee is invoked with one argument: (value).
       * Arguments
         array(Array): The array to iterate over.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -3891,7 +3990,8 @@
     // _.sumBy-----------------------------------------------------------------//
 
     /**
-      * This method is like _.sum except that it accepts iteratee which is invoked for each element in array to generate the value to be summed. The iteratee is invoked with one argument: (value).
+      * This method is like _.sum except that it accepts iteratee which is invoked for each element in
+        array to generate the value to be summed. The iteratee is invoked with one argument: (value).
       * Arguments
         array(Array): The array to iterate over.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -3953,8 +4053,9 @@
     // _.random----------------------------------------------------------------//
 
     /**
-      * Produces a random number between the inclusive lower and upper bounds. If only one argument is provided a number between 0 and the given number is returned.
-        If floating is true, or either lower or upper are floats, a floating-point number is returned instead of an integer.
+      * Produces a random number between the inclusive lower and upper bounds. If only one argument
+        is provided a number between 0 and the given number is returned. If floating is true, or either lower or upper are floats,
+        a floating-point number is returned instead of an integer.
 
         Note: JavaScript follows the IEEE-754 standard for resolving floating-point values which can produce unexpected results.
       * Arguments
@@ -3975,7 +4076,8 @@
     // _.assign----------------------------------------------------------------//
 
     /**
-      * Assigns own enumerable string keyed properties of source objects to the destination object.Source objects are applied from left to right.Subsequent sources overwrite property assignments of previous sources.
+      * Assigns own enumerable string keyed properties of source objects to the destination object.
+        Source objects are applied from left to right.Subsequent sources overwrite property assignments of previous sources.
 
         Note: This method mutates object and is loosely based on Object.assign.
       * Arguments
@@ -4009,8 +4111,9 @@
     // _.assignInWith----------------------------------------------------------//
 
     /**
-      * This method is like _.assignIn except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined,
-        assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+      * This method is like _.assignIn except that it accepts customizer which is invoked to produce
+        the assigned values.If customizer returns undefined, assignment is handled by the method instead.
+        The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
 
         Note: This method mutates object.
       * Arguments
@@ -4033,7 +4136,8 @@
     // _.assignWith------------------------------------------------------------//
 
     /**
-      * This method is like _.assign except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined, assignment is handled by the method instead.
+      * This method is like _.assign except that it accepts customizer which is invoked to produce the assigned values.
+        If customizer returns undefined, assignment is handled by the method instead.
         The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
 
         Note: This method mutates object.
@@ -4072,7 +4176,8 @@
     // _.create----------------------------------------------------------------//
 
     /**
-      * Creates an object that inherits from the prototype object.If a properties object is given, its own enumerable string keyed properties are assigned to the created object.
+      * Creates an object that inherits from the prototype object.If a properties object is given,
+        its own enumerable string keyed properties are assigned to the created object.
       * Arguments
         prototype(Object): The object to inherit from.
         [properties](Object): The properties to assign to the object.
@@ -4087,8 +4192,9 @@
     // _.defaults--------------------------------------------------------------//
 
     /**
-      * Assigns own and inherited enumerable string keyed properties of source objects to the destination object for all destination properties that resolve to undefined.
-        Source objects are applied from left to right. Once a property is set, additional values of the same property are ignored.
+      * Assigns own and inherited enumerable string keyed properties of source objects to the
+        destination object for all destination properties that resolve to undefined. Source objects are applied from left to right.
+        Once a property is set, additional values of the same property are ignored.
 
       * Arguments
         object(Object): The destination object.
@@ -4121,7 +4227,8 @@
     // _.entries -> toPairs----------------------------------------------------//
 
     /**
-      * Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
+      * Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs.
+        If object is a map or set, its entries are returned.
       * Arguments
         object(Object): The object to query.
       * Returns
@@ -4135,7 +4242,8 @@
     // _.entriesIn -> toPairsIn------------------------------------------------//
 
     /**
-      * Creates an array of own and inherited enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
+      * Creates an array of own and inherited enumerable string keyed-value pairs for object which can be consumed by _.fromPairs.
+        If object is a map or set, its entries are returned.
       * Arguments
         object(Object): The object to query.
       * Returns
@@ -4173,8 +4281,9 @@
     // _.extendWith -> assignInWith--------------------------------------------//
 
     /**
-      * This method is like _.assignIn except that it accepts customizer which is invoked to produce the assigned values.If customizer returns undefined,
-        assignment is handled by the method instead.The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
+      * This method is like _.assignIn except that it accepts customizer which is invoked to produce
+        the assigned values.If customizer returns undefined, assignment is handled by the method instead.
+        The customizer is invoked with five arguments: (objValue, srcValue, key, object, source).
 
         Note: This method mutates object.
       * Arguments
@@ -4192,7 +4301,8 @@
     // _.findKey---------------------------------------------------------------//
 
     /**
-      * This method is like _.find except that it returns the key of the first element predicate returns truthy for instead of the element itself.
+      * This method is like _.find except that it returns the key of the first element predicate
+        returns truthy for instead of the element itself.
       * Arguments
         object (Object): The object to inspect.
         [predicate=_.identity] (Function): The function invoked per iteration.
@@ -4227,7 +4337,8 @@
 
     /**
       * Iterates over own and inherited enumerable string keyed properties of an object and invokes iteratee
-        for each property.The iteratee is invoked with three arguments: (value, key, object).Iteratee functions may exit iteration early by explicitly returning false.
+        for each property.The iteratee is invoked with three arguments: (value, key, object).Iteratee functions
+        may exit iteration early by explicitly returning false.
       * Arguments
         object (Object): The object to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -4393,7 +4504,8 @@
     // _.invert----------------------------------------------------------------//
 
     /**
-      * Creates an object composed of the inverted keys and values of object.If object contains duplicate values, subsequent values overwrite property assignments of previous values.
+      * Creates an object composed of the inverted keys and values of object.If object contains duplicate values,
+        subsequent values overwrite property assignments of previous values.
       * Arguments
         object(Object): The object to invert.
       * Returns
@@ -4414,8 +4526,9 @@
     // _.invertBy--------------------------------------------------------------//
 
     /**
-      * This method is like _.invert except that the inverted object is generated from the results of running each element of object thru iteratee.
-        The corresponding inverted value of each inverted key is an array of keys responsible for generating the inverted value. The iteratee is invoked with one argument: (value).
+      * This method is like _.invert except that the inverted object is generated from the results of running
+        each element of object thru iteratee. The corresponding inverted value of each inverted key is an array of keys
+        responsible for generating the inverted value. The iteratee is invoked with one argument: (value).
       * Arguments
         object(Object): The object to invert.
         [iteratee = _.identity](Function): The iteratee invoked per element.
@@ -4502,7 +4615,8 @@
     // _.mapKeys---------------------------------------------------------------//
 
     /**
-      * The opposite of _.mapValues; this method creates an object with the same values as object and keys generated by running each own enumerable string keyed property of object thru iteratee. The iteratee is invoked with three arguments: (value, key, object).
+      * The opposite of _.mapValues; this method creates an object with the same values as object and keys generated by running
+        each own enumerable string keyed property of object thru iteratee. The iteratee is invoked with three arguments: (value, key, object).
       * Arguments
         object (Object): The object to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -4524,7 +4638,8 @@
     // _.mapValues-------------------------------------------------------------//
 
     /**
-      * Creates an object with the same keys as object and values generated by running each own enumerable string keyed property of object thru iteratee. The iteratee is invoked with three arguments:(value, key, object).
+      * Creates an object with the same keys as object and values generated by running each own enumerable
+        string keyed property of object thru iteratee. The iteratee is invoked with three arguments:(value, key, object).
       * Arguments
         object (Object): The object to iterate over.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -4546,8 +4661,11 @@
     // _.merge-----------------------------------------------------------------//
 
     /**
-      * This method is like _.assign except that it recursively merges own and inherited enumerable string keyed properties of source objects into the destination object. Source properties that resolve to undefined are
-        skipped if a destination value exists. Array and plain object properties are merged recursively. Other objects and value types are overridden by assignment. Source objects are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
+      * This method is like _.assign except that it recursively merges own and inherited enumerable string
+        keyed properties of source objects into the destination object. Source properties that resolve to undefined are
+        skipped if a destination value exists. Array and plain object properties are merged recursively.
+        Other objects and value types are overridden by assignment. Source objects are applied from left to right.
+        Subsequent sources overwrite property assignments of previous sources.
 
         Note: This method mutates object.
       * Arguments
@@ -4564,8 +4682,9 @@
     // _.mergeWith-------------------------------------------------------------//
 
     /**
-      * This method is like _.merge except that it accepts customizer which is invoked to produce the merged values of the destination and source properties. If customizer returns undefined, merging is handled by the method instead. The customizer is invoked with six arguments:
-        (objValue, srcValue, key, object, source, stack).
+      * This method is like _.merge except that it accepts customizer which is invoked to produce the merged
+        values of the destination and source properties. If customizer returns undefined, merging is handled by the method instead.
+        The customizer is invoked with six arguments: (objValue, srcValue, key, object, source, stack).
 
         Note: This method mutates object.
       * Arguments
@@ -4588,7 +4707,8 @@
     // _.omit------------------------------------------------------------------//
 
     /**
-      * The opposite of _.pick; this method creates an object composed of the own and inherited enumerable property paths of object that are not omitted.
+      * The opposite of _.pick; this method creates an object composed of the own and inherited enumerable
+        property paths of object that are not omitted.
 
         Note: This method is considerably slower than _.pick.
       * Arguments
@@ -4610,7 +4730,8 @@
     // _.omitBy----------------------------------------------------------------//
 
     /**
-      * Creates an object composed of the object properties predicate returns truthy for. The predicate is invoked with two arguments: (value, key).
+      * Creates an object composed of the object properties predicate returns truthy for.
+        The predicate is invoked with two arguments: (value, key).
       * Arguments
         object (Object): The source object.
         [predicate=_.identity] (Function): The function invoked per property.
@@ -4655,7 +4776,8 @@
     // _.pickBy----------------------------------------------------------------//
 
     /**
-      * Creates an object composed of the object properties predicate returns truthy for. The predicate is invoked with two arguments: (value, key).
+      * Creates an object composed of the object properties predicate returns truthy for.
+        The predicate is invoked with two arguments: (value, key).
       * Arguments
         object (Object): The source object.
         [predicate=_.identity] (Function): The function invoked per property.
@@ -4675,7 +4797,8 @@
     // _.result----------------------------------------------------------------//
 
     /**
-      * This method is like _.get except that if the resolved value is a function it's invoked with the this binding of its parent object and its result is returned.
+      * This method is like _.get except that if the resolved value is a function it's invoked with the this
+        binding of its parent object and its result is returned.
       * Arguments
         object (Object): The object to query.
         path (Array|string): The path of the property to resolve.
@@ -4692,7 +4815,8 @@
     // _.set-------------------------------------------------------------------//
 
     /**
-      * Sets the value at path of object. If a portion of path doesn't exist, it's created. Arrays are created for missing index properties while objects are created for all other missing properties. Use _.setWith to customize path creation.
+      * Sets the value at path of object. If a portion of path doesn't exist, it's created. Arrays are created for missing index
+        properties while objects are created for all other missing properties. Use _.setWith to customize path creation.
 
         Note: This method mutates object.
       * Arguments
@@ -4710,7 +4834,9 @@
     // _.setWith---------------------------------------------------------------//
 
     /**
-      * This method is like _.set except that it accepts customizer which is invoked to produce the objects of path.If customizer returns undefined path creation is handled by the method instead.The customizer is invoked with three arguments: (nsValue, key, nsObject).
+      * This method is like _.set except that it accepts customizer which is invoked to produce the objects of path.
+        If customizer returns undefined path creation is handled by the method instead.The customizer is invoked
+        with three arguments: (nsValue, key, nsObject).
 
         Note: This method mutates object.
       * Arguments
@@ -4729,7 +4855,8 @@
     // _.toPairs---------------------------------------------------------------//
 
     /**
-      * Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
+      * Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs.
+        If object is a map or set, its entries are returned.
       * Arguments
         object(Object): The object to query.
       * Returns
@@ -4743,7 +4870,8 @@
     // _.toPairsIn-------------------------------------------------------------//
 
     /**
-      * Creates an array of own and inherited enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
+      * Creates an array of own and inherited enumerable string keyed-value pairs for object which can be consumed by _.fromPairs.
+        If object is a map or set, its entries are returned.
       * Arguments
         object(Object): The object to query.
       * Returns
@@ -4814,7 +4942,8 @@
     // _.update----------------------------------------------------------------//
 
     /**
-      * This method is like _.set except that accepts updater to produce the value to set.Use _.updateWith to customize path creation.The updater is invoked with one argument: (value).
+      * This method is like _.set except that accepts updater to produce the value to set.Use _.updateWith to customize
+        path creation.The updater is invoked with one argument: (value).
 
         Note: This method mutates object.
       * Arguments
@@ -4833,8 +4962,9 @@
     // _.updateWith------------------------------------------------------------//
 
     /**
-      * This method is like _.update except that it accepts customizer which is invoked to produce the objects of path.If customizer returns undefined path creation is
-        handled by the method instead.The customizer is invoked with three arguments: (nsValue, key, nsObject).
+      * This method is like _.update except that it accepts customizer which is invoked to produce the objects of path.
+        If customizer returns undefined path creation is handled by the method instead.The customizer is invoked with three
+        arguments: (nsValue, key, nsObject).
 
         Note: This method mutates object.
       * Arguments
@@ -4902,7 +5032,8 @@
     // _.chain-----------------------------------------------------------------//
 
     /**
-      * Creates a lodash wrapper instance that wraps value with explicit method chain sequences enabled.The result of such sequences must be unwrapped with _# value.
+      * Creates a lodash wrapper instance that wraps value with explicit method chain sequences enabled.
+        The result of such sequences must be unwrapped with _# value.
       * Arguments
         value( * ): The value to wrap.
       * Returns
@@ -4917,7 +5048,8 @@
     // _.tap-------------------------------------------------------------------//
 
     /**
-      * This method invokes interceptor and returns value. The interceptor is invoked with one argument; (value). The purpose of this method is to "tap into" a method chain sequence in order to modify intermediate results.
+      * This method invokes interceptor and returns value. The interceptor is invoked with one argument; (value).
+        The purpose of this method is to "tap into" a method chain sequence in order to modify intermediate results.
       * Arguments
         value (*): The value to provide to interceptor.
         interceptor (Function): The function to invoke.
@@ -4933,7 +5065,8 @@
     // _.thru------------------------------------------------------------------//
 
     /**
-      * This method is like _.tap except that it returns the result of interceptor. The purpose of this method is to "pass thru" values replacing intermediate results in a method chain sequence.
+      * This method is like _.tap except that it returns the result of interceptor. The purpose of this method
+        is to "pass thru" values replacing intermediate results in a method chain sequence.
       * Arguments
         value (*): The value to provide to interceptor.
         interceptor (Function): The function to invoke.
@@ -5080,7 +5213,8 @@
     // _.deburr----------------------------------------------------------------//
 
     /**
-      * Deburrs string by converting Latin - 1 Supplement and Latin Extended - A letters to basic Latin letters and removing combining diacritical marks.
+      * Deburrs string by converting Latin - 1 Supplement and Latin Extended - A letters to basic Latin
+        letters and removing combining diacritical marks.
       * Arguments
         [string = ''](string): The string to deburr.
       * Returns
@@ -5111,8 +5245,9 @@
 
         Note: No other characters are escaped. To escape additional characters use a third-party library like he.
 
-        Though the ">" character is escaped for symmetry, characters like ">" and "/" don't need escaping in HTML and have no special meaning unless they're part of
-        a tag or unquoted attribute value. See Mathias Bynens's article (under "semi-related fun fact") for more details.
+        Though the ">" character is escaped for symmetry, characters like ">" and "/" don't need escaping
+        in HTML and have no special meaning unless they're part of a tag or unquoted attribute value.
+        See Mathias Bynens's article (under "semi-related fun fact") for more details.
 
         When working with HTML you should always quote attribute values to reduce XSS vectors.
       * Arguments
@@ -5189,7 +5324,8 @@
     // _.pad-------------------------------------------------------------------//
 
     /**
-      * Pads string on the left and right sides if it's shorter than length. Padding characters are truncated if they can't be evenly divided by length.
+      * Pads string on the left and right sides if it's shorter than length.
+        Padding characters are truncated if they can't be evenly divided by length.
       * Arguments
         [string = ''](string): The string to pad.
         [length = 0](number): The padding length.
@@ -5241,7 +5377,8 @@
     // _.parseInt--------------------------------------------------------------//
 
     /**
-      * Converts string to an integer of the specified radix. If radix is undefined or 0, a radix of 10 is used unless value is a hexadecimal, in which case a radix of 16 is used.
+      * Converts string to an integer of the specified radix. If radix is undefined or 0, a radix of 10 is used unless
+        value is a hexadecimal, in which case a radix of 16 is used.
 
         Note: This method aligns with the ES5 implementation of parseInt.
       * Arguments
@@ -5458,7 +5595,8 @@
     // _.truncate--------------------------------------------------------------//
 
     /**
-      * Truncates string if it's longer than the given maximum string length. The last characters of the truncated string are replaced with the omission string which defaults to "...".
+      * Truncates string if it's longer than the given maximum string length.
+        The last characters of the truncated string are replaced with the omission string which defaults to "...".
       * Arguments
         [string = ''](string): The string to truncate.
         [options = {}](Object): The options object.
@@ -5485,7 +5623,8 @@
     // _.unescape--------------------------------------------------------------//
 
     /**
-      * The inverse of _.escape; this method converts the HTML entities &amp;, &lt;, &gt;, &quot;, and &#39; in string to their corresponding characters.
+      * The inverse of _.escape; this method converts the HTML entities &amp;, &lt;, &gt;, &quot;,
+        and &#39; in string to their corresponding characters.
 
         Note: No other HTML entities are unescaped. To unescape additional HTML entities use a third-party library like he.
       * Arguments
@@ -5548,7 +5687,8 @@
     // _.attempt---------------------------------------------------------------//
 
     /**
-      * Attempts to invoke func, returning either the result or the caught error object.Any additional arguments are provided to func when it 's invoked.
+      * Attempts to invoke func, returning either the result or the caught error object.
+        Any additional arguments are provided to func when it 's invoked.
       * Arguments
         func (Function): The function to attempt.
         [args] (...*): The arguments to invoke func with.
@@ -5607,7 +5747,8 @@
     // _.conforms--------------------------------------------------------------//
 
     /**
-      * Creates a function that invokes the predicate properties of source with the corresponding property values of a given object, returning true if all predicates return truthy, else false.
+      * Creates a function that invokes the predicate properties of source with the corresponding property
+        values of a given object, returning true if all predicates return truthy, else false.
 
         Note: The created function is equivalent to _.conformsTo with source partially applied.
       * Arguments
@@ -5641,7 +5782,8 @@
     // _.defaultTo-------------------------------------------------------------//
 
     /**
-      * Checks value to determine whether a default value should be returned in its place. The defaultValue is returned if value is NaN, null, or undefined.
+      * Checks value to determine whether a default value should be returned in its place.
+        The defaultValue is returned if value is NaN, null, or undefined.
       * Arguments
         value (*): The value to check.
         defaultValue (*): The default value.
@@ -5656,7 +5798,8 @@
     // _.flow------------------------------------------------------------------//
 
     /**
-      * Creates a function that returns the result of invoking the given functions with the this binding of the created function, where each successive invocation is supplied the return value of the previous.
+      * Creates a function that returns the result of invoking the given functions with the this binding
+        of the created function, where each successive invocation is supplied the return value of the previous.
       * Arguments
         [funcs](...(Function | Function[])): The functions to invoke.
       * Returns
@@ -5703,8 +5846,10 @@
     // _.iteratee--------------------------------------------------------------//
 
     /**
-      * Creates a function that invokes func with the arguments of the created function. If func is a property name, the created function returns the property value for a given element.
-        If func is an array or object, the created function returns true for elements that contain the equivalent source properties, otherwise it returns false.
+      * Creates a function that invokes func with the arguments of the created function.
+        If func is a property name, the created function returns the property value for a given element.
+        If func is an array or object, the created function returns true for elements that contain
+        the equivalent source properties, otherwise it returns false.
       * Arguments
         [func = _.identity]( * ): The value to convert to a callback.
       * Returns
@@ -5718,11 +5863,13 @@
     // _.matches---------------------------------------------------------------//
 
     /**
-      * Creates a function that performs a partial deep comparison between a given object and source, returning true if the given object has equivalent property values, else false.
+      * Creates a function that performs a partial deep comparison between a given object and source,
+        returning true if the given object has equivalent property values, else false.
 
         Note: The created function is equivalent to _.isMatch with source partially applied.
 
-        Partial comparisons will match empty array and empty object source values against any array or object value, respectively. See _.isEqual for a list of supported value comparisons.
+        Partial comparisons will match empty array and empty object source values against any array or object value,
+        respectively. See _.isEqual for a list of supported value comparisons.
       * Arguments
         source(Object): The object of property values to match.
       * Returns
@@ -5738,9 +5885,11 @@
     // _.matchesProperty-------------------------------------------------------//
 
     /**
-      * Creates a function that performs a partial deep comparison between the value at path of a given object to srcValue, returning true if the object value is equivalent, else false.
+      * Creates a function that performs a partial deep comparison between the value at path of a given object to srcValue,
+        returning true if the object value is equivalent, else false.
 
-        Note: Partial comparisons will match empty array and empty object srcValue values against any array or object value, respectively. See _.isEqual for a list of supported value comparisons.
+        Note: Partial comparisons will match empty array and empty object srcValue values against any array or object value,
+        respectively. See _.isEqual for a list of supported value comparisons.
       * Arguments
         path(Array | string): The path of the property to get.
         srcValue( * ): The value to match.
@@ -5774,7 +5923,8 @@
     // _.methodOf--------------------------------------------------------------//
 
     /**
-      * The opposite of _.method; this method creates a function that invokes the method at a given path of object. Any additional arguments are provided to the invoked method.
+      * The opposite of _.method; this method creates a function that invokes the method at a given path of object.
+        Any additional arguments are provided to the invoked method.
       * Arguments
         object(Object): The object to query.
         [args](... * ): The arguments to invoke the method with.
@@ -6079,7 +6229,8 @@
     // _.times-----------------------------------------------------------------//
 
     /**
-      * Invokes the iteratee n times, returning an array of the results of each invocation. The iteratee is invoked with one argument; (index).
+      * Invokes the iteratee n times, returning an array of the results of each invocation.
+        The iteratee is invoked with one argument; (index).
       * Arguments
         n (number): The number of times to invoke iteratee.
         [iteratee=_.identity] (Function): The function invoked per iteration.
@@ -6966,4 +7117,3 @@
   }
   root.tcdian = root.__ = _runInContext()
 }).call(this)
-
