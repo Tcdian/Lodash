@@ -13,7 +13,7 @@
       this._chain = true
     }
     // unique id : idCounter
-    var idCounter = 1
+    var idCounter = 0
 
     // unique value : Symbol(0)
     var  _flagSymbol = Symbol(0)
@@ -557,6 +557,7 @@
     function first(arr) {
       return (arr && arr.length) ? arr[0] : void 0
     }
+
     // _.flatten---------------------------------------------------------------//
 
     /**
@@ -2004,7 +2005,7 @@
     function sampleSize(collection, n = 1) {
       let shuffledArr = shuffle(collection)
       let size = n < 0 ? 0 : n
-      return shuffledArr.slice(0, n)
+      return shuffledArr.slice(0, size)
     }
 
     // _.shuffle---------------------------------------------------------------//
@@ -2722,7 +2723,7 @@
       return Object.assign(result, val)
     }
 
-    // _.en-------------------------------------------------------------//
+    // _.cloneDeep-------------------------------------------------------------//
 
     /**
       * This method is like _.clone except that it recursively clones value.
@@ -2982,6 +2983,7 @@
     function isDate(obj) {
       return _objectProto.toString.call(obj) === _typeMap.Date
     }
+
     // _.isElement-------------------------------------------------------------//
 
     /**
@@ -4960,10 +4962,6 @@
         (Object): Returns the new lodash wrapper instance.
     **/
 
-    __.prototype.at = function ([paths]) {
-
-    }
-
     // _.prototype.chain-------------------------------------------------------//
 
     /**
@@ -5063,6 +5061,7 @@
         return item[0].toUpperCase() + item.slice(1).toLowerCase()
       }).join('')
     }
+
     // _.capitalize------------------------------------------------------------//
 
     /**
@@ -5171,6 +5170,7 @@
         return item.toLowerCase()
       }).join(' ')
     }
+
     // _.lowerFirst------------------------------------------------------------//
 
     /**
