@@ -81,7 +81,7 @@
     // Demilitarized zone
     var DMZ = Object.create(null)
 
-    // keys
+    // _keys 内部函数
     function _keys(obj) {
       let keys
       if (isArray(obj)) {
@@ -92,12 +92,12 @@
       return keys
     }
 
-    //values
+    // _values 内部函数
     function _values(obj) {
       return _keys(obj).map(key => obj[key])
     }
 
-    // entries
+    // _entries 内部函数
     function _entries(obj) {
       if (!isObject(obj)) return []
       if (isSet(obj) || isMap(obj)) return obj.entries()
@@ -105,28 +105,28 @@
       return Object.entries(obj)
     }
 
-    // _baseWordSeparate
+    // _baseWordSeparate 内部函数
     function _baseWordSeparate(str) {
       let pattern = /[\-_\s]+/g
       if (pattern.test(str)) return str.split(pattern).filter(it => it !== '')
       return str.split(/(?=[A-Z])/)
     }
 
-    // _baseAssign
+    // _baseAssign 内部函数
     function _baseAssign(obj, coverDefalult, prototypeChain, deep, customizer, sources) {
       sources.forEach(items => {
         for (let key in items) {
-          let value = items[key]
+          let val = items[key]
 
           //是否有customizer
           if (customizer) {
-            let customizerResult = customizer(obj[key], value, key, obj, items)
-            if (customizerResult) value = customizerResult
+            let customizerResult = customizer(obj[key], val, key, obj, items)
+            if (customizerResult) val = customizerResult
           }
 
           //是否深度复制
           if (deep && isObject(obj[key])) {
-            value = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [value])
+            val = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [val])
           }
 
           //是非覆盖已有属性
@@ -136,16 +136,16 @@
 
           //是否复制source原型链上属性
           if (prototypeChain) {
-            obj[key] = value
+            obj[key] = val
           } else if (items.hasOwnProperty(key)) {
-            obj[key] = value
+            obj[key] = val
           }
         }
       })
       return obj
     }
 
-    // _baseGetValue
+    // _baseGetValue 内部函数
     function _baseGetValue(obj, path, prototypeChain, defaultValue) {
       let pathArr = toPath(path)
       let result = obj
@@ -157,7 +157,7 @@
       return flag ? result : defaultValue
     }
 
-    //_baseGetPaths
+    // _baseGetPaths 内部函数
     function _baseGetPaths(obj, prototypeChain, paths = [], path = []) {
       // 只考虑普通对象和数组
       for (let key in obj) {
@@ -174,12 +174,12 @@
       return paths
     }
 
-    // _baseAddProperty
-    function _baseAddProperty(prop, value, obj, updater = identity, customizer) {
+    // _baseAddProperty 内部函数
+    function _baseAddProperty(prop, val, obj, updater = identity, customizer) {
       let pathArr = toPath(prop)
       function addProperty(obj, k = 0) {
         if (k === pathArr.length) {
-          return updater(value)
+          return updater(val)
         }
         let isNum = /^\d+$/.test(pathArr[k])
         obj = obj || (isNum ? [] : {})
@@ -190,28 +190,28 @@
       return addProperty(obj)
     }
 
-    // _optimizeCb
+    // _optimizeCb 内部函数
     function _optimizeCb(func, context, argCount) {
       if (context === void 0)
         return func
       if (argCount === 1) {
-        return function (value) {
-          return func.call(context, value)
+        return function (val) {
+          return func.call(context, val)
         }
       }
       if (argCount === 2) {
-        return function (value, index) {
-          return func.call(context, value, index)
+        return function (val, index) {
+          return func.call(context, val, index)
         }
       }
       if (argCount === 3) {
-        return function (value, index, Collection) {
-          return func.call(context, value, index, Collection)
+        return function (val, index, Collection) {
+          return func.call(context, val, index, Collection)
         }
       }
       if (argCount === 4) {
-        return function (accumulator, value, index, Collection) {
-          return func.call(context, accumulator, value, index, Collection)
+        return function (accumulator, val, index, Collection) {
+          return func.call(context, accumulator, val, index, Collection)
         }
       }
       return function (...args) {
@@ -219,33 +219,33 @@
       }
     }
 
-    // _baseMatchesProperty
-    function _baseMatchesProperty(path, value) {
+    // _baseMatchesProperty 内部函数
+    function _baseMatchesProperty(path, val) {
       return function (obj) {
-        return _baseGetValue(obj, path, true, _flagSymbol) === value
+        return _baseGetValue(obj, path, true, _flagSymbol) === val
       }
     }
 
-    // 正则 test
-    function _baseregexpTest(value) {
+    // _baseregexpTest 正则 test 方法
+    function _baseregexpTest(val) {
       return function (obj) {
-        return value.test(obj)
+        return val.test(obj)
       }
     }
 
-    // _cb
-    function _cb(value, context, argCount) {
-      if (isNil(value)) return identity
-      if (isFunction(value)) return _optimizeCb(value, context, argCount)
-      if (isObject(value)) {
-        if (isArray(value)) return _baseMatchesProperty(value[0], value[1])
-        if (isRegExp(value)) return _baseregexpTest(value)
-        return matches(value)
+    // _cb 内部iteratee方法
+    function _cb(val, context, argCount) {
+      if (isNil(val)) return identity
+      if (isFunction(val)) return _optimizeCb(val, context, argCount)
+      if (isObject(val)) {
+        if (isArray(val)) return _baseMatchesProperty(val[0], val[1])
+        if (isRegExp(val)) return _baseregexpTest(val)
+        return matches(val)
       }
-      return property(value)
+      return property(val)
     }
 
-    //merge sort
+    // _mergeSort 归并排序, 稳定排序
     function _mergeSort(arr, left = 0, right = arr.length - 1, iteratee = identity, order = 'asc') {
       if (left === right) {
         return arr.slice(left, left + 1)
@@ -281,7 +281,7 @@
       return resultArr
     }
 
-    // _exchange
+    // _exchange 内部函数
     function _exchange(arr, x, y) {
       let tmp = arr[x]
       arr[x] = arr[y]
@@ -376,12 +376,12 @@
         (Array): Returns the new array of filtered values.
     **/
 
-    function differenceBy(array, ...values) {
+    function differenceBy(arr, ...values) {
       let iteratee = last(values)
-      if (isArrayLikeObject(iteratee)) return difference(array, ...values)
+      if (isArrayLikeObject(iteratee)) return difference(arr, ...values)
       iteratee = _cb(iteratee, DMZ, 1)
       let compareArr = flatten(initial(values))
-      return filter(array, item => !compareArr.some(val => iteratee(val) === iteratee(item)))
+      return filter(arr, item => !compareArr.some(val => iteratee(val) === iteratee(item)))
     }
 
     // _.differenceWith--------------------------------------------------------//
@@ -398,11 +398,11 @@
         (Array): Returns the new array of filtered values.
     **/
 
-    function differenceWith(array, ...values) {
+    function differenceWith(arr, ...values) {
       let comparator = last(values)
-      if (isArrayLikeObject(comparator)) return difference(array, ...values)
+      if (isArrayLikeObject(comparator)) return difference(arr, ...values)
       let compareArr = flatten(initial(values))
-      return filter(array,item => !compareArr.some(val => comparator(item, val)))
+      return filter(arr,item => !compareArr.some(val => comparator(item, val)))
     }
 
     // _.drop------------------------------------------------------------------//
@@ -504,13 +504,13 @@
         (number): Returns the index of the found element, else -1.
     **/
 
-    function findIndex(array, predicate = identity, fromIndex = 0) {
+    function findIndex(arr, predicate = identity, fromIndex = 0) {
       predicate = _cb(predicate, DMZ, 3)
       let pos = -1
-      let len = array.length
+      let len = arr.length
       fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex
-      for (let i = fromIndex; i < array.length; i++) {
-        if (predicate(array[i], i, array)) {
+      for (let i = fromIndex; i < arr.length; i++) {
+        if (predicate(arr[i], i, arr)) {
           pos = i
           break
         }
@@ -530,13 +530,13 @@
         (number): Returns the index of the found element, else -1.
     **/
 
-    function findLastIndex(array, predicate = identity, fromIndex = array.length - 1) {
+    function findLastIndex(arr, predicate = identity, fromIndex = arr.length - 1) {
       predicate = _cb(predicate, DMZ, 3)
       let pos = -1
-      let len = array.length
+      let len = arr.length
       fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex
       for (let i = fromIndex; i >= 0; i--) {
-        if (predicate(array[i], i, array)) {
+        if (predicate(arr[i], i, arr)) {
           pos = i
           break
         }
@@ -858,15 +858,15 @@
         (Array): Returns array.
     **/
 
-    function pullAllBy(array, values, iteratee = identity) {
+    function pullAllBy(arr, values, iteratee = identity) {
       iteratee = _cb(iteratee, DMZ, 1)
-      for (let i = 0; i < array.length; i++) {
-        if (some(values, val => iteratee(val) === iteratee(array[i]))) {
-          array.splice(i, 1)
+      for (let i = 0; i < arr.length; i++) {
+        if (some(values, val => iteratee(val) === iteratee(arr[i]))) {
+          arr.splice(i, 1)
           i--
         }
       }
-      return array
+      return arr
     }
 
     // _.pullAllWith-----------------------------------------------------------//
@@ -883,15 +883,15 @@
         (Array): Returns array.
     **/
 
-    function pullAllWith(array, values, comparator) {
-      if (comparator === void 0) return pullAll(array, values)
-      for (let i = 0; i < array.length; i++) {
-        if (some(values, val => comparator(array[i], val))) {
-          array.splice(i, 1)
+    function pullAllWith(arr, values, comparator) {
+      if (comparator === void 0) return pullAll(arr, values)
+      for (let i = 0; i < arr.length; i++) {
+        if (some(values, val => comparator(arr[i], val))) {
+          arr.splice(i, 1)
           i--
         }
       }
-      return array
+      return arr
     }
 
     // _.pullAt----------------------------------------------------------------//
@@ -956,8 +956,8 @@
         (Array): Returns array.
     **/
 
-    function reverse(array) {
-      return array == null ? array : array.reverse()
+    function reverse(arr) {
+      return arr == null ? arr : arr.reverse()
     }
 
     // _.slice-----------------------------------------------------------------//
@@ -1794,10 +1794,10 @@
         (boolean): Returns true if value is found, else false.
     **/
 
-    function includes(collection, value, fromIndex = 0) {
+    function includes(collection, val, fromIndex = 0) {
       if (!isArrayLike(collection)) collection = values(collection)
       if (fromIndex < 0) fromIndex = Math.max(0, collection.length + fromIndex)
-      return collection.includes(value, fromIndex)
+      return collection.includes(val, fromIndex)
     }
 
     // _.invokeMap-------------------------------------------------------------//
@@ -2401,8 +2401,8 @@
         let cache = memo.cache
         let key = resolver ? resolver.call(this, ...args) : args[0]
         if(!(cache.has(key))) {
-          let value = func.call(this, ...args)
-          cache.set(key, value)
+          let val = func.call(this, ...args)
+          cache.set(key, val)
         }
         return cache.get(key)
       }
@@ -2699,7 +2699,7 @@
 
     function clone(val) {
 
-      //原型问题没考虑~
+      //原型链function问题 ?
       if (!isObject(val)) {
         return val
       }
@@ -2840,8 +2840,8 @@
         (boolean): Returns true if the values are equivalent, else false.
     **/
 
-    function eq(value, other) {
-      return value === other || (isNaN(value) && isNaN(other))
+    function eq(val, other) {
+      return val === other || (isNaN(val) && isNaN(other))
     }
 
     // _.gt--------------------------------------------------------------------//
@@ -2855,8 +2855,8 @@
         (boolean): Returns true if value is greater than other, else false.
     **/
 
-    function gt(value, other) {
-      return value > other
+    function gt(val, other) {
+      return val > other
     }
 
     // _.gte-------------------------------------------------------------------//
@@ -2870,8 +2870,8 @@
         (boolean): Returns true if value is greater than or equal to other, else false.
     **/
 
-    function gte(value, other) {
-      return value >= other
+    function gte(val, other) {
+      return val >= other
     }
 
     // _.isArguments-----------------------------------------------------------//
@@ -3490,8 +3490,8 @@
         (boolean): Returns true if value is less than other, else false.
     **/
 
-    function lt(value, other) {
-      return value < other
+    function lt(val, other) {
+      return val < other
     }
 
     // _.lte-------------------------------------------------------------------//
@@ -3505,8 +3505,8 @@
         (boolean): Returns true if value is less than or equal to other, else false.
     **/
 
-    function lte(value, other) {
-      return value <= other
+    function lte(val, other) {
+      return val <= other
     }
 
     // _.toArray---------------------------------------------------------------//
@@ -3519,18 +3519,18 @@
         (Array): Returns the converted array.
     **/
 
-    function toArray(value) {
-      if (isString(value))
-        return value.split('')
-      if (!isObject(value))
+    function toArray(val) {
+      if (isString(val))
+        return val.split('')
+      if (!isObject(val))
         return []
-      if (isArray(value) || isTypedArray(value) || isArrayBuffer(value))
-        return value.slice()
-      if (isArrayLike(value))
-        return _arrayProto.slice.call(value)
-      if (isSet(value) || isMap(value))
-        return Array.from(value.values())
-      return values(value)
+      if (isArray(val) || isTypedArray(val) || isArrayBuffer(val))
+        return val.slice()
+      if (isArrayLike(val))
+        return _arrayProto.slice.call(val)
+      if (isSet(val) || isMap(val))
+        return Array.from(val.values())
+      return values(val)
     }
 
     // _.toFinite--------------------------------------------------------------//
@@ -3543,10 +3543,10 @@
         (number): Returns the converted number.
     **/
 
-    function toFinite(value) {
-      if (value === Infinity) return Number.MAX_VALUE
-      if (value === -Infinity) return Number.MIN_VALUE
-      let result = Number(value)
+    function toFinite(val) {
+      if (val === Infinity) return Number.MAX_VALUE
+      if (val === -Infinity) return Number.MIN_VALUE
+      let result = Number(val)
       return isNaN(result) ? 0 : result
     }
 
@@ -3561,8 +3561,8 @@
         (number): Returns the converted integer.
     **/
 
-    function toInteger(value) {
-      let result = toFinite(value)
+    function toInteger(val) {
+      let result = toFinite(val)
       return result - result % 1
     }
 
@@ -3578,8 +3578,8 @@
         (number): Returns the converted integer.
     **/
 
-    function toLength(value) {
-      let result = toInteger(value)
+    function toLength(val) {
+      let result = toInteger(val)
       return result < 0 ? 0 : (result > 4294967295 ? 4294967295 : result)
     }
 
@@ -3593,8 +3593,8 @@
         (number): Returns the number.
     **/
 
-    function toNumber(value) {
-      return Number(value)
+    function toNumber(val) {
+      return Number(val)
     }
 
     // _.toPlainObject---------------------------------------------------------//
@@ -3607,13 +3607,13 @@
         (Object): Returns the converted plain object.
     **/
 
-    function toPlainObject(value) {
+    function toPlainObject(val) {
       let result = {}
-      if(!isString(value) && !isObject(value)) {
+      if(!isString(val) && !isObject(val)) {
         return result
       }
-      for(let key in value) {
-        result[key] = value[key]
+      for(let key in val) {
+        result[key] = val[key]
       }
       return result
     }
@@ -3628,8 +3628,8 @@
         (number): Returns the converted integer.
     **/
 
-    function toSafeInteger(value) {
-      var result = toInteger(value)
+    function toSafeInteger(val) {
+      var result = toInteger(val)
       if (result >= Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
       if (result <= Number.MIN_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
       return result
@@ -3645,13 +3645,13 @@
         (string): Returns the converted string.
     **/
 
-    function toString(value) {
-      if (value == void 0) return ''
-      if (isString(value)) return value
-      if (isArray(value)) return value.join()
-      if (isSymbol(value)) return value.toString()
-      if (Object.is(value, -0)) return '-0'
-      return '' + value
+    function toString(val) {
+      if (val == void 0) return ''
+      if (isString(val)) return val
+      if (isArray(val)) return val.join()
+      if (isSymbol(val)) return val.toString()
+      if (Object.is(val, -0)) return '-0'
+      return '' + val
     }
 
     //------------------------------------Math------------------------------------------
@@ -4702,8 +4702,8 @@
         (Object): Returns object.
     **/
 
-    function set(obj, path, value) {
-      return _baseAddProperty(path, value, obj)
+    function set(obj, path, val) {
+      return _baseAddProperty(path, val, obj)
     }
 
     // _.setWith---------------------------------------------------------------//
@@ -4721,8 +4721,8 @@
         (Object): Returns object.
     **/
 
-    function setWith(obj, path, value, customizer) {
-      return _baseAddProperty(path, value, obj, identity, customizer)
+    function setWith(obj, path, val, customizer) {
+      return _baseAddProperty(path, val, obj, identity, customizer)
     }
 
     // _.toPairs---------------------------------------------------------------//
@@ -5648,8 +5648,8 @@
         ( * ): Returns the resolved value.
     **/
 
-    function defaultTo(value, defaultValue) {
-      return isNil(value) || isNaN(value) ? defaultValue : value
+    function defaultTo(val, defaultValue) {
+      return isNil(val) || isNaN(val) ? defaultValue : val
     }
 
     // _.flow------------------------------------------------------------------//
@@ -5710,8 +5710,8 @@
         (Function): Returns the callback.
     **/
 
-    function iterate(value) {
-      return _cb(value, DMZ, Infinity)
+    function iterate(val) {
+      return _cb(val, DMZ, Infinity)
     }
 
     // _.matches---------------------------------------------------------------//
