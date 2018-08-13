@@ -239,6 +239,7 @@
       if (isFunction(val)) return _optimizeCb(val, context, argCount)
       if (isObject(val)) {
         if (isArray(val)) return _baseMatchesProperty(val[0], val[1])
+        //lodash 没有考虑正则匹配
         if (isRegExp(val)) return _baseregexpTest(val)
         return matches(val)
       }
@@ -2699,7 +2700,7 @@
 
     function clone(val) {
 
-      //原型链function问题 ?
+      //原型链问题 ?
       if (!isObject(val)) {
         return val
       }
