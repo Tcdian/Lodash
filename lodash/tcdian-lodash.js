@@ -22,6 +22,7 @@
     var _arrayProto = Array.prototype,
         _funcProto = Function.prototype,
         _objectProto = Object.prototype;
+        _symbolProto = Symbol.prototype
 
     // type 类型判断 map.
     var _typeMap = {
@@ -289,9 +290,10 @@
       arr[y] = tmp
     }
 
+    // _executeBound
     // Determines whether to execute a function as a constructor
     // or a normal function with the provided arguments.
-    function executeBound(func, boundFunc, thisArg, context, args) {
+    function _executeBound(func, boundFunc, thisArg, context, args) {
       if (!(context instanceof boundFunc)) return func.call(thisArg, ...args)
       // func 的实例
       let instance = Object.create(func.prototype)
@@ -301,14 +303,90 @@
       return instance
     }
 
+    // _replaceHolders
     // 整合 partials 和 args 为一个 完整的参数数组, 将partials中的 placeholder替换为 args中元素, args中剩余元素放到 数组结尾
-    function replaceHolders(partials, args, placeholder) {
+    function _replaceHolders(partials, args, placeholder) {
       let separator = 0
       return partials.map(partial => {
         if (partial === placeholder) return args[separator++]
         return partial
       }).concat(args.slice(separator))
     }
+
+    // _eq
+    // Internal recursive comparison function for `isEqual` & `isEqualWith`.
+    function _eq(val, other, customizer, hashMap = new Map()) {
+      // _wrapped 对象
+      if (val instanceof __) val = val._wrapped
+      if (other instanceof __) other = other._wrapped
+
+      // 类型不同, 返回false
+      let valType = _objectProto.toString.call(val)
+      if (valType != _objectProto.toString.call(other)) {
+        return false
+      }
+      // val === other
+      if (val === other) {
+        return true
+      }
+      // `NaN`
+      if (val !== val) {
+        return other !== other
+      }
+      if (!isObjectLike(val) && !isObjectLike(other)) {
+        return false
+      }
+
+      // String Number Date Boolean Symbol 包装对象 和 RegExp
+      // String 和 RegExp
+      if (valType === _typeMap.String || valType === _typeMap.RegExp) {
+        return '' + val === '' + other
+      }
+      // Number
+      if (valType === _typeMap.Number) {
+        if (+val !== +val) return +other !== +other
+        return +val === +other
+      }
+      // Boolean Date
+      if (valType === _typeMap.Boolean || valType === _typeMap.Date) {
+        return +val === +other
+      }
+      // Symbol
+      if (valType === _typeMap.Symbol) {
+        _symbolProto.valueOf.call(val) === _symbolProto.valueOf.call(other)
+      }
+
+      if (valType !== _typeMap.Array) {
+        if (val.constructor !== other.constructor) {
+          return false
+        }
+      }
+
+      if (hashMap.has(val)) {
+        return hashMap.get(val) === other && hashMap.get(other) === val
+      }
+
+      hashMap.set(val, other)
+      hashMap.set(other, val)
+
+      let valKeys = _keys(val)
+      let otherKeys = _keys(other)
+      if (valKeys.length !== otherKeys.length) {
+        return false
+      }
+      let result = valKeys.every(key => {
+        let customizerResult = customizer && customizer(val[key], other[key], key, val, other, hashMap)
+        if (customizerResult !== void 0) return customizerResult
+        return otherKeys.includes(key) && _eq(val[key], other[key], customizer, hashMap)
+      })
+
+      hashMap.delete(val)
+      hashMap.delete(other)
+
+      return result
+    }
+
+
     //------------------------------------Array-----------------------------------------
     // _.chunk-----------------------------------------------------------------//
 
@@ -2256,9 +2334,9 @@
       let placeholder = bind.placeholder
       let boundFunc = function(...args) {
         if (!isFunction(func)) throw new Error('Bind must be called on a function')
-        let finalArgs = replaceHolders(partials, args, placeholder)
+        let finalArgs = _replaceHolders(partials, args, placeholder)
         //处理 new 调用boundFunc ,this失效问题
-        return executeBound(func, boundFunc, thisArg, this, finalArgs)
+        return _executeBound(func, boundFunc, thisArg, this, finalArgs)
         // return func.call(thisArg, ...finalArgs)
       }
       return boundFunc
@@ -2289,8 +2367,8 @@
       let boundFunc = function (...args) {
         let func = obj[key]
         if (!isFunction(func)) throw new Error('bindKey must be called on a function')
-        let finalArgs = replaceHolders(partials, args, placeholder)
-        return executeBound(func, boundFunc, obj, this, finalArgs)
+        let finalArgs = _replaceHolders(partials, args, placeholder)
+        return _executeBound(func, boundFunc, obj, this, finalArgs)
       }
       return boundFunc
     }
@@ -2581,8 +2659,8 @@
       let placeholder = partial.placeholder
       let boundFunc = function (...args) {
         if (!isFunction(func)) throw new Error('partial must be called on a function')
-        let finalArgs = replaceHolders(partials, args, placeholder)
-        return executeBound(func, boundFunc, this, this, finalArgs)
+        let finalArgs = _replaceHolders(partials, args, placeholder)
+        return _executeBound(func, boundFunc, this, this, finalArgs)
       }
       return boundFunc
     }
@@ -2610,8 +2688,8 @@
         if (!isFunction(func)) throw new Error('partialRight must be called on a function')
         args.reverse()
         partials.reverse()
-        let finalArgs = replaceHolders(partials, args, placeholder).reverse()
-        return executeBound(func, boundFunc, this, this, finalArgs)
+        let finalArgs = _replaceHolders(partials, args, placeholder).reverse()
+        return _executeBound(func, boundFunc, this, this, finalArgs)
       }
       return boundFunc
     }
@@ -3159,24 +3237,8 @@
         (boolean): Returns true if the values are equivalent, else false.
     **/
 
-    function isEqual(val, other, loopHash = new Map()) {
-      if (_objectProto.toString.call(val) != _objectProto.toString.call(other)) {
-        return false
-      }
-      //简单考虑, 只考虑 基本类型 , 数组, 正则, 对象
-      if (!isObject(val)) {
-        return val === other
-      }
-      if (isRegExp(val)) {
-        return val.toString() === other.toString()
-      }
-      if (loopHash.has(val)) {
-        return true
-      }
-      loopHash.set(val, 'exist')
-      let keys = _keys(val)
-      let otherKeys = _keys(other)
-      return keys.length === otherKeys.length && keys.every(key => isEqual(val[key], other[key], loopHash))
+    function isEqual(val, other) {
+      return _eq(val, other)
     }
 
     // .isEqualWith------------------------------------------------------------//
@@ -3193,32 +3255,9 @@
         (boolean): Returns true if the values are equivalent, else false.
     **/
 
-    function isEqualWith(val, other, customizer, loopHash = new Map()) {
-      if (customizer === void 0) return isEqual(val, other, loopHash)
-      let result = customizer(val, other)
-      if (result !== void 0) return result
-      if (_objectProto.toString.call(val) != _objectProto.toString.call(other)) {
-        return false
-      }
-      //简单考虑, 只考虑 基本类型 , 数组, 正则, 对象
-      if (!isObject(val)) {
-        return val === other
-      }
-      if (isRegExp(val)) {
-        return val.toString() === other.toString()
-      }
-      if (loopHash.has(val)) {
-        return true
-      }
-      loopHash.set(val, 'exist')
-      let keys = _keys(val)
-      let otherKeys = _keys(other)
-      return keys.length === otherKeys.length && keys.every(key => {
-        let tmp = customizer(val[key], other[key], key, val, other, loopHash)
-        if (tmp === void 0)
-          return isEqualWith(val[key], other[key], customizer, loopHash)
-        return tmp
-      })
+    function isEqualWith(val, other, customizer) {
+      let customizerResult = customizer && customizer(val, other)
+      return customizerResult === void 0 ? _eq(val, other, customizer) : !!customizerResult
     }
 
     // _.isError---------------------------------------------------------------//
