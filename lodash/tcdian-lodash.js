@@ -289,6 +289,26 @@
       arr[y] = tmp
     }
 
+    // Determines whether to execute a function as a constructor
+    // or a normal function with the provided arguments.
+    function executeBound(func, boundFunc, thisArg, context, args) {
+      if (!(context instanceof boundFunc)) return func.call(thisArg, ...args)
+      // func 的实例
+      let instance = Object.create(func.prototype)
+      let result = func.call(instance, ...args)
+      if (isObject(result)) return result
+      // instance 作为参数传递, func.call (instance, ...args) 会直接改变instance
+      return instance
+    }
+
+    // 整合 partials 和 args 为一个 完整的参数数组, 将partials中的 placeholder替换为 args中元素, args中剩余元素放到 数组结尾
+    function replaceHolders(partials, args, placeholder) {
+      let separator = 0
+      return partials.map(partial => {
+        if (partial === placeholder) return args[separator++]
+        return partial
+      }).concat(args.slice(separator))
+    }
     //------------------------------------Array-----------------------------------------
     // _.chunk-----------------------------------------------------------------//
 
@@ -2233,16 +2253,18 @@
     **/
 
     function bind(func, thisArg, ...partials) {
-      return function(...args) {
+      let placeholder = bind.placeholder
+      let boundFunc = function(...args) {
         if (!isFunction(func)) throw new Error('Bind must be called on a function')
-        let separator = 0
-        let finalArgs = partials.map(partial => {
-          if(partial === __) return args[separator++]
-          return partial
-        }).concat(args.slice(separator))
-        return func.call(thisArg, ...finalArgs)
+        let finalArgs = replaceHolders(partials, args, placeholder)
+        //处理 new 调用boundFunc ,this失效问题
+        return executeBound(func, boundFunc, thisArg, this, finalArgs)
+        // return func.call(thisArg, ...finalArgs)
       }
+      return boundFunc
     }
+
+    bind.placeholder = __;
 
     // _.bindKey---------------------------------------------------------------//
 
@@ -2263,17 +2285,17 @@
     **/
 
     function bindKey(obj, key, ...partials) {
-      return function (...args) {
+      let placeholder = bindKey.placeholder
+      let boundFunc = function (...args) {
         let func = obj[key]
         if (!isFunction(func)) throw new Error('bindKey must be called on a function')
-        let separator = 0
-        let finalArgs = partials.map(partial => {
-          if (partial === __) return args[separator++]
-          return partial
-        }).concat(args.slice(separator))
-        return func.call(obj, ...finalArgs)
+        let finalArgs = replaceHolders(partials, args, placeholder)
+        return executeBound(func, boundFunc, obj, this, finalArgs)
       }
+      return boundFunc
     }
+
+    bindKey.placeholder = __;
 
     // _.curry-----------------------------------------------------------------//
 
@@ -2293,15 +2315,19 @@
     **/
 
     function curry(func, arity = func.length) {
+      let placeholder = curry.placeholder
       return function(...args) {
-        let argsLen = args.filter(arg => arg !== __).length
+        let argsLen = args.filter(arg => arg !== placeholder).length
+        let boundFunc = bind(func, this, ...args)
         if (argsLen >= arity) {
-          return bind(func, this, ...args)()
+          return boundFunc()
         } else {
-          return curry(bind(func, this, ...args), arity - argsLen)
+          return curry(boundFunc, arity - argsLen)
         }
       }
     }
+
+    curry.placeholder = __;
 
     // _.curryRight------------------------------------------------------------//
 
@@ -2321,16 +2347,20 @@
     **/
 
     function curryRight(func, arity = func.length) {
+      let placeholder = curryRight.placeholder
       return function (...args) {
-        let argsLen = args.filter(arg => arg !== __).length
-        let finalArgs = new Array(arity - args.length).fill(__).concat(args)
+        let argsLen = args.filter(arg => arg !== placeholder).length
+        let finalArgs = new Array(arity - args.length).fill(placeholder).concat(args)
+        let boundFunc = bind(func, this, ...finalArgs)
         if (argsLen >= arity) {
-          return bind(func, this, ...finalArgs)()
+          return boundFunc()
         } else {
-          return curryRight(bind(func, this, ...finalArgs), arity - argsLen)
+          return curryRight(boundFunc, arity - argsLen)
         }
       }
     }
+
+    curryRight.placeholder = __;
 
     // _.debounce--------------------------------------------------------------//
 
@@ -2548,16 +2578,16 @@
     **/
 
     function partial(func, ...partials) {
-      return function (...args) {
+      let placeholder = partial.placeholder
+      let boundFunc = function (...args) {
         if (!isFunction(func)) throw new Error('partial must be called on a function')
-        let separator = 0
-        let finalArgs = partials.map(partial => {
-          if (partial === __) return args[separator++]
-          return partial
-        }).concat(args.slice(separator))
-        return func.call(this, ...finalArgs)
+        let finalArgs = replaceHolders(partials, args, placeholder)
+        return executeBound(func, boundFunc, this, this, finalArgs)
       }
+      return boundFunc
     }
+
+    partial.placeholder = __
 
     // _.partialRight----------------------------------------------------------//
     /**
@@ -2574,18 +2604,19 @@
         (Function): Returns the new partially applied function.
     **/
 
-    function partialRight(func, ...partivals) {
-      return function (...args) {
+    function partialRight(func, ...partials) {
+      let placeholder = partial.placeholder
+      let boundFunc = function (...args) {
         if (!isFunction(func)) throw new Error('partialRight must be called on a function')
-        let separator = 0
         args.reverse()
-        let finalArgs = partivals.reverse().map(partial => {
-          if(partial === __) return args[separator++]
-          return partial
-        }).concat(args.slice(separator)).reverse()
-        return func.call(this, ...finalArgs)
+        partials.reverse()
+        let finalArgs = replaceHolders(partials, args, placeholder).reverse()
+        return executeBound(func, boundFunc, this, this, finalArgs)
       }
+      return boundFunc
     }
+
+    partial.placeholder = __
 
     // _.rearg-----------------------------------------------------------------//
 
@@ -5718,7 +5749,7 @@
     **/
 
     function bindAll(obj, methodNames) {
-      if (!methodNames) throw new Error('bindAll must be passed function names')
+      if (!isArray(methodNames) && !isFunction(methodNames)) throw new Error('bindAll must be passed function names')
       methodNames = isArray(methodNames) ? methodNames : [methodNames]
       methodNames.forEach(methodName => {
         obj[methodName] = bind(obj[methodName], obj)
@@ -7118,4 +7149,5 @@
   }
 
   root.tcdian = root.__ = _runInContext()
+
 }).call(this)
