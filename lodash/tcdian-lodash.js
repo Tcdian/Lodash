@@ -114,22 +114,20 @@
     }
 
     // _baseAssign 内部函数
-    function _baseAssign(obj, coverDefalult, prototypeChain, deep, customizer, sources) {
+    function _baseAssign(obj, coverDefalult, prototypeChain, deep, customizer, sources, stackMap = new Map()) {
       sources.forEach(items => {
         for (let key in items) {
           let val = items[key]
 
           //是否有customizer
-          if (customizer) {
-            let customizerResult = customizer(obj[key], val, key, obj, items)
-            if (customizerResult) val = customizerResult
-          }
+          let customizerResult = customizer && customizer(obj[key], val, key, obj, stackMap)
+          val = customizerResult !== void 0 ? customizerResult : val
 
           //是否深度复制
-          if (deep && isObject(obj[key])) {
-            val = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [val])
+          if (customizerResult === void 0 && deep && isObject(obj[key]) && !stackMap.has(obj[key])) {
+              stackMap.set(obj[key], 'exist')
+              val = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [val], stackMap)
           }
-
           //是非覆盖已有属性
           if (!coverDefalult && obj.hasOwnProperty(key)) {
             continue
