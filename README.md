@@ -4,9 +4,12 @@
 这次lodash的简单实现, 有几个我印象比较深的地方:
 * iteratee <br>
 通过iteratee函数, 将传入的参数处理成一个函数,这使得我们在使用lodash的一些高阶函数时,传入的值并不局限于函数,传入的值会被iteratee进行处理,返回需要的函数.
-* cloneDeep isEqual <br>
-完整的实现cloneDeep 和 isEqual比较复杂,我在实现中只是简单的考虑了常用的数据类型(基础类型,数组,对象,正则),对于ES6新加入的Set Map 等没有全部的考虑.还有就是
-其中复杂的循环引用问题,非enumerable属性问题, 原型链问题, 我在实现中的考虑并不完全,需要进一步去完善.
+* isEqual <br>
+isEqual 的实现需要考虑很多问题, 我在实现中没有考虑ES6新加入的Map 和 Set等新的数据结构, 对于循环引用问题,我用一个Map存储出现过的值.
+构造函数问题, 如果两个值均有constructor,则判断两个值的constructor是否为同一个, 如果其中一个没有constructor, 则忽略不考虑,判断其他属性是否equal.
+对于对象的Symbol属性, 我在实现中没有去考虑. isEqual 还需要进一步去完善.
+* cloneDeep <br>
+和isEqual类似, 我在实现的时候考虑的情况和isEqual基本类似,没有考虑ES6新添加的Map 和 Set.
 * throttle debounce <br>
 lodash的 这两个函数配置项比较多, 实现也较为复杂, 基本上这两个函数相当于我们平时使用中的debounce和throttle的混合体.
 * bind <br>

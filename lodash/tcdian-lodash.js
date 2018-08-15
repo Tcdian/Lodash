@@ -313,9 +313,9 @@
       }).concat(args.slice(separator))
     }
 
-    // _eq
+    // _baseIsEqual
     // Internal recursive comparison function for `isEqual` & `isEqualWith`.
-    function _eq(val, other, customizer, hashMap = new Map()) {
+    function _baseIsEqual(val, other, customizer, stackMap = new Map()) {
       // _wrapped 对象
       if (val instanceof __) val = val._wrapped
       if (other instanceof __) other = other._wrapped
@@ -357,17 +357,18 @@
       }
 
       if (valType !== _typeMap.Array) {
-        if (val.constructor !== other.constructor) {
+        // 对象的 constructor 是否相同
+        if (val.constructor !== other.constructor && 'constructor' in val && 'constructor' in other) {
           return false
         }
       }
 
-      if (hashMap.has(val)) {
-        return hashMap.get(val) === other && hashMap.get(other) === val
+      if (stackMap.has(val)) {
+        return stackMap.get(val) === other && stackMap.get(other) === val
       }
 
-      hashMap.set(val, other)
-      hashMap.set(other, val)
+      stackMap.set(val, other)
+      stackMap.set(other, val)
 
       let valKeys = _keys(val)
       let otherKeys = _keys(other)
@@ -375,17 +376,75 @@
         return false
       }
       let result = valKeys.every(key => {
-        let customizerResult = customizer && customizer(val[key], other[key], key, val, other, hashMap)
+        let customizerResult = customizer && customizer(val[key], other[key], key, val, other, stackMap)
         if (customizerResult !== void 0) return customizerResult
-        return otherKeys.includes(key) && _eq(val[key], other[key], customizer, hashMap)
+        return otherKeys.includes(key) && _baseIsEqual(val[key], other[key], customizer, stackMap)
       })
 
-      hashMap.delete(val)
-      hashMap.delete(other)
+      stackMap.delete(val)
+      stackMap.delete(other)
 
       return result
     }
 
+    // _baseClone
+      function _baseClone(val, isDeep, customizer, stackMap = new Map()) {
+        if (!isObject(val)) {
+          return val
+        }
+        let valType = _objectProto.toString.call(val)
+        let valConstructor = val.constructor
+        let result
+        // Date Boolean
+        if (valType === _typeMap.Date || valType === _typeMap.Boolean) {
+          result = new valConstructor(+val)
+        }
+        // Number String
+        if (valType === _typeMap.Number || valType === _typeMap.String) {
+          result = new valConstructor(val)
+        }
+        // RegExp
+        if (valType === _typeMap.RegExp) {
+          result = new valConstructor(val.source, /[img]*$/.exec(val)[0])
+          result.lastIndex = val.lastIndex
+        }
+        // Symbol
+        if (valType === _typeMap.Symbol) {
+          result = Object(_symbolProto.valueOf.call(val))
+        }
+        // Function
+        if (valType === _typeMap.Function) {
+          result = {}
+        }
+        // Array
+        if (valType === _typeMap.Array) {
+          result = new valConstructor(val.length)
+        }
+        // Object
+        if (valType === _typeMap.Object) {
+          result = Object.create(Object.getPrototypeOf(val))
+        }
+
+        if (stackMap.has(val)) {
+          return stackMap.get(val)
+        }
+        stackMap.set(val, result)
+
+        let keys = _keys(val)
+        keys.forEach(key => {
+          let customizerResult = customizer && customizer(val[key], key, val, stackMap)
+          if (customizerResult !== void 0) {
+            result[key] = customizerResult
+          } else if (!isDeep) {
+            result[key] = val[key]
+          } else {
+            result[key] = _baseClone(val[key], isDeep, customizer, stackMap)
+          }
+        })
+
+        stackMap.delete(val)
+        return result
+      }
 
     //------------------------------------Array-----------------------------------------
     // _.chunk-----------------------------------------------------------------//
@@ -2890,29 +2949,7 @@
     **/
 
     function clone(val) {
-
-      //原型链问题 ?
-      if (!isObject(val)) {
-        return val
-      }
-      if (isElement(val) || isFunction(val) || isWeakMap(val) || isWeakSet(val) || isError(val) || _objectProto.toString.call(val) === _typeMap.HTMLCollection) {
-        return {}
-      }
-      if (isArray(val) || isTypedArray(val) || isArrayBuffer(val) || isArguments(val)) {
-        return _arrayProto.slice.call(val)
-      }
-      if (isMap(val)) {
-        let result = new Map()
-        val.forEach((item, key) => {
-          result.set(key, item)
-        })
-        return result
-      }
-      if(isSet(val)) {
-        return new Set(val)
-      }
-      let result = Object.create(Object.getPrototypeOf(val))
-      return Object.assign(result, val)
+      return _baseClone(val)
     }
 
     // _.cloneDeep-------------------------------------------------------------//
@@ -2925,29 +2962,8 @@
         ( * ): Returns the deep cloned value.
     **/
 
-    function cloneDeep(val, loopHash = new Map()) {
-      //循环引用问题 ?
-      //非enumerable问题 ?
-      //原型链问题 ?
-
-      //避免过于复杂,仅考虑基础类型, 数组, 对象, 正则
-      if (!isObject(val)) {
-        return val
-      }
-      if (isRegExp(val)) {
-        return new RegExp(val)
-      }
-      if (loopHash.has(val)) {
-        return val
-      }
-      loopHash.set(val, 'exist')
-      let keys = _keys(val)
-      let result = isArray(val) ? [] : {}
-      Object.setPrototypeOf(result, Object.getPrototypeOf(val))
-      keys.forEach(key => {
-        result[key] = cloneDeep(val[key], loopHash)
-      })
-      return result
+    function cloneDeep(val) {
+      return _baseClone(val, true)
     }
 
     // _.cloneDeepWith---------------------------------------------------------//
@@ -2960,32 +2976,10 @@
         ( * ): Returns the deep cloned value.
     **/
 
-    function cloneDeepWith(val, customizer, loopHash = new Map()) {
-      if (customizer === void 0) return cloneDeep(val)
-      //避免过于复杂,仅考虑 普通值, 数组, 对象, 正则
-      let customizerResult = customizer(val)
+    function cloneDeepWith(val, customizer) {
+      let customizerResult = customizer && customizer(val)
       if (customizerResult !== void 0) return customizerResult
-      if (!isObject(val)) {
-        return val
-      }
-      if (isRegExp(val)) {
-        return new RegExp(val)
-      }
-      if (loopHash.has(val)) {
-        return val
-      }
-      loopHash.set(val, 'exist')
-      let keys = _keys(val)
-      let result = isArray(val) ? [] : {}
-      Object.setPrototypeOf(result, Object.getPrototypeOf(val))
-      keys.forEach(key => {
-        let tmp = customizer(val[key], key, val, loopHash)
-        if(tmp === void 0)
-          result[key] = cloneDeepWith(val[key], customizer, loopHash)
-        result[key] = tmp
-      })
-      return result
-
+      return _baseClone(val, true, customizer)
     }
 
     // _.cloneWith-------------------------------------------------------------//
@@ -3002,8 +2996,9 @@
     **/
 
     function cloneWith(val, customizer) {
-      if (customizer === void 0 || customizer(val) === void 0) return clone(val)
-      return customizer(val)
+      let customizerResult = customizer && customizer(val)
+      if (customizerResult !== void 0) return customizerResult
+      return _baseClone(val, false, customizer)
     }
 
     // _.conformsTo------------------------------------------------------------//
@@ -3238,7 +3233,7 @@
     **/
 
     function isEqual(val, other) {
-      return _eq(val, other)
+      return _baseIsEqual(val, other)
     }
 
     // .isEqualWith------------------------------------------------------------//
@@ -3257,7 +3252,7 @@
 
     function isEqualWith(val, other, customizer) {
       let customizerResult = customizer && customizer(val, other)
-      return customizerResult === void 0 ? _eq(val, other, customizer) : !!customizerResult
+      return customizerResult === void 0 ? _baseIsEqual(val, other, customizer) : !!customizerResult
     }
 
     // _.isError---------------------------------------------------------------//
