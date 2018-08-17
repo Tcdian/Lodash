@@ -6,7 +6,7 @@
 通过iteratee函数, 将传入的参数处理成一个函数,这使得我们在使用lodash的一些高阶函数时,传入的值并不局限于函数,传入的值会被iteratee进行处理,返回需要的函数.
 * isEqual <br>
 isEqual 的实现需要考虑很多问题, 我在实现中没有考虑ES6新加入的Map 和 Set等新的数据结构, 对于循环引用问题,我用一个Map存储出现过的值.
-构造函数问题, 如果两个值均有constructor,则判断两个值的constructor是否为同一个, 如果其中一个没有constructor, 则忽略不考虑,判断其他属性是否equal.
+原型链方面, 如果两个值均有constructor,则判断两个值的constructor是否为同一个, 如果其中一个没有constructor, 则忽略不考虑,判断其他属性是否equal.
 对于对象的Symbol属性, 我在实现中没有去考虑. isEqual 还需要进一步去完善.
 * cloneDeep <br>
 和isEqual类似, 我在实现的时候考虑的情况和isEqual基本类似,没有考虑ES6新添加的Map 和 Set.

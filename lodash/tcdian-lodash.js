@@ -481,7 +481,7 @@
     **/
 
     function compact(arr) {
-      return arr.filter(val => !!identity(val))
+      return arr.filter(Boolean)
     }
 
     // _.concat----------------------------------------------------------------//
@@ -2534,7 +2534,7 @@
       let result
       let context
       let lastArgs
-      // 功能不完全,有待验添加和验证
+
       return function (...args) {
         let runtime = Date.now()
         if (!previous && leading === false) {
