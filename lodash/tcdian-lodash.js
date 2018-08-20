@@ -1158,6 +1158,7 @@
     **/
 
     function sortedIndex(arr, val) {
+      if (val > arr[arr.length - 1]) return arr.length
       let left = 0
       let right = arr.length - 1
       while(left < right) {
@@ -1186,6 +1187,7 @@
 
     function sortedIndexBy(arr, val, iteratee = identity) {
       iteratee = _cb(iteratee, DMZ, 1)
+      if (iteratee(val) > iteratee(arr[arr.length - 1])) return arr.length
       let left = 0
       let right = arr.length - 1
       while (left < right) {
@@ -1211,7 +1213,7 @@
     **/
 
     function sortedIndexOf(arr, val) {
-      let index =sortedIndex(arr, val)
+      let index = sortedIndex(arr, val)
       return arr[index] === val ? index : -1
     }
 
@@ -1228,6 +1230,7 @@
     **/
 
     function sortedLastIndex(arr, val) {
+      if (val < arr[0]) return 0
       let left = 0
       let right = arr.length - 1
       while(left < right) {
@@ -1256,6 +1259,7 @@
 
     function sortedLastIndexBy(arr, val, iteratee = identity) {
       iteratee = _cb(iteratee, DMZ, 1)
+      if(iteratee(val) < iteratee(arr[0])) return 0
       let left = 0
       let right = arr.length - 1
       while (left < right) {
