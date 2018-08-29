@@ -2453,17 +2453,19 @@
         (Function): Returns the new curried function.
     **/
 
-    function curry(func, arity = func.length) {
+    function curry(func, arity = func.length, guard, partial = []) {
+      partial = guard === void 0 ? partial : []
       let placeholder = curry.placeholder
-      return function(...args) {
+      let boundFunc = function(...args) {
         let argsLen = args.filter(arg => arg !== placeholder).length
-        let boundFunc = bind(func, this, ...args)
+        let finalArgs = _replaceHolders(partial, args, placeholder)
         if (argsLen >= arity) {
-          return boundFunc()
+          return _executeBound(func, boundFunc, this, this, finalArgs)
         } else {
-          return curry(boundFunc, arity - argsLen)
+          return curry(func, arity - argsLen, void 0, finalArgs)
         }
       }
+      return boundFunc
     }
 
     curry.placeholder = __;
@@ -2485,18 +2487,20 @@
         (Function): Returns the new curried function.
     **/
 
-    function curryRight(func, arity = func.length) {
+    function curryRight(func, arity = func.length, guard, partial = []) {
+      partial = guard === void 0 ? partial : []
       let placeholder = curryRight.placeholder
-      return function (...args) {
+      let boundFunc = function (...args) {
         let argsLen = args.filter(arg => arg !== placeholder).length
-        let finalArgs = new Array(arity - args.length).fill(placeholder).concat(args)
-        let boundFunc = bind(func, this, ...finalArgs)
+        let arityArgs = new Array(arity - args.length).fill(placeholder).concat(args)
+        let finalArgs = _replaceHolders(partial, arityArgs, placeholder)
         if (argsLen >= arity) {
-          return boundFunc()
+          return _executeBound(func, boundFunc, this, this, finalArgs)
         } else {
-          return curryRight(boundFunc, arity - argsLen)
+          return curryRight(func, arity - argsLen, void 0, finalArgs)
         }
       }
+      return boundFunc
     }
 
     curryRight.placeholder = __;
