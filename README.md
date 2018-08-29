@@ -11,13 +11,13 @@ isEqual 的实现需要考虑很多问题, 我在实现中没有考虑ES6新加�
 * cloneDeep <br>
 和isEqual类似, 我在实现的时候考虑的情况和isEqual基本类似,没有考虑ES6新添加的Map 和 Set.
 * throttle debounce <br>
-lodash的 这两个函数配置项比较多, 实现也较为复杂, 基本上这两个函数相当于我们平时使用中的debounce和throttle的混合体.
+lodash的 这两个函数配置项比较多, 实现也较为复杂, 基本上这两个函数相当于我们平时使用中的debounce 和 throttle的混合体.
 * bind <br>
-lodash的bind函数支持传入lodash自身来当做占位符
+lodash的bind函数支持传入lodash自身来当做占位符, bind返回的函数, 在 new调用时 bind的 this无效
 * curry <br>
-函数柯里化,函数接收的参数没有达到指定数量时, 将传入的参数bind到函数上, 返回该bind函数
+函数柯里化,函数接收的参数没有达到指定数量时, 将传入的参数记录, 并返回新的函数, 需要注意的是this 的指向和 new调用
 * memoize <br>
 将函数运行的结果保存在Cache中, 函数被重复调用时,返回保存的结果, Cache使用ES6 Map, 支持对Cache进行修改
 * chain <br>
 lodash 本身的实现是支持无new 调用的, 此方法让lodash支持链式调用.
-##### 还有很多函数在实现的过程中遇到过一些问题, 计划在接下来的时间里, 阅读一下lodash的源码,学习lodash作者的代码实现思路和方式, 之后再去重新实现一遍lodash库.我认为很多细节的东西,需要不断去摸索,尝试,才能掌握好.对自己说一声: 加油 !
+##### 还有很多函数在实现的过程中遇到过一些问题, 计划在之后的时间里, 阅读一下lodash的源码,学习lodash作者的代码实现思路和方式, 之后再去重新实现一遍lodash库.我认为很多细节的东西,需要不断去摸索,尝试,才能掌握好.对自己说一声: 加油 !
