@@ -281,8 +281,8 @@
       return resultArr
     }
 
-    // _exchange 内部函数
-    function _exchange(arr, x, y) {
+    // _swap 内部函数
+    function _swap(arr, x, y) {
       let tmp = arr[x]
       arr[x] = arr[y]
       arr[y] = tmp
@@ -2239,7 +2239,7 @@
       let len = values.length
       for (let i = 0; i < len - 1; i++) {
         let randomIndex = Math.floor(Math.random() * (len - i)) + i
-        _exchange(values, i, randomIndex)
+        _swap(values, i, randomIndex)
       }
       return values
     }

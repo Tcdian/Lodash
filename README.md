@@ -7,7 +7,7 @@
 * isEqual <br>
 isEqual 的实现需要考虑很多问题, 我在实现中没有考虑ES6新加入的Map 和 Set等新的数据结构, 对于循环引用问题,我用一个Map存储出现过的值.
 原型链方面, 如果两个值均有constructor,则判断两个值的constructor是否为同一个, 如果其中一个没有constructor, 则忽略不考虑,判断其他属性是否equal.
-对于对象的Symbol属性, 我在实现中没有去考虑. isEqual 还需要进一步去完善.
+对于对象的Symbol属性(Object.getOwnPropertySymbols), enumerable为false的属性(Object.getOwnPropertyNames), 我在实现中没有去考虑. isEqual 还需要进一步去完善.
 * cloneDeep <br>
 和isEqual类似, 我在实现的时候考虑的情况和isEqual基本类似,没有考虑ES6新添加的Map 和 Set.
 * throttle debounce <br>
