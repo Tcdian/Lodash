@@ -214,7 +214,7 @@
         }
       }
       return function (...args) {
-        return func.apply(context, args)
+        return func.call(context, ...args)
       }
     }
 
@@ -2348,7 +2348,7 @@
 
     function ary(func, argsCount = func.length) {
       return function(...args) {
-        return func.apply(this, args.slice(0, argsCount))
+        return func.call(this, ...args.slice(0, argsCount))
       }
     }
 
@@ -2601,7 +2601,7 @@
 
     function delay(func, wait, ...args) {
       return setTimeout(() => {
-        return func.apply(DMZ, args)
+        return func.call(DMZ, ...args)
       }, wait);
     }
 
@@ -2617,7 +2617,7 @@
 
     function flip(func) {
       return function(...args) {
-        return func.apply(this, args.reverse())
+        return func.call(this, ...args.reverse())
       }
     }
 
@@ -2666,7 +2666,7 @@
 
     function negate(predicate) {
       return function (...args) {
-        return !predicate.apply(this, args)
+        return !predicate.call(this, ...args)
       }
     }
 
@@ -5880,7 +5880,7 @@
     function flow(funcs) {
       return function (...args) {
         return funcs.reduce((accumulator, currentVal, index) => {
-          if (index === 0) return currentVal.apply(DMZ, accumulator)
+          if (index === 0) return currentVal.call(DMZ, ...accumulator)
           return currentVal.call(DMZ, accumulator)
         }, args)
       }
