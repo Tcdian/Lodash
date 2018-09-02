@@ -403,7 +403,7 @@
         }
         // RegExp
         if (valType === _typeMap.RegExp) {
-          result = new valConstructor(val.source, /[img]*$/.exec(val)[0])
+          result = new valConstructor(val.source, val.flags)
           result.lastIndex = val.lastIndex
         }
         // Symbol
