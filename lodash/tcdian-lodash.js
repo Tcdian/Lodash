@@ -2534,9 +2534,9 @@
     **/
 
     function debounce(func, wait = 0, options = {}) {
-      let leading = options.hasOwnProperty('leading') ? options.leading : true
-      let trailing = options.hasOwnProperty('trailing') ? options.trailing : true
-      let maxWait = options.hasOwnProperty('maxWait') ? options.maxWait : Infinity
+      let { leading = true } = options
+      let { trailing = true } = options
+      let { maxWait = Infinity } = options
       let previous = 0
       let timeoutID = null
       let result
@@ -2851,8 +2851,8 @@
     **/
 
     function throttle(func, wait = 0, options = {}) {
-      let leading = options.hasOwnProperty('leading') ? options.leading : true
-      let trailing = options.hasOwnProperty('trailing') ? options.trailing : true
+      let {leading = true} = options
+      let {trailing = true} = options
       let previous = 0
       let timeoutID = null
       let result
@@ -5679,9 +5679,9 @@
     **/
 
     function truncate(str = '', options = {}) {
-      let length = options['length'] || 30
-      let omission = options['omission'] || '...'
-      let separator = options['separator']
+      let {length = 30} = options
+      let {omission = '...'} = options
+      let {separator} = options
       let strLen = length - omission.length > 0 ? length - omission.length : 0
       if (separator === void 0) {
         return str.substr(0, strLen) + omission
@@ -6033,11 +6033,12 @@
         obj = __
       }
       let funcArr = functions(source)
+      let {chain: optionChain} = options
       forEach(funcArr, funcName => {
         let func = obj[funcName] = source[funcName]
         obj.prototype[funcName] = function (...args) {
           args.unshift(this._wrapped)
-          if (options.chain && this._chain) {
+          if (optionChain === true && this._chain) {
             return chain(func.call(obj, ...args))
           }
           return func.call(obj, ...args)
