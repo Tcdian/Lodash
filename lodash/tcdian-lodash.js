@@ -86,7 +86,7 @@
     function _keys(obj) {
       let keys
       if (isArray(obj)) {
-        keys = new Array(obj.length).fill(1).map((it, index) => index)
+        keys = Array.from({length: obj.length}, (it, index) => index)
       } else {
         keys = Object.keys(obj)
       }
@@ -1653,7 +1653,7 @@
 
     function zip(...arrays) {
       if(arrays.length === 0 || arrays[0].length === 0) return []
-      let result = new Array(arrays[0].length).fill(1).map(it => [])
+      let result = Array.from({length: arrays[0].length}, () => [])
       for(let i = 0; i < arrays.length; i++) {
         for(let j = 0; j < arrays[i].length; j++) {
           result[j][i] = arrays[i][j]
@@ -2775,7 +2775,7 @@
 
     function rearg(func, indexes) {
       return function (...args) {
-        let finalArgs = new Array(indexes.length)
+        let finalArgs = Array.from({length: indexes.length})
         indexes.forEach((item, i) => {
           finalArgs[i] = args[item]
         })
