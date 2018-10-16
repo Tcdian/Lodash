@@ -2,15 +2,16 @@
 ##### 为了加强自己对js基础的掌握, 计划用七天时间, 仿照lodash的功能, 仿写一个简单的lodash库
 
 最后用时九天,完成lodash共 298 个函数,其中很多函数的实现没有完整的还原lodash函数的所有功能,并且很多的测试用例都比较少,很多函数的实现存在一些问题,这是我今后需要去修改和完善的地方.<br>
+
 这次lodash的简单实现, 有几个我印象比较深的地方:
 ##### isEqual / isEqualWith
-- isEqual<br>
+- isEqual
   ```
   function isEqual(val, other) {
     return _baseIsEqual(val, other)
   }
   ```
-- isEqualWith<br>
+- isEqualWith
   ```
   function isEqualWith(val, other, customizer) {
     let customizerResult = customizer && customizer(val, other)
@@ -19,8 +20,7 @@
       : !!customizerResult
   }
   ```
-- _baseIsEqual <br>
-  isEqual 和 isEqualWith 功能基本类似, 区别在于 isEqualWith 接收一个比较函数customizer, 我将两个函数的功能整合到了 _baseIsEqual 中, 下面是 isEqual 函数
+- _baseIsEqual 是 isEqual 和 isEqualWith 功能基本类似, 区别在于 isEqualWith 接收一个比较函数customizer, 我将两个函数的功能整合到了 _baseIsEqual 中, 下面是 _baseIsEqual 函数
   ```
   function _baseIsEqual(val, other, customizer, stackMap = new Map()) {
 
@@ -113,13 +113,13 @@
   }
   ```
 ##### clone / cloneWith / cloneDeep / cloneDeepWith <br>
-- clone <br>
+- clone
   ```
   function clone(val) {
     return _baseClone(val)
   }
   ```
-- cloneWith <br>
+- cloneWith
   ```
   function cloneWith(val, customizer) {
     let customizerResult = customizer && customizer(val)
@@ -127,13 +127,13 @@
     return _baseClone(val, false, customizer)
   }
   ```
-- cloneDeep <br>
+- cloneDeep
   ```
   function cloneDeep(val) {
     return _baseClone(val, true)
   }
   ```
-- cloneDeepWith <br>
+- cloneDeepWith
   ```
   function cloneDeepWith(val, customizer) {
     let customizerResult = customizer && customizer(val)
@@ -141,8 +141,7 @@
     return _baseClone(val, true, customizer)
   }
   ```
-- _baseClone <br>
-  上方四个函数实现的基础函数
+- _baseClone 以上四个函数的基础函数
   ```
   function _baseClone(val, isDeep, customizer, stackMap = new Map()) {
 
@@ -278,7 +277,7 @@
 
   bind.placeholder = __
   ```
-- curry <br>
+- curry
   ```
   function curry(func, arity = func.length, guard, partial = []) {
     // guard 守卫, 防止传入多余参数
