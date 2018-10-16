@@ -1,23 +1,336 @@
 ## tcdian_lodash
-##### 为了加强自己对js基础的掌握, 计划用七天时间仿写一个lodash库
+##### 为了加强自己对js基础的掌握, 计划用七天时间, 仿照lodash的功能, 仿写一个简单的lodash库
+
 最后用时九天,完成lodash共 298 个函数,其中很多函数的实现没有完整的还原lodash函数的所有功能,并且很多的测试用例都比较少,很多函数的实现存在一些问题,这是我今后需要去修改和完善的地方.<br>
 这次lodash的简单实现, 有几个我印象比较深的地方:
-* iteratee <br>
+##### isEqual / isEqualWith
+- isEqual<br>
+  ```
+  function isEqual(val, other) {
+    return _baseIsEqual(val, other)
+  }
+  ```
+- isEqualWith<br>
+  ```
+  function isEqualWith(val, other, customizer) {
+    let customizerResult = customizer && customizer(val, other)
+    return customizerResult === void 0
+      ? _baseIsEqual(val, other, customizer)
+      : !!customizerResult
+  }
+  ```
+- _baseIsEqual <br>
+  isEqual 和 isEqualWith 功能基本类似, 区别在于 isEqualWith 接收一个比较函数customizer, 我将两个函数的功能整合到了 _baseIsEqual 中, 下面是 isEqual 函数
+  ```
+  function _baseIsEqual(val, other, customizer, stackMap = new Map()) {
+
+    // _wrapped 对象
+    if (val instanceof __) val = val._wrapped
+    if (other instanceof __) other = other._wrapped
+
+    // 类型不同, 返回false
+    let valType = _objectProto.toString.call(val)
+    if (valType != _objectProto.toString.call(other)) {
+      return false
+    }
+
+    // val === other
+    if (val === other) {
+      return true
+    }
+
+    // `NaN`
+    if (val !== val) {
+      return other !== other
+    }
+
+    if (!isObjectLike(val) && !isObjectLike(other)) {
+      return false
+    }
+
+    // String Number Date Boolean Symbol 之类的包装对象 和 RegExp
+    // String 和 RegExp
+    if (valType === _typeMap.String || valType === _typeMap.RegExp) {
+      return '' + val === '' + other
+    }
+
+    // Number
+    if (valType === _typeMap.Number) {
+      if (+val !== +val) return +other !== +other
+      return +val === +other
+    }
+
+    // Boolean Date
+    if (valType === _typeMap.Boolean || valType === _typeMap.Date) {
+      return +val === +other
+    }
+
+    // Symbol
+    if (valType === _typeMap.Symbol) {
+      _symbolProto.valueOf.call(val) === _symbolProto.valueOf.call(other)
+    }
+
+    if (valType !== _typeMap.Array) {
+      // 对象的 constructor 是否相同, 这里参考的是　underscore的 源码
+      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+      // from different frames are.
+      if (val.constructor !== other.constructor
+        && !(isFunction(val.constructor)
+          && val.constructor instanceof val.constructor
+          && isFunction(other.constructor)
+          && other.constructor instanceof other.constructor)
+        && ('constructor' in val && 'constructor' in other)) {
+        return false
+      }
+    }
+
+    // 使用Map存储, 防止出现循环引用问题
+    if (stackMap.has(val)) {
+      return stackMap.get(val) === other && stackMap.get(other) === val
+    }
+    stackMap.set(val, other)
+    stackMap.set(other, val)
+
+    // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
+    let valKeys = _keys(val)
+    let otherKeys = _keys(other)
+
+    if (valKeys.length !== otherKeys.length) {
+      return false
+    }
+
+    // 递归对比每一个属性
+    let result = valKeys.every(key => {
+      let customizerResult = customizer && customizer(val[key], other[key], key, val, other, stackMap)
+      if (customizerResult !== void 0) return customizerResult
+      return otherKeys.includes(key) && _baseIsEqual(val[key], other[key], customizer, stackMap)
+    })
+
+    stackMap.delete(val)
+    stackMap.delete(other)
+
+    return result
+  }
+  ```
+##### clone / cloneWith / cloneDeep / cloneDeepWith <br>
+- clone <br>
+  ```
+  function clone(val) {
+    return _baseClone(val)
+  }
+  ```
+- cloneWith <br>
+  ```
+  function cloneWith(val, customizer) {
+    let customizerResult = customizer && customizer(val)
+    if (customizerResult !== void 0) return customizerResult
+    return _baseClone(val, false, customizer)
+  }
+  ```
+- cloneDeep <br>
+  ```
+  function cloneDeep(val) {
+    return _baseClone(val, true)
+  }
+  ```
+- cloneDeepWith <br>
+  ```
+  function cloneDeepWith(val, customizer) {
+    let customizerResult = customizer && customizer(val)
+    if (customizerResult !== void 0) return customizerResult
+    return _baseClone(val, true, customizer)
+  }
+  ```
+- _baseClone <br>
+  上方四个函数实现的基础函数
+  ```
+  function _baseClone(val, isDeep, customizer, stackMap = new Map()) {
+
+    // 基础类型, 直接返回 val
+    if (!isObject(val)) {
+      return val
+    }
+
+    let valType = _objectProto.toString.call(val)
+    let valConstructor = val.constructor
+    let result
+
+    // Date Boolean 包装对象
+    if (valType === _typeMap.Date || valType === _typeMap.Boolean) {
+      result = new valConstructor(+val)
+    }
+
+    // Number String 包装对象
+    if (valType === _typeMap.Number || valType === _typeMap.String) {
+      result = new valConstructor(val)
+    }
+
+    // RegExp
+    if (valType === _typeMap.RegExp) {
+      result = new valConstructor(val.source, val.flags)
+      result.lastIndex = val.lastIndex
+    }
+
+    // Symbol 包装对象
+    if (valType === _typeMap.Symbol) {
+      result = Object(_symbolProto.valueOf.call(val))
+    }
+
+    // Function
+    if (valType === _typeMap.Function) {
+      result = {}
+    }
+
+    // Array
+    if (valType === _typeMap.Array) {
+      result = new valConstructor(val.length)
+    }
+
+    // Object
+    if (valType === _typeMap.Object) {
+      result = Object.create(Object.getPrototypeOf(val))
+    }
+
+    // 处理循环引用问题
+    if (stackMap.has(val)) {
+      return stackMap.get(val)
+    }
+    stackMap.set(val, result)
+
+    // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
+    let keys = _keys(val)
+    // 根据 isDeep , 看是否需要深度克隆
+    keys.forEach(key => {
+      // customizer cloneWith 和 cloneDeepWith 定制值
+      let customizerResult = customizer && customizer(val[key], key, val, stackMap)
+      if (customizerResult !== void 0) {
+        result[key] = customizerResult
+      } else if (!isDeep) {
+        result[key] = val[key]
+      } else {
+        result[key] = _baseClone(val[key], isDeep, customizer, stackMap)
+      }
+    })
+
+    stackMap.delete(val)
+    return result
+  }
+  ```
+##### throttle / debounce <br>
+- lodash的 throttle 和 debounce 比较类似, 部分 options 不一样, 这里以 throttle 为例
+  ```
+  function throttle(func, wait = 0, options = {}) {
+    // Specify invoking on the leading edge of the timeout.
+    let {leading = true} = options
+    // Specify invoking on the trailing edge of the timeout.
+    let {trailing = true} = options
+    let previous = 0
+    let timeoutID = null
+    let result
+    let context
+    let lastArgs
+
+    return function (...args) {
+      let runtime = Date.now()
+      context = this
+      lastArgs = args
+      if (previous === 0 && leading === false) {
+        previous = runtime
+      }
+      // 需要等待多长时间后可以执行
+      let remaining = wait - (runtime - previous)
+      // remaining > wait 说明时间被调整过
+      if (remaining <= 0 || remaining > wait) {
+        if (timeoutID) {
+          clearTimeout(timeoutID)
+          timeoutID = null
+        }
+        previous = runtime
+        result = func.call(context, ...lastArgs)
+      } else if ( !timeoutID && trailing !== false) {
+        timeoutID = setTimeout(() => {
+          //leading 为false时,每次触发后一定会延迟wait时间才会调用,如果不把previous重置
+          //为0,那么中间间隔长时间remaining就会变为负数,下一次调用就会马上触发,不会延迟
+          previous = leading === false ? 0 : Date.now()
+          timeoutID = null
+          result = func.call(context, ...lastArgs)
+        }, remaining);
+      }
+      return result
+    }
+  }
+  ```
+##### bind / curry
+- bind <br>
+  ```
+  function bind(func, thisArg, ...partials) {
+    // 占位符
+    let placeholder = bind.placeholder
+    let boundFunc = function(...args) {
+      if (!isFunction(func)) throw new Error('Bind must be called on a function')
+      // _replaceHolders 函数, 处理占位符的情况
+      let finalArgs = _replaceHolders(partials, args, placeholder)
+      // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
+      return _executeBound(func, boundFunc, thisArg, this, finalArgs)
+    }
+    return boundFunc
+  }
+
+  bind.placeholder = __
+  ```
+- curry <br>
+  ```
+  function curry(func, arity = func.length, guard, partial = []) {
+    // guard 守卫, 防止传入多余参数
+    partial = guard === void 0 ? partial : []
+    // 占位符
+    let placeholder = curry.placeholder
+    let boundFunc = function(...args) {
+      let argsLen = args.filter(arg => arg !== placeholder).length
+      // _replaceHolders 函数, 处理占位符的情况
+      let finalArgs = _replaceHolders(partial, args, placeholder)
+      // 判断是否达到指定数量参数
+      if (argsLen >= arity) {
+        // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
+        return _executeBound(func, boundFunc, this, this, finalArgs)
+      } else {
+        // 未达到指定数量参数, 返回新的函数, 并将之前参数传递到新函数
+        return curry(func, arity - argsLen, void 0, finalArgs)
+      }
+    }
+    return boundFunc
+  }
+
+  curry.placeholder = __
+  ```
+- 下面是 bind 和 curry 中使用的 _replaceHolders 函数和 _executeBound 函数 <br>
+  ```
+  // _replaceHolders
+  // 整合 partials 和 args 为一个 完整的参数数组, 将partials中的 placeholder替换为 args中元素, args中剩余元素放到 数组结尾
+  function _replaceHolders(partials, args, placeholder) {
+    let separator = 0
+    return partials.map(partial => {
+      if (partial === placeholder) return args[separator++]
+      return partial
+    }).concat(args.slice(separator))
+  }
+
+  // _executeBound
+  // Determines whether to execute a function as a constructor
+  // or a normal function with the provided arguments.
+  function _executeBound(func, boundFunc, thisArg, context, args) {
+    if (!(context instanceof boundFunc)) return func.call(thisArg, ...args)
+    // func 的实例
+    let instance = Object.create(func.prototype)
+    let result = func.call(instance, ...args)
+    if (isObject(result)) return result
+    return instance
+  }
+  ```
+##### iteratee
 通过iteratee函数, 将传入的参数处理成一个函数,这使得我们在使用lodash的一些高阶函数时,传入的值并不局限于函数,传入的值会被iteratee进行处理,返回需要的函数.
-* isEqual <br>
-isEqual 的实现需要考虑很多问题, 我在实现中没有考虑ES6新加入的Map 和 Set等新的数据结构, 对于循环引用问题,我用一个Map存储出现过的值.
-原型链方面, 如果两个值均有constructor,则判断两个值的constructor是否为同一个, 如果其中一个没有constructor, 则忽略不考虑,判断其他属性是否equal.
-对于对象的Symbol属性(Object.getOwnPropertySymbols), enumerable为false的属性(Object.getOwnPropertyNames), 我在实现中没有去考虑. isEqual 还需要进一步去完善.
-* cloneDeep <br>
-和isEqual类似, 我在实现的时候考虑的情况和isEqual基本类似,没有考虑ES6新添加的Map 和 Set.
-* throttle debounce <br>
-lodash的 这两个函数配置项比较多, 实现也较为复杂, 基本上这两个函数相当于我们平时使用中的debounce 和 throttle的混合体.
-* bind <br>
-lodash的bind函数支持传入lodash自身来当做占位符, bind返回的函数, 在 new调用时 bind的 this无效
-* curry <br>
-函数柯里化,函数接收的参数没有达到指定数量时, 将传入的参数记录, 并返回新的函数, 需要注意的是this 的指向和 new调用
-* memoize <br>
+##### memoize
 将函数运行的结果保存在Cache中, 函数被重复调用时,返回保存的结果, Cache使用ES6 Map, 支持对Cache进行修改
-* chain <br>
+##### chain
 lodash 本身的实现是支持无new 调用的, 此方法让lodash支持链式调用.
-##### 还有很多函数在实现的过程中遇到过一些问题, 计划在之后的时间里, 阅读一下lodash的源码,学习lodash作者的代码实现思路和方式, 之后再去重新实现一遍lodash库.我认为很多细节的东西,需要不断去摸索,尝试,才能掌握好.对自己说一声: 加油 !
+##### 还有一些其他的函数不一一列举了, 其中有一些函数在实现的过程中遇到过一些问题, 计划在之后的时间里, 阅读一下lodash的源码,学习lodash作者的代码实现思路和方式, 之后再去重新实现一遍lodash库.我认为很多细节的东西,需要不断去摸索,尝试,才能掌握好.对自己说一声: 加油 !

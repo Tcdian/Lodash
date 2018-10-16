@@ -297,7 +297,6 @@
       let instance = Object.create(func.prototype)
       let result = func.call(instance, ...args)
       if (isObject(result)) return result
-      // instance 作为参数传递, func.call (instance, ...args) 会直接改变instance
       return instance
     }
 
@@ -314,6 +313,7 @@
     // _baseIsEqual
     // Internal recursive comparison function for `isEqual` & `isEqualWith`.
     function _baseIsEqual(val, other, customizer, stackMap = new Map()) {
+
       // _wrapped 对象
       if (val instanceof __) val = val._wrapped
       if (other instanceof __) other = other._wrapped
@@ -323,56 +323,73 @@
       if (valType != _objectProto.toString.call(other)) {
         return false
       }
+
       // val === other
       if (val === other) {
         return true
       }
+
       // `NaN`
       if (val !== val) {
         return other !== other
       }
+
       if (!isObjectLike(val) && !isObjectLike(other)) {
         return false
       }
 
-      // String Number Date Boolean Symbol 包装对象 和 RegExp
+      // String Number Date Boolean Symbol 之类的包装对象 和 RegExp
       // String 和 RegExp
       if (valType === _typeMap.String || valType === _typeMap.RegExp) {
         return '' + val === '' + other
       }
+
       // Number
       if (valType === _typeMap.Number) {
         if (+val !== +val) return +other !== +other
         return +val === +other
       }
+
       // Boolean Date
       if (valType === _typeMap.Boolean || valType === _typeMap.Date) {
         return +val === +other
       }
+
       // Symbol
       if (valType === _typeMap.Symbol) {
         _symbolProto.valueOf.call(val) === _symbolProto.valueOf.call(other)
       }
 
       if (valType !== _typeMap.Array) {
-        // 对象的 constructor 是否相同
-        if (val.constructor !== other.constructor && 'constructor' in val && 'constructor' in other) {
+        // 对象的 constructor 是否相同, 这里参考的是　underscore的 源码
+        // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+        // from different frames are.
+        if (val.constructor !== other.constructor
+          && !(isFunction(val.constructor)
+            && val.constructor instanceof val.constructor
+            && isFunction(other.constructor)
+            && other.constructor instanceof other.constructor)
+          && ('constructor' in val && 'constructor' in other)) {
           return false
         }
       }
 
+      // 使用Map存储, 防止出现循环引用问题
       if (stackMap.has(val)) {
         return stackMap.get(val) === other && stackMap.get(other) === val
       }
-
       stackMap.set(val, other)
       stackMap.set(other, val)
 
+      // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
       let valKeys = _keys(val)
       let otherKeys = _keys(other)
+
       if (valKeys.length !== otherKeys.length) {
         return false
       }
+
+      // 递归对比每一个属性
       let result = valKeys.every(key => {
         let customizerResult = customizer && customizer(val[key], other[key], key, val, other, stackMap)
         if (customizerResult !== void 0) return customizerResult
@@ -387,49 +404,63 @@
 
     // _baseClone
       function _baseClone(val, isDeep, customizer, stackMap = new Map()) {
+
+        // 基础类型, 直接返回 val
         if (!isObject(val)) {
           return val
         }
+
         let valType = _objectProto.toString.call(val)
         let valConstructor = val.constructor
         let result
-        // Date Boolean
+
+        // Date Boolean 包装对象
         if (valType === _typeMap.Date || valType === _typeMap.Boolean) {
           result = new valConstructor(+val)
         }
-        // Number String
+
+        // Number String 包装对象
         if (valType === _typeMap.Number || valType === _typeMap.String) {
           result = new valConstructor(val)
         }
+
         // RegExp
         if (valType === _typeMap.RegExp) {
           result = new valConstructor(val.source, val.flags)
           result.lastIndex = val.lastIndex
         }
-        // Symbol
+
+        // Symbol 包装对象
         if (valType === _typeMap.Symbol) {
           result = Object(_symbolProto.valueOf.call(val))
         }
+
         // Function
         if (valType === _typeMap.Function) {
           result = {}
         }
+
         // Array
         if (valType === _typeMap.Array) {
           result = new valConstructor(val.length)
         }
+
         // Object
         if (valType === _typeMap.Object) {
           result = Object.create(Object.getPrototypeOf(val))
         }
 
+        // 处理循环引用问题
         if (stackMap.has(val)) {
           return stackMap.get(val)
         }
         stackMap.set(val, result)
 
+        // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
         let keys = _keys(val)
+        // 根据 isDeep , 看是否需要深度克隆
         keys.forEach(key => {
+          // customizer cloneWith 和 cloneDeepWith 定制值
           let customizerResult = customizer && customizer(val[key], key, val, stackMap)
           if (customizerResult !== void 0) {
             result[key] = customizerResult
@@ -2392,18 +2423,19 @@
     **/
 
     function bind(func, thisArg, ...partials) {
+      // 占位符
       let placeholder = bind.placeholder
       let boundFunc = function(...args) {
         if (!isFunction(func)) throw new Error('Bind must be called on a function')
+        // _replaceHolders 函数, 处理占位符的情况
         let finalArgs = _replaceHolders(partials, args, placeholder)
-        //处理 new 调用boundFunc ,this失效问题
+        // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
         return _executeBound(func, boundFunc, thisArg, this, finalArgs)
-        // return func.call(thisArg, ...finalArgs)
       }
       return boundFunc
     }
 
-    bind.placeholder = __;
+    bind.placeholder = __
 
     // _.bindKey---------------------------------------------------------------//
 
@@ -2434,7 +2466,7 @@
       return boundFunc
     }
 
-    bindKey.placeholder = __;
+    bindKey.placeholder = __
 
     // _.curry-----------------------------------------------------------------//
 
@@ -2454,21 +2486,27 @@
     **/
 
     function curry(func, arity = func.length, guard, partial = []) {
+      // guard 守卫, 防止传入多余参数
       partial = guard === void 0 ? partial : []
+      // 占位符
       let placeholder = curry.placeholder
       let boundFunc = function(...args) {
         let argsLen = args.filter(arg => arg !== placeholder).length
+        // _replaceHolders 函数, 处理占位符的情况
         let finalArgs = _replaceHolders(partial, args, placeholder)
+        // 判断是否达到指定数量参数
         if (argsLen >= arity) {
+          // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
           return _executeBound(func, boundFunc, this, this, finalArgs)
         } else {
+          // 未达到指定数量参数, 返回新的函数, 并将之前参数传递到新函数
           return curry(func, arity - argsLen, void 0, finalArgs)
         }
       }
       return boundFunc
     }
 
-    curry.placeholder = __;
+    curry.placeholder = __
 
     // _.curryRight------------------------------------------------------------//
 
@@ -2503,7 +2541,7 @@
       return boundFunc
     }
 
-    curryRight.placeholder = __;
+    curryRight.placeholder = __
 
     // _.debounce--------------------------------------------------------------//
 
@@ -2858,6 +2896,7 @@
       let result
       let context
       let lastArgs
+
       return function (...args) {
         let runtime = Date.now()
         context = this
@@ -2865,9 +2904,9 @@
         if (previous === 0 && leading === false) {
           previous = runtime
         }
+
         //需要等待多长时间后可以执行
         let remaining = wait - (runtime - previous)
-
         //remaining > wait 说明时间被调整过
         if (remaining <= 0 || remaining > wait) {
           if (timeoutID) {
@@ -3258,7 +3297,9 @@
 
     function isEqualWith(val, other, customizer) {
       let customizerResult = customizer && customizer(val, other)
-      return customizerResult === void 0 ? _baseIsEqual(val, other, customizer) : !!customizerResult
+      return customizerResult === void 0
+        ? _baseIsEqual(val, other, customizer)
+        : !!customizerResult
     }
 
     // _.isError---------------------------------------------------------------//
