@@ -306,6 +306,7 @@
   ```
   // _replaceHolders
   // 整合 partials 和 args 为一个 完整的参数数组, 将partials中的 placeholder替换为 args中元素, args中剩余元素放到 数组结尾
+
   function _replaceHolders(partials, args, placeholder) {
     let separator = 0
     return partials.map(partial => {
@@ -317,6 +318,7 @@
   // _executeBound
   // Determines whether to execute a function as a constructor
   // or a normal function with the provided arguments.
+
   function _executeBound(func, boundFunc, thisArg, context, args) {
     if (!(context instanceof boundFunc)) return func.call(thisArg, ...args)
     // func 的实例
@@ -326,10 +328,27 @@
     return instance
   }
   ```
+##### memoize
+  ```
+  // 参数 resolver 是个 function, 用来计算 key
+  // 如果没有传入 key, 则用 memo 的第一个参数作为当做 key
+
+  function memoize(func, resolver) {
+    let memo = function (...args) {
+      let { cache } = memo
+      let key = resolver ? resolver.call(this, ...args) : args[0]
+      if (!cache.has(key)) {
+        cache.set(key, func.call(this, ...args))
+      }
+      return cache.get(key)
+    }
+    memo.cache = new Map()
+    return memo
+  }
+  ```
 ##### iteratee
 通过iteratee函数, 将传入的参数处理成一个函数,这使得我们在使用lodash的一些高阶函数时,传入的值并不局限于函数,传入的值会被iteratee进行处理,返回需要的函数.
-##### memoize
-将函数运行的结果保存在Cache中, 函数被重复调用时,返回保存的结果, Cache使用ES6 Map, 支持对Cache进行修改
+
 ##### chain
 lodash 本身的实现是支持无new 调用的, 此方法让lodash支持链式调用.
 ##### 还有一些其他的函数不一一列举了, 其中有一些函数在实现的过程中遇到过一些问题, 计划在之后的时间里, 阅读一下lodash的源码,学习lodash作者的代码实现思路和方式, 之后再去重新实现一遍lodash库.我认为很多细节的东西,需要不断去摸索,尝试,才能掌握好.对自己说一声: 加油 !
