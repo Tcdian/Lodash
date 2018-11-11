@@ -216,47 +216,81 @@
   }
   ```
 ##### throttle / debounce <br>
-- lodash的 throttle 和 debounce 比较类似, 部分 options 不一样, 这里以 throttle 为例
+- throttle 函数, 额外有一个 options, 两个配置项 leading (首次是否调用) 和 trailing (结尾是否额外调用一次)
   ```
   function throttle(func, wait = 0, options = {}) {
-    // Specify invoking on the leading edge of the timeout.
     let {leading = true} = options
-    // Specify invoking on the trailing edge of the timeout.
     let {trailing = true} = options
     let previous = 0
     let timeoutID = null
     let result
-    let context
-    let lastArgs
 
-    return function (...args) {
+    let throttleFunc = function (...args) {
       let runtime = Date.now()
-      context = this
-      lastArgs = args
       if (previous === 0 && leading === false) {
         previous = runtime
       }
-      // 需要等待多长时间后可以执行
+
+      //需要等待多长时间后可以执行
       let remaining = wait - (runtime - previous)
-      // remaining > wait 说明时间被调整过
+      //remaining > wait 说明时间被调整过
       if (remaining <= 0 || remaining > wait) {
         if (timeoutID) {
           clearTimeout(timeoutID)
           timeoutID = null
         }
         previous = runtime
-        result = func.call(context, ...lastArgs)
+        result = func.call(this, ...args)
       } else if ( !timeoutID && trailing !== false) {
         timeoutID = setTimeout(() => {
           //leading 为false时,每次触发后一定会延迟wait时间才会调用,如果不把previous重置
           //为0,那么中间间隔长时间remaining就会变为负数,下一次调用就会马上触发,不会延迟
           previous = leading === false ? 0 : Date.now()
           timeoutID = null
-          result = func.call(context, ...lastArgs)
+          result = func.call(this, ...args)
         }, remaining);
       }
       return result
     }
+
+    throttleFunc.cancel = function () {
+      clearTimeout(timeoutID)
+      previous = 0
+      timeoutID = null
+    }
+
+    return throttleFunc
+  }
+  ```
+- debounce 函数, 接收一个 immediate 参数, 函数是否在初始时刻调用
+  ```
+  function debounce(func, wait, immediate) {
+    let timeoutID = null
+    let result
+    let later = function (context, ...args) {
+      timeoutID = null
+      result = func.call(context, ...args)
+    }
+    let debounceFunc = function (...args) {
+      if (timeoutID) clearTimeout(timeoutID)
+      if (immediate) {
+        let callNow = !timeoutID
+        timeoutID = setTimeout(() => {
+          later(this, ...args)
+        }, wait)
+        if (callNow) result = func.call(this, ...args)
+      } else {
+        timeoutID = setTimeout(() => {
+          later(this, ...args)
+        }, wait);
+      }
+      return result
+    }
+    debounceFunc.cancel = function () {
+      clearTimeout(timeoutID)
+      timeoutID = null
+    }
+    return debounceFunc
   }
   ```
 ##### bind / curry

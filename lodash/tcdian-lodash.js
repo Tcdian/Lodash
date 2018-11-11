@@ -2571,43 +2571,33 @@
         (Function): Returns the new debounced function.
     **/
 
-    function debounce(func, wait = 0, options = {}) {
-      let { leading = true } = options
-      let { trailing = true } = options
-      let { maxWait = Infinity } = options
-      let previous = 0
+    function debounce(func, wait, immediate) {
       let timeoutID = null
       let result
-      let context
-      let lastArgs
-
-      return function (...args) {
-        let runtime = Date.now()
-        if (!previous && leading === false) {
-          previous = runtime
-        }
-
-        let remaining = maxWait - (runtime - previous)
-        context = this
-        lastArgs = args
-
-        if (timeoutID) {
-          clearTimeout(timeoutID)
-        }
+      let later = function (context, ...args) {
         timeoutID = null
-
-        if (remaining <= 0 || remaining > maxWait) {
-          previous = runtime
-          result = func.call(context, ...lastArgs)
-        } else if(trailing) {
+        result = func.call(context, ...args)
+      }
+      let debounceFunc = function (...args) {
+        if (timeoutID) clearTimeout(timeoutID)
+        if (immediate) {
+          let callNow = !timeoutID
           timeoutID = setTimeout(() => {
-            previous = leading === false ? 0 : Date.now()
-            timeoutID = null
-            result = func.call(context, ...lastArgs)
+            later(this, ...args)
           }, wait)
+          if (callNow) result = func.call(this, ...args)
+        } else {
+          timeoutID = setTimeout(() => {
+            later(this, ...args)
+          }, wait);
         }
         return result
       }
+      debounceFunc.cancel = function () {
+        clearTimeout(timeoutID)
+        timeoutID = null
+      }
+      return debounceFunc
     }
 
     // _.defer-----------------------------------------------------------------//
@@ -2894,13 +2884,9 @@
       let previous = 0
       let timeoutID = null
       let result
-      let context
-      let lastArgs
 
-      return function (...args) {
+      let throttleFunc = function (...args) {
         let runtime = Date.now()
-        context = this
-        lastArgs = args
         if (previous === 0 && leading === false) {
           previous = runtime
         }
@@ -2914,18 +2900,26 @@
             timeoutID = null
           }
           previous = runtime
-          result = func.call(context, ...lastArgs)
+          result = func.call(this, ...args)
         } else if ( !timeoutID && trailing !== false) {
           timeoutID = setTimeout(() => {
             //leading 为false时,每次触发后一定会延迟wait时间才会调用,如果不把previous重置
             //为0,那么中间间隔长时间remaining就会变为负数,下一次调用就会马上触发,不会延迟
             previous = leading === false ? 0 : Date.now()
             timeoutID = null
-            result = func.call(context, ...lastArgs)
+            result = func.call(this, ...args)
           }, remaining);
         }
         return result
       }
+
+      throttleFunc.cancel = function () {
+        clearTimeout(timeoutID)
+        previous = 0
+        timeoutID = null
+      }
+
+      return throttleFunc
     }
 
     // _.unary-----------------------------------------------------------------//
