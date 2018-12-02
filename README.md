@@ -293,6 +293,28 @@
     return debounceFunc
   }
   ```
+##### call / apply
+- call <br>
+  ```
+  function call(func, context, ...args) {
+    context = context == null ? window : context
+    context.fn = func
+    let result = context.fn(...args)
+    delete context.fn
+    return result
+  }
+  ```
+- apply <br>
+  ```
+  function apply(func, context, args) {
+    context = context == null ? window : context
+    args = args === void 0 ? [] : args
+    context.fn = func
+    let result = context.fn(...args)
+    delete context.fn
+    return result
+  }
+  ```
 ##### bind / curry
 - bind <br>
   ```
