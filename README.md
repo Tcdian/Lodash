@@ -1,4 +1,4 @@
-## tcdian_lodash
+## Lodash
 ##### 为了加强自己对js基础的掌握, 计划仿照lodash的功能, 仿写一个简单的lodash库
 
 最后完成lodash共 298 个函数,其中很多函数的实现没有完整的还原lodash函数的所有功能,并且很多的测试用例都比较少,很多函数的实现存在一些问题,这是我今后需要去修改和完善的地方.<br>
@@ -293,28 +293,6 @@
     return debounceFunc
   }
   ```
-##### call / apply
-- call <br>
-  ```
-  function call(func, context, ...args) {
-    context = context == null ? window : context
-    context.fn = func
-    let result = context.fn(...args)
-    delete context.fn
-    return result
-  }
-  ```
-- apply <br>
-  ```
-  function apply(func, context, args) {
-    context = context == null ? window : context
-    args = args === void 0 ? [] : args
-    context.fn = func
-    let result = context.fn(...args)
-    delete context.fn
-    return result
-  }
-  ```
 ##### bind / curry
 - bind <br>
   ```
@@ -402,9 +380,4 @@
     return memo
   }
   ```
-##### iteratee
-通过iteratee函数, 将传入的参数处理成一个函数,这使得我们在使用lodash的一些高阶函数时,传入的值并不局限于函数,传入的值会被iteratee进行处理,返回需要的函数.
-
-##### chain
-lodash 本身的实现是支持无new 调用的, 此方法让lodash支持链式调用.
 ##### 还有一些其他的函数不一一列举了, 其中有一些函数在实现的过程中遇到过一些问题, 计划在之后的时间里, 阅读一下lodash的源码,学习lodash作者的代码实现思路和方式, 之后再去重新实现一遍lodash库.我认为很多细节的东西,需要不断去摸索,尝试,才能掌握好.对自己说一声: 加油 !
