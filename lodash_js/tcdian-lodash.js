@@ -24,58 +24,58 @@
 
     // type 类型判断 map.
     var _typeMap = {
-      Arguments: "[object Arguments]",
-      Array: "[object Array]",
-      AsyncFunction: "[object AsyncFunction]",
-      Boolean: "[object Boolean]",
-      Date: "[object Date]",
-      DOMException: "[object DOMException]",
-      Error: "[object Error]",
-      Function: "[object Function]",
-      HTMLCollection: "[object HTMLCollection]",
-      GeneratorFunction: "[object GeneratorFunction]",
-      Map: "[object Map]",
-      Number: "[object Number]",
-      Null: "[object Null]",
-      Object: "[object Object]",
-      Promise: "[object Promise]",
-      Proxy: "[object Proxy]",
-      RegExp: "[object RegExp]",
-      Set: "[object Set]",
-      String: "[object String]",
-      Symbol: "[object Symbol]",
-      Undefined: "[object Undefined]",
-      WeakMap: "[object WeakMap]",
-      WeakSet: "[object WeakSet]",
-      ArrayBuffer: "[object ArrayBuffer]",
-      DataView: "[object DataView]",
-      Float32Array: "[object Float32Array]",
-      Float64Array: "[object Float64Array]",
-      Int8Array: "[object Int8Array]",
-      Int16Array: "[object Int16Array]",
-      Int32Array: "[object Int32Array]",
-      Uint8Array: "[object Uint8Array]",
-      Uint8ClampedArray: "[object Uint8ClampedArray]",
-      Uint16Array: "[object Uint16Array]",
-      Uint32Array: "[object Uint32Array]",
+      Arguments: '[object Arguments]',
+      Array: '[object Array]',
+      AsyncFunction: '[object AsyncFunction]',
+      Boolean: '[object Boolean]',
+      Date: '[object Date]',
+      DOMException: '[object DOMException]',
+      Error: '[object Error]',
+      Function: '[object Function]',
+      HTMLCollection: '[object HTMLCollection]',
+      GeneratorFunction: '[object GeneratorFunction]',
+      Map: '[object Map]',
+      Number: '[object Number]',
+      Null: '[object Null]',
+      Object: '[object Object]',
+      Promise: '[object Promise]',
+      Proxy: '[object Proxy]',
+      RegExp: '[object RegExp]',
+      Set: '[object Set]',
+      String: '[object String]',
+      Symbol: '[object Symbol]',
+      Undefined: '[object Undefined]',
+      WeakMap: '[object WeakMap]',
+      WeakSet: '[object WeakSet]',
+      ArrayBuffer: '[object ArrayBuffer]',
+      DataView: '[object DataView]',
+      Float32Array: '[object Float32Array]',
+      Float64Array: '[object Float64Array]',
+      Int8Array: '[object Int8Array]',
+      Int16Array: '[object Int16Array]',
+      Int32Array: '[object Int32Array]',
+      Uint8Array: '[object Uint8Array]',
+      Uint8ClampedArray: '[object Uint8ClampedArray]',
+      Uint16Array: '[object Uint16Array]',
+      Uint32Array: '[object Uint32Array]',
     };
 
     // Used to map characters to HTML entities.
     var _htmlEscapes = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
     };
 
     // Used to map HTML entities to characters.
     var _htmlUnescapes = {
-      "&amp;": "&",
-      "&lt;": "<",
-      "&gt;": ">",
-      "&quot;": '"',
-      "&#39;": "'",
+      '&amp;': '&',
+      '&lt;': '<',
+      '&gt;': '>',
+      '&quot;': '"',
+      '&#39;': "'",
     };
     // Demilitarized zone
     var DMZ = Object.create(null);
@@ -108,7 +108,7 @@
     function _baseWordSeparate(str) {
       let pattern = /[\-_\s]+/g;
       if (pattern.test(str))
-        return str.split(pattern).filter((it) => it !== "");
+        return str.split(pattern).filter((it) => it !== '');
       return str.split(/(?=[A-Z])/);
     }
 
@@ -138,7 +138,7 @@
             isObject(obj[key]) &&
             !stackMap.has(obj[key])
           ) {
-            stackMap.set(obj[key], "exist");
+            stackMap.set(obj[key], 'exist');
             val = _baseAssign(
               obj[key],
               coverDefalult,
@@ -274,7 +274,7 @@
       left = 0,
       right = arr.length - 1,
       iteratee = identity,
-      order = "asc"
+      order = 'asc'
     ) {
       if (left === right) {
         return arr.slice(left, left + 1);
@@ -288,7 +288,7 @@
       let leftIndex = 0;
       let rightIndex = 0;
       while (leftIndex < leftLen && rightIndex < rightLen) {
-        if (order !== "desc") {
+        if (order !== 'desc') {
           if (iteratee(leftArr[leftIndex]) <= iteratee(rightArr[rightIndex])) {
             resultArr.push(leftArr[leftIndex]);
             leftIndex++;
@@ -374,7 +374,7 @@
       // String Number Date Boolean Symbol 之类的包装对象 和 RegExp
       // String 和 RegExp
       if (valType === _typeMap.String || valType === _typeMap.RegExp) {
-        return "" + val === "" + other;
+        return '' + val === '' + other;
       }
 
       // Number
@@ -407,8 +407,8 @@
             isFunction(other.constructor) &&
             other.constructor instanceof other.constructor
           ) &&
-          "constructor" in val &&
-          "constructor" in other
+          'constructor' in val &&
+          'constructor' in other
         ) {
           return false;
         }
@@ -1023,8 +1023,8 @@
         (string): Returns the joined string.
     **/
 
-    function join(arr, separator = ",") {
-      return arr == null ? "" : arr.join(separator);
+    function join(arr, separator = ',') {
+      return arr == null ? '' : arr.join(separator);
     }
 
     // _.last------------------------------------------------------------------//
@@ -2184,7 +2184,7 @@
         return values.map((val) => {
           let method = _baseGetValue(val, path, true, _flagSymbol);
           if (method === _flagSymbol)
-            throw new Error("invokeMap must call on a function");
+            throw new Error('invokeMap must call on a function');
           return method.call(val, ...args);
         });
       }
@@ -2254,7 +2254,7 @@
         (Array): Returns the new sorted array.
     **/
 
-    function orderBy(collection, iteratees = [identity], orders = ["asc"]) {
+    function orderBy(collection, iteratees = [identity], orders = ['asc']) {
       let values = _values(collection);
       let valuesLen = values.length;
       let iterateesCopy = iteratees.slice();
@@ -2489,7 +2489,7 @@
       let iterateesCopy = isArray(iteratees) ? iteratees.slice() : [iteratees];
       iterateesCopy.reverse().forEach((iteratee) => {
         iteratee = _cb(iteratee, DMZ, 1);
-        values = _mergeSort(values, 0, valuesLen - 1, iteratee, "asc");
+        values = _mergeSort(values, 0, valuesLen - 1, iteratee, 'asc');
       });
       return values;
     }
@@ -2588,7 +2588,7 @@
       let placeholder = bind.placeholder;
       let boundFunc = function (...args) {
         if (!isFunction(func))
-          throw new Error("Bind must be called on a function");
+          throw new Error('Bind must be called on a function');
         // _replaceHolders 函数, 处理占位符的情况
         let finalArgs = _replaceHolders(partials, args, placeholder);
         // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
@@ -2622,7 +2622,7 @@
       let boundFunc = function (...args) {
         let func = obj[key];
         if (!isFunction(func))
-          throw new Error("bindKey must be called on a function");
+          throw new Error('bindKey must be called on a function');
         let finalArgs = _replaceHolders(partials, args, placeholder);
         return _executeBound(func, boundFunc, obj, this, finalArgs);
       };
@@ -2917,7 +2917,7 @@
       let placeholder = partial.placeholder;
       let boundFunc = function (...args) {
         if (!isFunction(func))
-          throw new Error("partial must be called on a function");
+          throw new Error('partial must be called on a function');
         let finalArgs = _replaceHolders(partials, args, placeholder);
         return _executeBound(func, boundFunc, this, this, finalArgs);
       };
@@ -2945,7 +2945,7 @@
       let placeholder = partial.placeholder;
       let boundFunc = function (...args) {
         if (!isFunction(func))
-          throw new Error("partialRight must be called on a function");
+          throw new Error('partialRight must be called on a function');
         args.reverse();
         partials.reverse();
         let finalArgs = _replaceHolders(partials, args, placeholder).reverse();
@@ -3326,7 +3326,7 @@
     **/
 
     function isArrayLike(obj) {
-      let len = obj["length"];
+      let len = obj['length'];
       return !isFunction(obj) && len >= 0 && len <= Number.MAX_SAFE_INTEGER;
     }
 
@@ -3632,7 +3632,7 @@
     **/
 
     function isNative(obj) {
-      return isFunction(obj) && /\[native code\]/.test("" + obj);
+      return isFunction(obj) && /\[native code\]/.test('' + obj);
     }
 
     // _.isNil-----------------------------------------------------------------//
@@ -3691,7 +3691,7 @@
 
     function isObject(obj) {
       let type = typeof obj;
-      return !isNull(obj) && (type == "object" || type == "function");
+      return !isNull(obj) && (type == 'object' || type == 'function');
     }
 
     // _.isObjectLike----------------------------------------------------------//
@@ -3705,7 +3705,7 @@
     **/
 
     function isObjectLike(obj) {
-      return !isNull(obj) && typeof obj == "object";
+      return !isNull(obj) && typeof obj == 'object';
     }
 
     // _.isPlainObject---------------------------------------------------------//
@@ -3906,7 +3906,7 @@
     **/
 
     function toArray(val) {
-      if (isString(val)) return val.split("");
+      if (isString(val)) return val.split('');
       if (!isObject(val)) return [];
       if (isArray(val) || isTypedArray(val) || isArrayBuffer(val))
         return val.slice();
@@ -4028,12 +4028,12 @@
     **/
 
     function toString(val) {
-      if (val == void 0) return "";
+      if (val == void 0) return '';
       if (isString(val)) return val;
       if (isArray(val)) return val.join();
       if (isSymbol(val)) return val.toString();
-      if (Object.is(val, -0)) return "-0";
-      return "" + val;
+      if (Object.is(val, -0)) return '-0';
+      return '' + val;
     }
 
     //------------------------------------Math------------------------------------------
@@ -4866,10 +4866,10 @@
       let pathArr = toPath(path);
       let funcName = pathArr.pop();
       let context = _baseGetValue(obj, pathArr, true, _flagSymbol);
-      if (context === _flagSymbol) throw new Error("can not find value in obj");
+      if (context === _flagSymbol) throw new Error('can not find value in obj');
       let func = Object.getPrototypeOf(context)[funcName];
       if (!isFunction(func))
-        throw new Error("invoke must be passed function names");
+        throw new Error('invoke must be passed function names');
       return func.call(context, ...args);
     }
 
@@ -5499,13 +5499,13 @@
         (string): Returns the camel cased string.
     **/
 
-    function camelCase(str = "") {
+    function camelCase(str = '') {
       return _baseWordSeparate(str)
         .map((item, index) => {
           if (index === 0) return item.toLowerCase();
           return item[0].toUpperCase() + item.slice(1).toLowerCase();
         })
-        .join("");
+        .join('');
     }
 
     // _.capitalize------------------------------------------------------------//
@@ -5518,7 +5518,7 @@
         (string): Returns the capitalized string.
     **/
 
-    function capitalize(str = "") {
+    function capitalize(str = '') {
       return str[0].toUpperCase() + str.slice(1).toLowerCase();
     }
 
@@ -5545,7 +5545,7 @@
         (boolean): Returns true if string ends with target, else false.
     **/
 
-    function endsWith(string = "", target, position = string.length) {
+    function endsWith(string = '', target, position = string.length) {
       return string.endsWith(target, position);
     }
 
@@ -5567,7 +5567,7 @@
         (string): Returns the escaped string.
     **/
 
-    function escape(str = "") {
+    function escape(str = '') {
       return str.replace(/[&<>"']/g, ($0) => _htmlEscapes[$0]);
     }
 
@@ -5581,9 +5581,9 @@
         (string): Returns the escaped string.
     **/
 
-    function escapeRegExp(str = "") {
+    function escapeRegExp(str = '') {
       //"^", "$", "", ".", "*", "+", "?", "(", ")", "[", "]", "{", "}", and "|"
-      return str.replace(/[\^\$\.\*\+\?\(\)\[\]\{\}\|]/g, ($0) => "\\" + $0);
+      return str.replace(/[\^\$\.\*\+\?\(\)\[\]\{\}\|]/g, ($0) => '\\' + $0);
     }
 
     // _.kebabCase-------------------------------------------------------------//
@@ -5596,12 +5596,12 @@
         (string): Returns the kebab cased string.
     **/
 
-    function kebabCase(str = "") {
+    function kebabCase(str = '') {
       return _baseWordSeparate(str)
         .map((item) => {
           return item.toLowerCase();
         })
-        .join("-");
+        .join('-');
     }
 
     // _.lowerCase-------------------------------------------------------------//
@@ -5614,12 +5614,12 @@
         (string): Returns the lower cased string.
     **/
 
-    function lowerCase(str = "") {
+    function lowerCase(str = '') {
       return _baseWordSeparate(str)
         .map((item) => {
           return item.toLowerCase();
         })
-        .join(" ");
+        .join(' ');
     }
 
     // _.lowerFirst------------------------------------------------------------//
@@ -5632,7 +5632,7 @@
         (string): Returns the converted string.
     **/
 
-    function lowerFirst(str = "") {
+    function lowerFirst(str = '') {
       return str[0].toLowerCase() + str.slice(1);
     }
 
@@ -5649,7 +5649,7 @@
         (string): Returns the padded string.
     **/
 
-    function pad(str = "", targetLen = 0, chars = " ") {
+    function pad(str = '', targetLen = 0, chars = ' ') {
       let strLen = str.length;
       let addLen = targetLen - strLen > 0 ? targetLen - strLen : 0;
       if (addLen === 0) return str;
@@ -5669,7 +5669,7 @@
         (string): Returns the padded string.
     **/
 
-    function padEnd(str = "", targetLen = 0, chars = " ") {
+    function padEnd(str = '', targetLen = 0, chars = ' ') {
       return str.padEnd(targetLen, chars);
     }
 
@@ -5685,7 +5685,7 @@
         (string): Returns the padded string.
     **/
 
-    function padStart(str = "", targetLen = 0, chars = " ") {
+    function padStart(str = '', targetLen = 0, chars = ' ') {
       return str.padStart(targetLen, chars);
     }
 
@@ -5719,7 +5719,7 @@
         (string): Returns the repeated string.
     **/
 
-    function repeat(str = "", timers = 1, guard) {
+    function repeat(str = '', timers = 1, guard) {
       if (guard) timers = 1;
       return str.repeat(timers);
     }
@@ -5738,7 +5738,7 @@
         (string): Returns the modified string.
     **/
 
-    function replace(str = "", pattern, replacement) {
+    function replace(str = '', pattern, replacement) {
       return str.replace(pattern, replacement);
     }
 
@@ -5752,12 +5752,12 @@
         (string): Returns the snake cased string.
     **/
 
-    function snakeCase(str = "") {
+    function snakeCase(str = '') {
       return _baseWordSeparate(str)
         .map((item) => {
           return item.toLowerCase();
         })
-        .join("_");
+        .join('_');
     }
 
     // _.split-----------------------------------------------------------------//
@@ -5774,7 +5774,7 @@
         (Array): Returns the new array of chunks.
     **/
 
-    function split(str = "", separator, limit) {
+    function split(str = '', separator, limit) {
       return str.split(separator, limit);
     }
 
@@ -5788,12 +5788,12 @@
         (string): Returns the start cased string.
     **/
 
-    function startCase(str = "") {
+    function startCase(str = '') {
       return _baseWordSeparate(str)
         .map((item) => {
           return item[0].toUpperCase() + item.slice(1);
         })
-        .join(" ");
+        .join(' ');
     }
 
     // _.startsWith------------------------------------------------------------//
@@ -5808,7 +5808,7 @@
         (boolean): Returns true if string starts with target, else false.
     **/
 
-    function startsWith(str = "", target, position = 0) {
+    function startsWith(str = '', target, position = 0) {
       return str.startsWith(target, position);
     }
 
@@ -5832,7 +5832,7 @@
         (string): Returns the lower cased string.
     **/
 
-    function toLower(str = "") {
+    function toLower(str = '') {
       return str.toLowerCase();
     }
 
@@ -5846,7 +5846,7 @@
         (string): Returns the upper cased string.
     **/
 
-    function toUpper(str = "") {
+    function toUpper(str = '') {
       return str.toUpperCase();
     }
 
@@ -5861,9 +5861,9 @@
         (string): Returns the trimmed string.
     **/
 
-    function trim(str = "", chars = " ", guard) {
-      if (guard) chars = " ";
-      if (chars === " ") return str.trim();
+    function trim(str = '', chars = ' ', guard) {
+      if (guard) chars = ' ';
+      if (chars === ' ') return str.trim();
       return trimStart(trimEnd(str, chars), chars);
     }
 
@@ -5878,9 +5878,9 @@
         (string): Returns the trimmed string.
     **/
 
-    function trimEnd(str = "", chars = " ", guard) {
-      if (guard) chars = " ";
-      if (chars === " ") return str.trimRight();
+    function trimEnd(str = '', chars = ' ', guard) {
+      if (guard) chars = ' ';
+      if (chars === ' ') return str.trimRight();
       for (var i = str.length - 1; i >= 0; i--) {
         if (!chars.includes(str[i])) {
           break;
@@ -5900,9 +5900,9 @@
         (string): Returns the trimmed string.
     **/
 
-    function trimStart(str = "", chars = " ", guard) {
-      if (guard) chars = " ";
-      if (chars === " ") return str.trimLeft();
+    function trimStart(str = '', chars = ' ', guard) {
+      if (guard) chars = ' ';
+      if (chars === ' ') return str.trimLeft();
       for (var i = 0; i < str.length; i++) {
         if (!chars.includes(str[i])) {
           break;
@@ -5926,9 +5926,9 @@
         (string): Returns the truncated string.
     **/
 
-    function truncate(str = "", options = {}) {
+    function truncate(str = '', options = {}) {
       let { length = 30 } = options;
-      let { omission = "..." } = options;
+      let { omission = '...' } = options;
       let { separator } = options;
       let strLen = length - omission.length > 0 ? length - omission.length : 0;
       if (separator === void 0) {
@@ -5936,7 +5936,7 @@
       }
       let result = str.substr(0, strLen);
       let lastMatch = isRegExp(separator)
-        ? result.match(new RegExp(separator, "g")).pop()
+        ? result.match(new RegExp(separator, 'g')).pop()
         : separator;
       return result.slice(0, result.lastIndexOf(lastMatch)) + omission;
     }
@@ -5954,7 +5954,7 @@
         (string): Returns the unescaped string.
     **/
 
-    function unescape(str = "") {
+    function unescape(str = '') {
       return str.replace(
         /(&amp;|&lt;|&gt;|&quot;|&#39;)/g,
         ($0) => _htmlUnescapes[$0]
@@ -5971,12 +5971,12 @@
         (string): Returns the upper cased string.
     **/
 
-    function upperCase(str = "") {
+    function upperCase(str = '') {
       return _baseWordSeparate(str)
         .map((item) => {
           return item.toUpperCase();
         })
-        .join(" ");
+        .join(' ');
     }
 
     // _.upperFirst------------------------------------------------------------//
@@ -5989,7 +5989,7 @@
         (string): Returns the converted string.
     **/
 
-    function upperFirst(str = "") {
+    function upperFirst(str = '') {
       return str[0].toUpperCase() + str.slice(1);
     }
 
@@ -6004,7 +6004,7 @@
         (Array): Returns the words of string.
     **/
 
-    function words(str = "", pattern, guard) {
+    function words(str = '', pattern, guard) {
       if (guard || !pattern) pattern = /[a-zA-Z0-9]+/g;
       return str.match(pattern);
     }
@@ -6045,7 +6045,7 @@
 
     function bindAll(obj, methodNames) {
       if (!isArray(methodNames) && !isFunction(methodNames))
-        throw new Error("bindAll must be passed function names");
+        throw new Error('bindAll must be passed function names');
       methodNames = isArray(methodNames) ? methodNames : [methodNames];
       methodNames.forEach((methodName) => {
         obj[methodName] = bind(obj[methodName], obj);
@@ -6537,7 +6537,7 @@
     **/
 
     function stubString() {
-      return "";
+      return '';
     }
 
     // _.stubTrue--------------------------------------------------------------//
@@ -6585,7 +6585,7 @@
       if (isArray(val)) return val;
       return toString(val)
         .split(/[\[\]\.]+/)
-        .filter((it) => it !== "");
+        .filter((it) => it !== '');
     }
     // _.uniqueId--------------------------------------------------------------//
 
@@ -6685,15 +6685,15 @@
       var index = 0;
 
       function typeParse(jsonStr) {
-        if (jsonStr[index] === "{") {
+        if (jsonStr[index] === '{') {
           return parseObject(jsonStr);
-        } else if (jsonStr[index] === "[") {
+        } else if (jsonStr[index] === '[') {
           return parseArray(jsonStr);
-        } else if (jsonStr[index] === "n") {
+        } else if (jsonStr[index] === 'n') {
           return parseNull(jsonStr);
-        } else if (jsonStr[index] === "t") {
+        } else if (jsonStr[index] === 't') {
           return parseTrue(jsonStr);
-        } else if (jsonStr[index] === "f") {
+        } else if (jsonStr[index] === 'f') {
           return parseFalse(jsonStr);
         } else if (jsonStr[index] === '"') {
           return parseString(jsonStr);
@@ -6705,12 +6705,12 @@
       function parseObject(jsonStr) {
         index++;
         var part = {};
-        while (jsonStr[index] !== "}") {
+        while (jsonStr[index] !== '}') {
           var key = typeParse(jsonStr);
           index++;
           var val = typeParse(jsonStr);
           part[key] = val;
-          if (jsonStr[index] === "}") {
+          if (jsonStr[index] === '}') {
             index++;
             break;
           }
@@ -6722,8 +6722,8 @@
       function parseArray(jsonStr) {
         index++;
         var part = [];
-        while (jsonStr[index] !== "]") {
-          if (jsonStr[index] === ",") {
+        while (jsonStr[index] !== ']') {
+          if (jsonStr[index] === ',') {
             index++;
           } else {
             part.push(typeParse(jsonStr));
@@ -6735,36 +6735,36 @@
 
       function parseNull(jsonStr) {
         var part = jsonStr.substr(index, 4);
-        if (part === "null") {
+        if (part === 'null') {
           index += 4;
           return null;
         } else {
-          throw new Error("found Error at" + index);
+          throw new Error('found Error at' + index);
         }
       }
 
       function parseTrue(jsonStr) {
         var part = jsonStr.substr(index, 4);
-        if (part === "true") {
+        if (part === 'true') {
           index += 4;
           return true;
         } else {
-          throw new Error("found Error at" + index);
+          throw new Error('found Error at' + index);
         }
       }
 
       function parseFalse(jsonStr) {
         var part = jsonStr.substr(index, 5);
-        if (part === "false") {
+        if (part === 'false') {
           index += 5;
           return false;
         } else {
-          throw new Error("found Error at" + index);
+          throw new Error('found Error at' + index);
         }
       }
 
       function parseString(jsonStr) {
-        var part = "";
+        var part = '';
         index++;
         while (jsonStr[index] !== '"') {
           part += jsonStr[index];
@@ -6775,7 +6775,7 @@
       }
 
       function parseNumber(jsonStr) {
-        var part = "";
+        var part = '';
         while (isNumberChar(jsonStr[index])) {
           part += jsonStr[index];
           index++;
