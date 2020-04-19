@@ -1,479 +1,524 @@
 (function () {
-
   // Used to restore the original `_` reference in `_.noConflict`.
-  var root = this
-  var _tcdian = root.__
+  var root = this;
+  var _tcdian = root.__;
 
   var _runInContext = function () {
-
-    var __ = function(obj) {
-      if (obj instanceof __) return obj
-      if (!(this instanceof __)) return new __(obj)
-      this._wrapped = obj
-      this._chain = true
-    }
+    var __ = function (obj) {
+      if (obj instanceof __) return obj;
+      if (!(this instanceof __)) return new __(obj);
+      this._wrapped = obj;
+      this._chain = true;
+    };
     // unique id : idCounter
-    var idCounter = 0
+    var idCounter = 0;
 
     // unique value : Symbol(0)
-    var  _flagSymbol = Symbol(0)
+    var _flagSymbol = Symbol(0);
 
     // Used for built-in method references.
     var _arrayProto = Array.prototype,
-        _funcProto = Function.prototype,
-        _objectProto = Object.prototype;
-        _symbolProto = Symbol.prototype
+      _funcProto = Function.prototype,
+      _objectProto = Object.prototype;
+    _symbolProto = Symbol.prototype;
 
     // type 类型判断 map.
     var _typeMap = {
-      Arguments: '[object Arguments]',
-      Array: '[object Array]',
-      AsyncFunction: '[object AsyncFunction]',
-      Boolean: '[object Boolean]',
-      Date: '[object Date]',
-      DOMException: '[object DOMException]',
-      Error: '[object Error]',
-      Function: '[object Function]',
+      Arguments: "[object Arguments]",
+      Array: "[object Array]",
+      AsyncFunction: "[object AsyncFunction]",
+      Boolean: "[object Boolean]",
+      Date: "[object Date]",
+      DOMException: "[object DOMException]",
+      Error: "[object Error]",
+      Function: "[object Function]",
       HTMLCollection: "[object HTMLCollection]",
-      GeneratorFunction: '[object GeneratorFunction]',
-      Map: '[object Map]',
-      Number: '[object Number]',
-      Null: '[object Null]',
-      Object: '[object Object]',
-      Promise: '[object Promise]',
-      Proxy: '[object Proxy]',
-      RegExp: '[object RegExp]',
-      Set: '[object Set]',
-      String: '[object String]',
-      Symbol: '[object Symbol]',
-      Undefined: '[object Undefined]',
-      WeakMap: '[object WeakMap]',
-      WeakSet: '[object WeakSet]',
-      ArrayBuffer: '[object ArrayBuffer]',
-      DataView: '[object DataView]',
-      Float32Array: '[object Float32Array]',
-      Float64Array: '[object Float64Array]',
-      Int8Array: '[object Int8Array]',
-      Int16Array: '[object Int16Array]',
-      Int32Array: '[object Int32Array]',
-      Uint8Array: '[object Uint8Array]',
-      Uint8ClampedArray: '[object Uint8ClampedArray]',
-      Uint16Array: '[object Uint16Array]',
-      Uint32Array: '[object Uint32Array]'
-    }
+      GeneratorFunction: "[object GeneratorFunction]",
+      Map: "[object Map]",
+      Number: "[object Number]",
+      Null: "[object Null]",
+      Object: "[object Object]",
+      Promise: "[object Promise]",
+      Proxy: "[object Proxy]",
+      RegExp: "[object RegExp]",
+      Set: "[object Set]",
+      String: "[object String]",
+      Symbol: "[object Symbol]",
+      Undefined: "[object Undefined]",
+      WeakMap: "[object WeakMap]",
+      WeakSet: "[object WeakSet]",
+      ArrayBuffer: "[object ArrayBuffer]",
+      DataView: "[object DataView]",
+      Float32Array: "[object Float32Array]",
+      Float64Array: "[object Float64Array]",
+      Int8Array: "[object Int8Array]",
+      Int16Array: "[object Int16Array]",
+      Int32Array: "[object Int32Array]",
+      Uint8Array: "[object Uint8Array]",
+      Uint8ClampedArray: "[object Uint8ClampedArray]",
+      Uint16Array: "[object Uint16Array]",
+      Uint32Array: "[object Uint32Array]",
+    };
 
     // Used to map characters to HTML entities.
     var _htmlEscapes = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    }
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
 
     // Used to map HTML entities to characters.
     var _htmlUnescapes = {
-      '&amp;': '&',
-      '&lt;': '<',
-      '&gt;': '>',
-      '&quot;': '"',
-      '&#39;': "'"
-    }
+      "&amp;": "&",
+      "&lt;": "<",
+      "&gt;": ">",
+      "&quot;": '"',
+      "&#39;": "'",
+    };
     // Demilitarized zone
-    var DMZ = Object.create(null)
+    var DMZ = Object.create(null);
 
     // _keys 内部函数
     function _keys(obj) {
-      let keys
+      let keys;
       if (isArray(obj)) {
-        keys = Array.from({length: obj.length}, (it, index) => index)
+        keys = Array.from({ length: obj.length }, (it, index) => index);
       } else {
-        keys = Object.keys(obj)
+        keys = Object.keys(obj);
       }
-      return keys
+      return keys;
     }
 
     // _values 内部函数
     function _values(obj) {
-      return _keys(obj).map(key => obj[key])
+      return _keys(obj).map((key) => obj[key]);
     }
 
     // _entries 内部函数
     function _entries(obj) {
-      if (!isObject(obj)) return []
-      if (isSet(obj) || isMap(obj)) return obj.entries()
-      if (isArray(obj)) return obj.map((item, index) => [index, item])
-      return Object.entries(obj)
+      if (!isObject(obj)) return [];
+      if (isSet(obj) || isMap(obj)) return obj.entries();
+      if (isArray(obj)) return obj.map((item, index) => [index, item]);
+      return Object.entries(obj);
     }
 
     // _baseWordSeparate 内部函数
     function _baseWordSeparate(str) {
-      let pattern = /[\-_\s]+/g
-      if (pattern.test(str)) return str.split(pattern).filter(it => it !== '')
-      return str.split(/(?=[A-Z])/)
+      let pattern = /[\-_\s]+/g;
+      if (pattern.test(str))
+        return str.split(pattern).filter((it) => it !== "");
+      return str.split(/(?=[A-Z])/);
     }
 
     // _baseAssign 内部函数
-    function _baseAssign(obj, coverDefalult, prototypeChain, deep, customizer, sources, stackMap = new Map()) {
-      sources.forEach(items => {
+    function _baseAssign(
+      obj,
+      coverDefalult,
+      prototypeChain,
+      deep,
+      customizer,
+      sources,
+      stackMap = new Map()
+    ) {
+      sources.forEach((items) => {
         for (let key in items) {
-          let val = items[key]
+          let val = items[key];
 
           //是否有customizer
-          let customizerResult = customizer && customizer(obj[key], val, key, obj, stackMap)
-          val = customizerResult !== void 0 ? customizerResult : val
+          let customizerResult =
+            customizer && customizer(obj[key], val, key, obj, stackMap);
+          val = customizerResult !== void 0 ? customizerResult : val;
 
           //是否深度复制
-          if (customizerResult === void 0 && deep && isObject(obj[key]) && !stackMap.has(obj[key])) {
-              stackMap.set(obj[key], 'exist')
-              val = _baseAssign(obj[key], coverDefalult, prototypeChain, deep, customizer, [val], stackMap)
+          if (
+            customizerResult === void 0 &&
+            deep &&
+            isObject(obj[key]) &&
+            !stackMap.has(obj[key])
+          ) {
+            stackMap.set(obj[key], "exist");
+            val = _baseAssign(
+              obj[key],
+              coverDefalult,
+              prototypeChain,
+              deep,
+              customizer,
+              [val],
+              stackMap
+            );
           }
           //是非覆盖已有属性
           if (!coverDefalult && obj.hasOwnProperty(key)) {
-            continue
+            continue;
           }
 
           //是否复制source原型链上属性
           if (prototypeChain) {
-            obj[key] = val
+            obj[key] = val;
           } else if (items.hasOwnProperty(key)) {
-            obj[key] = val
+            obj[key] = val;
           }
         }
-      })
-      return obj
+      });
+      return obj;
     }
 
     // _baseGetValue 内部函数
     function _baseGetValue(obj, path, prototypeChain, defaultValue) {
-      let pathArr = toPath(path)
-      let result = obj
-      let flag = pathArr.every(item => {
-        let tmpResult = prototypeChain && (item in root.Object(result)) || result.hasOwnProperty(item)
-        result = result[item]
-        return tmpResult
-      })
-      return flag ? result : defaultValue
+      let pathArr = toPath(path);
+      let result = obj;
+      let flag = pathArr.every((item) => {
+        let tmpResult =
+          (prototypeChain && item in root.Object(result)) ||
+          result.hasOwnProperty(item);
+        result = result[item];
+        return tmpResult;
+      });
+      return flag ? result : defaultValue;
     }
 
     // _baseGetPaths 内部函数
     function _baseGetPaths(obj, prototypeChain, paths = [], path = []) {
       // 只考虑普通对象和数组
       for (let key in obj) {
-        if(prototypeChain || obj.hasOwnProperty(key)) {
-          path.push(key)
-          if(!isObject(obj[key])) {
-            paths.push(path.slice())
+        if (prototypeChain || obj.hasOwnProperty(key)) {
+          path.push(key);
+          if (!isObject(obj[key])) {
+            paths.push(path.slice());
           } else {
-            _baseGetPaths(obj[key], prototypeChain, paths, path)
+            _baseGetPaths(obj[key], prototypeChain, paths, path);
           }
-          path.pop()
+          path.pop();
         }
       }
-      return paths
+      return paths;
     }
 
     // _baseAddProperty 内部函数
     function _baseAddProperty(prop, val, obj, updater = identity, customizer) {
-      let pathArr = toPath(prop)
+      let pathArr = toPath(prop);
       function addProperty(obj, k = 0) {
         if (k === pathArr.length) {
-          return updater(val)
+          return updater(val);
         }
-        let isNum = /^\d+$/.test(pathArr[k])
-        obj = obj || (isNum ? [] : {})
-        obj = (customizer && customizer(obj[pathArr[k]], pathArr[k], obj)) || obj
-        obj[pathArr[k]] = addProperty(obj[pathArr[k]], k + 1)
-        return obj
+        let isNum = /^\d+$/.test(pathArr[k]);
+        obj = obj || (isNum ? [] : {});
+        obj =
+          (customizer && customizer(obj[pathArr[k]], pathArr[k], obj)) || obj;
+        obj[pathArr[k]] = addProperty(obj[pathArr[k]], k + 1);
+        return obj;
       }
-      return addProperty(obj)
+      return addProperty(obj);
     }
 
     // _optimizeCb 内部函数
     function _optimizeCb(func, context, argCount) {
-      if (context === void 0)
-        return func
+      if (context === void 0) return func;
       if (argCount === 1) {
         return function (val) {
-          return func.call(context, val)
-        }
+          return func.call(context, val);
+        };
       }
       if (argCount === 2) {
         return function (val, index) {
-          return func.call(context, val, index)
-        }
+          return func.call(context, val, index);
+        };
       }
       if (argCount === 3) {
         return function (val, index, Collection) {
-          return func.call(context, val, index, Collection)
-        }
+          return func.call(context, val, index, Collection);
+        };
       }
       if (argCount === 4) {
         return function (accumulator, val, index, Collection) {
-          return func.call(context, accumulator, val, index, Collection)
-        }
+          return func.call(context, accumulator, val, index, Collection);
+        };
       }
       return function (...args) {
-        return func.call(context, ...args)
-      }
+        return func.call(context, ...args);
+      };
     }
 
     // _baseMatchesProperty 内部函数
     function _baseMatchesProperty(path, val) {
       return function (obj) {
-        return _baseGetValue(obj, path, true, _flagSymbol) === val
-      }
+        return _baseGetValue(obj, path, true, _flagSymbol) === val;
+      };
     }
 
     // _baseregexpTest 正则 test 方法
     function _baseregexpTest(val) {
       return function (obj) {
-        return val.test(obj)
-      }
+        return val.test(obj);
+      };
     }
 
     // _cb 内部iteratee方法
     function _cb(val, context, argCount) {
-      if (isNil(val)) return identity
-      if (isFunction(val)) return _optimizeCb(val, context, argCount)
+      if (isNil(val)) return identity;
+      if (isFunction(val)) return _optimizeCb(val, context, argCount);
       if (isObject(val)) {
-        if (isArray(val)) return _baseMatchesProperty(val[0], val[1])
+        if (isArray(val)) return _baseMatchesProperty(val[0], val[1]);
         //lodash 没有考虑正则匹配
-        if (isRegExp(val)) return _baseregexpTest(val)
-        return matches(val)
+        if (isRegExp(val)) return _baseregexpTest(val);
+        return matches(val);
       }
-      return property(val)
+      return property(val);
     }
 
     // _mergeSort 归并排序, 稳定排序
-    function _mergeSort(arr, left = 0, right = arr.length - 1, iteratee = identity, order = 'asc') {
+    function _mergeSort(
+      arr,
+      left = 0,
+      right = arr.length - 1,
+      iteratee = identity,
+      order = "asc"
+    ) {
       if (left === right) {
-        return arr.slice(left, left + 1)
+        return arr.slice(left, left + 1);
       }
-      let mid = Math.floor((left + right) / 2)
-      let leftArr = _mergeSort(arr, left, mid, iteratee, order)
-      let rightArr = _mergeSort(arr, mid + 1, right, iteratee, order)
-      let resultArr = []
-      let leftLen = leftArr.length
-      let rightLen = rightArr.length
-      let leftIndex = 0
-      let rightIndex = 0
+      let mid = Math.floor((left + right) / 2);
+      let leftArr = _mergeSort(arr, left, mid, iteratee, order);
+      let rightArr = _mergeSort(arr, mid + 1, right, iteratee, order);
+      let resultArr = [];
+      let leftLen = leftArr.length;
+      let rightLen = rightArr.length;
+      let leftIndex = 0;
+      let rightIndex = 0;
       while (leftIndex < leftLen && rightIndex < rightLen) {
-        if (order !== 'desc') {
+        if (order !== "desc") {
           if (iteratee(leftArr[leftIndex]) <= iteratee(rightArr[rightIndex])) {
-            resultArr.push(leftArr[leftIndex])
-            leftIndex ++
+            resultArr.push(leftArr[leftIndex]);
+            leftIndex++;
           } else {
-            resultArr.push(rightArr[rightIndex])
-            rightIndex ++
+            resultArr.push(rightArr[rightIndex]);
+            rightIndex++;
           }
         } else {
           if (iteratee(leftArr[leftIndex]) >= iteratee(rightArr[rightIndex])) {
-            resultArr.push(leftArr[leftIndex])
-            leftIndex++
+            resultArr.push(leftArr[leftIndex]);
+            leftIndex++;
           } else {
-            resultArr.push(rightArr[rightIndex])
-            rightIndex++
+            resultArr.push(rightArr[rightIndex]);
+            rightIndex++;
           }
         }
       }
-      resultArr.push(...leftArr.slice(leftIndex), ...rightArr.slice(rightIndex))
-      return resultArr
+      resultArr.push(
+        ...leftArr.slice(leftIndex),
+        ...rightArr.slice(rightIndex)
+      );
+      return resultArr;
     }
 
     // _swap 内部函数
     function _swap(arr, x, y) {
-      let tmp = arr[x]
-      arr[x] = arr[y]
-      arr[y] = tmp
+      let tmp = arr[x];
+      arr[x] = arr[y];
+      arr[y] = tmp;
     }
 
     // _executeBound
     // Determines whether to execute a function as a constructor
     // or a normal function with the provided arguments.
     function _executeBound(func, boundFunc, thisArg, context, args) {
-      if (!(context instanceof boundFunc)) return func.call(thisArg, ...args)
+      if (!(context instanceof boundFunc)) return func.call(thisArg, ...args);
       // func 的实例
-      let instance = Object.create(func.prototype)
-      let result = func.call(instance, ...args)
-      if (isObject(result)) return result
-      return instance
+      let instance = Object.create(func.prototype);
+      let result = func.call(instance, ...args);
+      if (isObject(result)) return result;
+      return instance;
     }
 
     // _replaceHolders
     // 整合 partials 和 args 为一个 完整的参数数组, 将partials中的 placeholder替换为 args中元素, args中剩余元素放到 数组结尾
     function _replaceHolders(partials, args, placeholder) {
-      let separator = 0
-      return partials.map(partial => {
-        if (partial === placeholder) return args[separator++]
-        return partial
-      }).concat(args.slice(separator))
+      let separator = 0;
+      return partials
+        .map((partial) => {
+          if (partial === placeholder) return args[separator++];
+          return partial;
+        })
+        .concat(args.slice(separator));
     }
 
     // _baseIsEqual
     // Internal recursive comparison function for `isEqual` & `isEqualWith`.
     function _baseIsEqual(val, other, customizer, stackMap = new Map()) {
-
       // _wrapped 对象
-      if (val instanceof __) val = val._wrapped
-      if (other instanceof __) other = other._wrapped
+      if (val instanceof __) val = val._wrapped;
+      if (other instanceof __) other = other._wrapped;
 
       // 类型不同, 返回false
-      let valType = _objectProto.toString.call(val)
+      let valType = _objectProto.toString.call(val);
       if (valType != _objectProto.toString.call(other)) {
-        return false
+        return false;
       }
 
       // val === other
       if (val === other) {
-        return true
+        return true;
       }
 
       // `NaN`
       if (val !== val) {
-        return other !== other
+        return other !== other;
       }
 
       if (!isObjectLike(val) && !isObjectLike(other)) {
-        return false
+        return false;
       }
 
       // String Number Date Boolean Symbol 之类的包装对象 和 RegExp
       // String 和 RegExp
       if (valType === _typeMap.String || valType === _typeMap.RegExp) {
-        return '' + val === '' + other
+        return "" + val === "" + other;
       }
 
       // Number
       if (valType === _typeMap.Number) {
-        if (+val !== +val) return +other !== +other
-        return +val === +other
+        if (+val !== +val) return +other !== +other;
+        return +val === +other;
       }
 
       // Boolean Date
       if (valType === _typeMap.Boolean || valType === _typeMap.Date) {
-        return +val === +other
+        return +val === +other;
       }
 
       // Symbol
       if (valType === _typeMap.Symbol) {
-        _symbolProto.valueOf.call(val) === _symbolProto.valueOf.call(other)
+        return (
+          _symbolProto.valueOf.call(val) === _symbolProto.valueOf.call(other)
+        );
       }
 
       if (valType !== _typeMap.Array) {
         // 对象的 constructor 是否相同, 这里参考的是　underscore的 源码
         // Objects with different constructors are not equivalent, but `Object`s or `Array`s
         // from different frames are.
-        if (val.constructor !== other.constructor
-          && !(isFunction(val.constructor)
-            && val.constructor instanceof val.constructor
-            && isFunction(other.constructor)
-            && other.constructor instanceof other.constructor)
-          && ('constructor' in val && 'constructor' in other)) {
-          return false
+        if (
+          val.constructor !== other.constructor &&
+          !(
+            isFunction(val.constructor) &&
+            val.constructor instanceof val.constructor &&
+            isFunction(other.constructor) &&
+            other.constructor instanceof other.constructor
+          ) &&
+          "constructor" in val &&
+          "constructor" in other
+        ) {
+          return false;
         }
       }
 
       // 使用Map存储, 防止出现循环引用问题
       if (stackMap.has(val)) {
-        return stackMap.get(val) === other && stackMap.get(other) === val
+        return stackMap.get(val) === other && stackMap.get(other) === val;
       }
-      stackMap.set(val, other)
-      stackMap.set(other, val)
+      stackMap.set(val, other);
+      stackMap.set(other, val);
 
       // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
-      let valKeys = _keys(val)
-      let otherKeys = _keys(other)
+      let valKeys = _keys(val);
+      let otherKeys = _keys(other);
 
       if (valKeys.length !== otherKeys.length) {
-        return false
+        return false;
       }
 
       // 递归对比每一个属性
-      let result = valKeys.every(key => {
-        let customizerResult = customizer && customizer(val[key], other[key], key, val, other, stackMap)
-        if (customizerResult !== void 0) return customizerResult
-        return otherKeys.includes(key) && _baseIsEqual(val[key], other[key], customizer, stackMap)
-      })
+      let result = valKeys.every((key) => {
+        let customizerResult =
+          customizer &&
+          customizer(val[key], other[key], key, val, other, stackMap);
+        if (customizerResult !== void 0) return customizerResult;
+        return (
+          otherKeys.includes(key) &&
+          _baseIsEqual(val[key], other[key], customizer, stackMap)
+        );
+      });
 
-      stackMap.delete(val)
-      stackMap.delete(other)
+      stackMap.delete(val);
+      stackMap.delete(other);
 
-      return result
+      return result;
     }
 
     // _baseClone
-      function _baseClone(val, isDeep, customizer, stackMap = new Map()) {
-
-        // 基础类型, 直接返回 val
-        if (!isObject(val)) {
-          return val
-        }
-
-        let valType = _objectProto.toString.call(val)
-        let valConstructor = val.constructor
-        let result
-
-        // Date Boolean 包装对象
-        if (valType === _typeMap.Date || valType === _typeMap.Boolean) {
-          result = new valConstructor(+val)
-        }
-
-        // Number String 包装对象
-        if (valType === _typeMap.Number || valType === _typeMap.String) {
-          result = new valConstructor(val)
-        }
-
-        // RegExp
-        if (valType === _typeMap.RegExp) {
-          result = new valConstructor(val.source, val.flags)
-          result.lastIndex = val.lastIndex
-        }
-
-        // Symbol 包装对象
-        if (valType === _typeMap.Symbol) {
-          result = Object(_symbolProto.valueOf.call(val))
-        }
-
-        // Function
-        if (valType === _typeMap.Function) {
-          result = {}
-        }
-
-        // Array
-        if (valType === _typeMap.Array) {
-          result = new valConstructor(val.length)
-        }
-
-        // Object
-        if (valType === _typeMap.Object) {
-          result = Object.create(Object.getPrototypeOf(val))
-        }
-
-        // 处理循环引用问题
-        if (stackMap.has(val)) {
-          return stackMap.get(val)
-        }
-        stackMap.set(val, result)
-
-        // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
-        let keys = _keys(val)
-        // 根据 isDeep , 看是否需要深度克隆
-        keys.forEach(key => {
-          // customizer cloneWith 和 cloneDeepWith 定制值
-          let customizerResult = customizer && customizer(val[key], key, val, stackMap)
-          if (customizerResult !== void 0) {
-            result[key] = customizerResult
-          } else if (!isDeep) {
-            result[key] = val[key]
-          } else {
-            result[key] = _baseClone(val[key], isDeep, customizer, stackMap)
-          }
-        })
-
-        stackMap.delete(val)
-        return result
+    function _baseClone(val, isDeep, customizer, stackMap = new Map()) {
+      // 基础类型, 直接返回 val
+      if (!isObject(val)) {
+        return val;
       }
+
+      let valType = _objectProto.toString.call(val);
+      let valConstructor = val.constructor;
+      let result;
+
+      // Date Boolean 包装对象
+      if (valType === _typeMap.Date || valType === _typeMap.Boolean) {
+        result = new valConstructor(+val);
+      }
+
+      // Number String 包装对象
+      if (valType === _typeMap.Number || valType === _typeMap.String) {
+        result = new valConstructor(val);
+      }
+
+      // RegExp
+      if (valType === _typeMap.RegExp) {
+        result = new valConstructor(val.source, val.flags);
+        result.lastIndex = val.lastIndex;
+      }
+
+      // Symbol 包装对象
+      if (valType === _typeMap.Symbol) {
+        result = Object(_symbolProto.valueOf.call(val));
+      }
+
+      // Function
+      if (valType === _typeMap.Function) {
+        result = {};
+      }
+
+      // Array
+      if (valType === _typeMap.Array) {
+        result = new valConstructor(val.length);
+      }
+
+      // Object
+      if (valType === _typeMap.Object) {
+        result = Object.create(Object.getPrototypeOf(val));
+      }
+
+      // 处理循环引用问题
+      if (stackMap.has(val)) {
+        return stackMap.get(val);
+      }
+      stackMap.set(val, result);
+
+      // _keys 库中实现的内部方法, 和 Object.keys的区别是对数组使用时, 返回的 key 是 number, 而非 string
+      let keys = _keys(val);
+      // 根据 isDeep , 看是否需要深度克隆
+      keys.forEach((key) => {
+        // customizer cloneWith 和 cloneDeepWith 定制值
+        let customizerResult =
+          customizer && customizer(val[key], key, val, stackMap);
+        if (customizerResult !== void 0) {
+          result[key] = customizerResult;
+        } else if (!isDeep) {
+          result[key] = val[key];
+        } else {
+          result[key] = _baseClone(val[key], isDeep, customizer, stackMap);
+        }
+      });
+
+      stackMap.delete(val);
+      return result;
+    }
 
     //------------------------------------Array-----------------------------------------
     // _.chunk-----------------------------------------------------------------//
@@ -489,16 +534,16 @@
     **/
 
     function chunk(arr, size = 1) {
-      let len = arr === null ? 0 : arr.length
-      size = isSafeInteger(size) ? size : 0
-      if(len === 0 || size < 1) {
-        return []
+      let len = arr === null ? 0 : arr.length;
+      size = isSafeInteger(size) ? size : 0;
+      if (len === 0 || size < 1) {
+        return [];
       }
-      let result = []
-      for(let i = 0; i < len; i += size) {
-        result.push(arr.slice(i, i + size))
+      let result = [];
+      for (let i = 0; i < len; i += size) {
+        result.push(arr.slice(i, i + size));
       }
-      return result
+      return result;
     }
 
     // _.compact---------------------------------------------------------------//
@@ -512,7 +557,7 @@
     **/
 
     function compact(arr) {
-      return arr.filter(Boolean)
+      return arr.filter(Boolean);
     }
 
     // _.concat----------------------------------------------------------------//
@@ -527,7 +572,7 @@
     **/
 
     function concat(arr, ...others) {
-      return arr.concat(...others)
+      return arr.concat(...others);
     }
 
     // _.difference------------------------------------------------------------//
@@ -545,8 +590,8 @@
     **/
 
     function difference(arr, ...others) {
-      let compareArr = flatten(others)
-      return arr.filter(val => !compareArr.includes(val))
+      let compareArr = flatten(others);
+      return arr.filter((val) => !compareArr.includes(val));
     }
 
     // _.differenceBy----------------------------------------------------------//
@@ -566,11 +611,14 @@
     **/
 
     function differenceBy(arr, ...values) {
-      let iteratee = last(values)
-      if (isArrayLikeObject(iteratee)) return difference(arr, ...values)
-      iteratee = _cb(iteratee, DMZ, 1)
-      let compareArr = flatten(initial(values))
-      return filter(arr, item => !compareArr.some(val => iteratee(val) === iteratee(item)))
+      let iteratee = last(values);
+      if (isArrayLikeObject(iteratee)) return difference(arr, ...values);
+      iteratee = _cb(iteratee, DMZ, 1);
+      let compareArr = flatten(initial(values));
+      return filter(
+        arr,
+        (item) => !compareArr.some((val) => iteratee(val) === iteratee(item))
+      );
     }
 
     // _.differenceWith--------------------------------------------------------//
@@ -590,10 +638,13 @@
     **/
 
     function differenceWith(arr, ...values) {
-      let comparator = last(values)
-      if (isArrayLikeObject(comparator)) return difference(arr, ...values)
-      let compareArr = flatten(initial(values))
-      return filter(arr,item => !compareArr.some(val => comparator(item, val)))
+      let comparator = last(values);
+      if (isArrayLikeObject(comparator)) return difference(arr, ...values);
+      let compareArr = flatten(initial(values));
+      return filter(
+        arr,
+        (item) => !compareArr.some((val) => comparator(item, val))
+      );
     }
 
     // _.drop------------------------------------------------------------------//
@@ -608,8 +659,8 @@
     **/
 
     function drop(arr, n = 1) {
-      let startIndex = n < 0 ? 0 : n
-      return arr.slice(startIndex)
+      let startIndex = n < 0 ? 0 : n;
+      return arr.slice(startIndex);
     }
 
     // _.dropRight-------------------------------------------------------------//
@@ -624,9 +675,9 @@
     **/
 
     function dropRight(arr, n = 1) {
-      let endIndex = arr.length - Math.floor(n)
-      endIndex = endIndex < 0 ? 0 : endIndex
-      return arr.slice(0, endIndex)
+      let endIndex = arr.length - Math.floor(n);
+      endIndex = endIndex < 0 ? 0 : endIndex;
+      return arr.slice(0, endIndex);
     }
 
     // _.dropRightWhile--------------------------------------------------------//
@@ -642,8 +693,8 @@
     **/
 
     function dropRightWhile(arr, predicate = identity) {
-      let tmp = arr.slice()
-      return dropWhile(tmp.reverse(), predicate).reverse()
+      let tmp = arr.slice();
+      return dropWhile(tmp.reverse(), predicate).reverse();
     }
 
     // _.dropWhile-------------------------------------------------------------//
@@ -659,8 +710,13 @@
     **/
 
     function dropWhile(arr, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      return arr.slice(findIndex(arr, (item, index, collection) => !predicate(item, index, collection)))
+      predicate = _cb(predicate, DMZ, 3);
+      return arr.slice(
+        findIndex(
+          arr,
+          (item, index, collection) => !predicate(item, index, collection)
+        )
+      );
     }
 
     // _.fill------------------------------------------------------------------//
@@ -679,10 +735,10 @@
     **/
 
     function fill(arr, val, start = 0, end = arr.length) {
-      for(let i = start; i < end; i++) {
-        arr[i] = val
+      for (let i = start; i < end; i++) {
+        arr[i] = val;
       }
-      return arr
+      return arr;
     }
 
     // _.findIndex-------------------------------------------------------------//
@@ -699,17 +755,17 @@
     **/
 
     function findIndex(arr, predicate = identity, fromIndex = 0) {
-      predicate = _cb(predicate, DMZ, 3)
-      let pos = -1
-      let len = arr.length
-      fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex
+      predicate = _cb(predicate, DMZ, 3);
+      let pos = -1;
+      let len = arr.length;
+      fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex;
       for (let i = fromIndex; i < arr.length; i++) {
         if (predicate(arr[i], i, arr)) {
-          pos = i
-          break
+          pos = i;
+          break;
         }
       }
-      return pos
+      return pos;
     }
 
     // _.findLastIndex---------------------------------------------------------//
@@ -724,18 +780,22 @@
         (number): Returns the index of the found element, else -1.
     **/
 
-    function findLastIndex(arr, predicate = identity, fromIndex = arr.length - 1) {
-      predicate = _cb(predicate, DMZ, 3)
-      let pos = -1
-      let len = arr.length
-      fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex
+    function findLastIndex(
+      arr,
+      predicate = identity,
+      fromIndex = arr.length - 1
+    ) {
+      predicate = _cb(predicate, DMZ, 3);
+      let pos = -1;
+      let len = arr.length;
+      fromIndex = fromIndex < 0 ? len + fromIndex : fromIndex;
       for (let i = fromIndex; i >= 0; i--) {
         if (predicate(arr[i], i, arr)) {
-          pos = i
-          break
+          pos = i;
+          break;
         }
       }
-      return pos
+      return pos;
     }
 
     // _.first - > head--------------------------------------------------------//
@@ -749,7 +809,7 @@
     **/
 
     function first(arr) {
-      return (arr && arr.length) ? arr[0] : void 0
+      return arr && arr.length ? arr[0] : void 0;
     }
 
     // _.flatten---------------------------------------------------------------//
@@ -763,7 +823,7 @@
     **/
 
     function flatten(arr) {
-      return flattenDepth(arr, 1)
+      return flattenDepth(arr, 1);
     }
 
     // _.flattenDeep-----------------------------------------------------------//
@@ -777,7 +837,7 @@
     **/
 
     function flattenDeep(arr) {
-      return flattenDepth(arr, Infinity)
+      return flattenDepth(arr, Infinity);
     }
 
     // _.flattenDepth----------------------------------------------------------//
@@ -792,19 +852,19 @@
     **/
 
     function flattenDepth(arr, depth = 1) {
-      depth = depth < 0 ? 0 : Math.floor(depth)
-      let result = []
+      depth = depth < 0 ? 0 : Math.floor(depth);
+      let result = [];
       function flat(arr, depth) {
-        for(let i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
           if (isArray(arr[i]) && depth > 0) {
-            flat(arr[i], depth - 1)
+            flat(arr[i], depth - 1);
           } else {
-            result.push(arr[i])
+            result.push(arr[i]);
           }
         }
-        return result
+        return result;
       }
-      return flat(arr, depth)
+      return flat(arr, depth);
     }
 
     // _.fromPairs-------------------------------------------------------------//
@@ -819,12 +879,12 @@
     **/
 
     function fromPairs(pairs) {
-      let len = pairs == null ? 0 : pairs.length
-      let result = {}
-      for(let i = 0; i < len; i++) {
-        result[pairs[i][0]] = pairs[i][1]
+      let len = pairs == null ? 0 : pairs.length;
+      let result = {};
+      for (let i = 0; i < len; i++) {
+        result[pairs[i][0]] = pairs[i][1];
       }
-      return result
+      return result;
     }
 
     // _.head------------------------------------------------------------------//
@@ -838,7 +898,7 @@
     **/
 
     function head(arr) {
-      return first(arr)
+      return first(arr);
     }
 
     // _.indexOf---------------------------------------------------------------//
@@ -855,7 +915,7 @@
     **/
 
     function indexOf(arr, val, fromIndex = 0) {
-      return arr.indexOf(val, fromIndex)
+      return arr.indexOf(val, fromIndex);
     }
 
     // _.initial---------------------------------------------------------------//
@@ -869,8 +929,8 @@
     **/
 
     function initial(arr) {
-      let len = arr == null ? 0 : arr.length
-      return len ? arr.slice(0, len - 1) : []
+      let len = arr == null ? 0 : arr.length;
+      return len ? arr.slice(0, len - 1) : [];
     }
 
     // _.intersection----------------------------------------------------------//
@@ -885,11 +945,14 @@
     **/
 
     function intersection(...arrays) {
-      let initialArr = arrays[0]
-      let otherArrs = arrays.slice(1)
+      let initialArr = arrays[0];
+      let otherArrs = arrays.slice(1);
       return filter(initialArr, (item, index, collection) => {
-        return collection.indexOf(item) === index && every(otherArrs, otherArr => otherArr.includes(item))
-      })
+        return (
+          collection.indexOf(item) === index &&
+          every(otherArrs, (otherArr) => otherArr.includes(item))
+        );
+      });
     }
 
     // _.intersectionBy--------------------------------------------------------//
@@ -906,15 +969,19 @@
     **/
 
     function intersectionBy(...arrays) {
-      let iteratee = last(arrays)
-      if (isArrayLikeObject(iteratee)) return intersection(...arrays)
-      let initialArr = first(arrays)
-      let otherArrs = tail(initial(arrays))
-      iteratee = _cb(iteratee, DMZ, 1)
+      let iteratee = last(arrays);
+      if (isArrayLikeObject(iteratee)) return intersection(...arrays);
+      let initialArr = first(arrays);
+      let otherArrs = tail(initial(arrays));
+      iteratee = _cb(iteratee, DMZ, 1);
       return filter(initialArr, (item, index, collection) => {
-        return collection.indexOf(item) === index
-          && every(otherArrs, otherArr => some(otherArr, it => iteratee(it) === iteratee(item)))
-      })
+        return (
+          collection.indexOf(item) === index &&
+          every(otherArrs, (otherArr) =>
+            some(otherArr, (it) => iteratee(it) === iteratee(item))
+          )
+        );
+      });
     }
 
     // _.intersectionWith------------------------------------------------------//
@@ -931,14 +998,18 @@
     **/
 
     function intersectionWith(...arrays) {
-      let comparator = last(arrays)
-      if (isArrayLikeObject(comparator)) return intersection(...arrays)
-      let initialArr = first(arrays)
-      let otherArrs = tail(initial(arrays))
+      let comparator = last(arrays);
+      if (isArrayLikeObject(comparator)) return intersection(...arrays);
+      let initialArr = first(arrays);
+      let otherArrs = tail(initial(arrays));
       return filter(initialArr, (item, index, collection) => {
-        return collection.indexOf(item) === index &&
-          every(otherArrs, otherArr => otherArr.some(it => comparator(item, it)))
-      })
+        return (
+          collection.indexOf(item) === index &&
+          every(otherArrs, (otherArr) =>
+            otherArr.some((it) => comparator(item, it))
+          )
+        );
+      });
     }
 
     // _.join------------------------------------------------------------------//
@@ -952,8 +1023,8 @@
         (string): Returns the joined string.
     **/
 
-    function join(arr, separator = ',') {
-      return arr == null ? '' : arr.join(separator)
+    function join(arr, separator = ",") {
+      return arr == null ? "" : arr.join(separator);
     }
 
     // _.last------------------------------------------------------------------//
@@ -967,7 +1038,7 @@
     **/
 
     function last(arr) {
-      return (arr && arr.length) ? arr[arr.length - 1] : void 0
+      return arr && arr.length ? arr[arr.length - 1] : void 0;
     }
 
     // _.lastIndexOf-----------------------------------------------------------//
@@ -983,7 +1054,7 @@
     **/
 
     function lastIndexOf(arr, val, fromIndex = arr.length - 1) {
-      return arr.lastIndexOf(val, fromIndex)
+      return arr.lastIndexOf(val, fromIndex);
     }
 
     // _.nth-------------------------------------------------------------------//
@@ -998,7 +1069,7 @@
     **/
 
     function nth(arr, n = 0) {
-      return (arr && arr.length) ? arr[n < 0 ? arr.length + n: n] : void 0
+      return arr && arr.length ? arr[n < 0 ? arr.length + n : n] : void 0;
     }
 
     // _.pull------------------------------------------------------------------//
@@ -1017,11 +1088,11 @@
     function pull(arr, ...values) {
       for (let i = 0; i < arr.length; i++) {
         if (values.includes(arr[i])) {
-          arr.splice(i, 1)
-          i--
+          arr.splice(i, 1);
+          i--;
         }
       }
-      return arr
+      return arr;
     }
 
     // _.pullAll---------------------------------------------------------------//
@@ -1038,7 +1109,7 @@
     **/
 
     function pullAll(arr, values) {
-      return pull(arr, ...values)
+      return pull(arr, ...values);
     }
 
     // _.pullAllBy-------------------------------------------------------------//
@@ -1057,14 +1128,14 @@
     **/
 
     function pullAllBy(arr, values, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
+      iteratee = _cb(iteratee, DMZ, 1);
       for (let i = 0; i < arr.length; i++) {
-        if (some(values, val => iteratee(val) === iteratee(arr[i]))) {
-          arr.splice(i, 1)
-          i--
+        if (some(values, (val) => iteratee(val) === iteratee(arr[i]))) {
+          arr.splice(i, 1);
+          i--;
         }
       }
-      return arr
+      return arr;
     }
 
     // _.pullAllWith-----------------------------------------------------------//
@@ -1083,14 +1154,14 @@
     **/
 
     function pullAllWith(arr, values, comparator) {
-      if (comparator === void 0) return pullAll(arr, values)
+      if (comparator === void 0) return pullAll(arr, values);
       for (let i = 0; i < arr.length; i++) {
-        if (some(values, val => comparator(arr[i], val))) {
-          arr.splice(i, 1)
-          i--
+        if (some(values, (val) => comparator(arr[i], val))) {
+          arr.splice(i, 1);
+          i--;
         }
       }
-      return arr
+      return arr;
     }
 
     // _.pullAt----------------------------------------------------------------//
@@ -1108,14 +1179,14 @@
 
     function pullAt(arr, indexs) {
       indexs.sort(function (a, b) {
-        return b - a
-      })
-      let result = []
-      for(let i = 0; i < indexs.length; i++) {
-        let index = indexs[i]
-        result.unshift(...arr.splice(index, 1))
+        return b - a;
+      });
+      let result = [];
+      for (let i = 0; i < indexs.length; i++) {
+        let index = indexs[i];
+        result.unshift(...arr.splice(index, 1));
       }
-      return result
+      return result;
     }
 
     // _.remove----------------------------------------------------------------//
@@ -1133,14 +1204,14 @@
     **/
 
     function remove(arr, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let result = []
-      for(let i = 0; i < arr.length; i++) {
-        if(predicate(arr[i], i, arr)) {
-          result.push(...arr.splice(i--, 1))
+      predicate = _cb(predicate, DMZ, 3);
+      let result = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (predicate(arr[i], i, arr)) {
+          result.push(...arr.splice(i--, 1));
         }
       }
-      return result
+      return result;
     }
 
     // _.reverse---------------------------------------------------------------//
@@ -1156,7 +1227,7 @@
     **/
 
     function reverse(arr) {
-      return arr == null ? arr : arr.reverse()
+      return arr == null ? arr : arr.reverse();
     }
 
     // _.slice-----------------------------------------------------------------//
@@ -1174,7 +1245,7 @@
     **/
 
     function slice(arr, start = 0, end = arr.length) {
-      return arr.slice(start, end)
+      return arr.slice(start, end);
     }
 
     // _.sortedIndex-----------------------------------------------------------//
@@ -1189,18 +1260,18 @@
     **/
 
     function sortedIndex(arr, val) {
-      if (val > arr[arr.length - 1]) return arr.length
-      let left = 0
-      let right = arr.length - 1
-      while(left < right) {
-        let mid = Math.floor((left + right) / 2)
+      if (val > arr[arr.length - 1]) return arr.length;
+      let left = 0;
+      let right = arr.length - 1;
+      while (left < right) {
+        let mid = Math.floor((left + right) / 2);
         if (arr[mid] < val) {
-          left = mid + 1
+          left = mid + 1;
         } else {
-          right = mid
+          right = mid;
         }
       }
-      return left
+      return left;
     }
 
     // _.sortedIndexBy---------------------------------------------------------//
@@ -1217,19 +1288,19 @@
     **/
 
     function sortedIndexBy(arr, val, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      if (iteratee(val) > iteratee(arr[arr.length - 1])) return arr.length
-      let left = 0
-      let right = arr.length - 1
+      iteratee = _cb(iteratee, DMZ, 1);
+      if (iteratee(val) > iteratee(arr[arr.length - 1])) return arr.length;
+      let left = 0;
+      let right = arr.length - 1;
       while (left < right) {
-        let mid = Math.floor((left + right) / 2)
+        let mid = Math.floor((left + right) / 2);
         if (iteratee(arr[mid]) < iteratee(val)) {
-          left = mid + 1
+          left = mid + 1;
         } else {
-          right = mid
+          right = mid;
         }
       }
-      return left
+      return left;
     }
 
     // _.sortedIndexOf---------------------------------------------------------//
@@ -1244,8 +1315,8 @@
     **/
 
     function sortedIndexOf(arr, val) {
-      let index = sortedIndex(arr, val)
-      return arr[index] === val ? index : -1
+      let index = sortedIndex(arr, val);
+      return arr[index] === val ? index : -1;
     }
 
     // _.sortedLastIndex-------------------------------------------------------//
@@ -1261,18 +1332,18 @@
     **/
 
     function sortedLastIndex(arr, val) {
-      if (val < arr[0]) return 0
-      let left = 0
-      let right = arr.length - 1
-      while(left < right) {
-        let mid = Math.ceil((left + right) / 2)
+      if (val < arr[0]) return 0;
+      let left = 0;
+      let right = arr.length - 1;
+      while (left < right) {
+        let mid = Math.ceil((left + right) / 2);
         if (arr[mid] > val) {
-          right = mid - 1
+          right = mid - 1;
         } else {
-          left = mid
+          left = mid;
         }
       }
-      return left + 1
+      return left + 1;
     }
 
     // _.sortedLastIndexBy-----------------------------------------------------//
@@ -1289,19 +1360,19 @@
     **/
 
     function sortedLastIndexBy(arr, val, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      if(iteratee(val) < iteratee(arr[0])) return 0
-      let left = 0
-      let right = arr.length - 1
+      iteratee = _cb(iteratee, DMZ, 1);
+      if (iteratee(val) < iteratee(arr[0])) return 0;
+      let left = 0;
+      let right = arr.length - 1;
       while (left < right) {
-        let mid = Math.ceil((left + right) / 2)
+        let mid = Math.ceil((left + right) / 2);
         if (iteratee(arr[mid]) > iteratee(val)) {
-          right = mid - 1
+          right = mid - 1;
         } else {
-          left = mid
+          left = mid;
         }
       }
-      return left + 1
+      return left + 1;
     }
 
     // _.sortedLastIndexOf-----------------------------------------------------//
@@ -1316,8 +1387,8 @@
     **/
 
     function sortedLastIndexOf(arr, val) {
-      let index = sortedLastIndex(arr, val) - 1
-      return arr[index] === val ? index : -1
+      let index = sortedLastIndex(arr, val) - 1;
+      return arr[index] === val ? index : -1;
     }
 
     // _.sortedUniq------------------------------------------------------------//
@@ -1331,7 +1402,9 @@
     **/
 
     function sortedUniq(arr) {
-      return arr.filter((item, index, collection) => item !== collection[index - 1])
+      return arr.filter(
+        (item, index, collection) => item !== collection[index - 1]
+      );
     }
 
     // _.sortedUniqBy----------------------------------------------------------//
@@ -1346,8 +1419,11 @@
     **/
 
     function sortedUniqBy(arr, iteratee) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      return arr.filter((item, index, collection) => iteratee(item) !== iteratee(collection[index - 1]))
+      iteratee = _cb(iteratee, DMZ, 1);
+      return arr.filter(
+        (item, index, collection) =>
+          iteratee(item) !== iteratee(collection[index - 1])
+      );
     }
 
     // _.tail------------------------------------------------------------------//
@@ -1361,8 +1437,8 @@
     **/
 
     function tail(arr) {
-      let len = arr == null ? 0 : arr.length
-      return len ? arr.slice(1, len) : []
+      let len = arr == null ? 0 : arr.length;
+      return len ? arr.slice(1, len) : [];
     }
 
     // _.take------------------------------------------------------------------//
@@ -1377,7 +1453,7 @@
     **/
 
     function take(arr, n = 1) {
-      return (arr && arr.length) ? arr.slice(0, n < 0 ? 0 : n) : []
+      return arr && arr.length ? arr.slice(0, n < 0 ? 0 : n) : [];
     }
 
     // _.takeRight-------------------------------------------------------------//
@@ -1392,9 +1468,9 @@
     **/
 
     function takeRight(arr, n = 1) {
-      return (arr && arr.length)
+      return arr && arr.length
         ? arr.slice(arr.length - n < 0 ? 0 : arr.length - n, arr.length)
-        : []
+        : [];
     }
 
     // _.takeRightWhile--------------------------------------------------------//
@@ -1410,8 +1486,8 @@
     **/
 
     function takeRightWhile(arr, predicate = identity) {
-      let tmp = arr.slice()
-      return takeWhile(tmp.reverse(), predicate).reverse()
+      let tmp = arr.slice();
+      return takeWhile(tmp.reverse(), predicate).reverse();
     }
 
     // _.takeWhile-------------------------------------------------------------//
@@ -1427,8 +1503,14 @@
     **/
 
     function takeWhile(arr, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      return arr.slice(0, findIndex(arr, (item, index, collection) => !predicate(item, index, collection)))
+      predicate = _cb(predicate, DMZ, 3);
+      return arr.slice(
+        0,
+        findIndex(
+          arr,
+          (item, index, collection) => !predicate(item, index, collection)
+        )
+      );
     }
 
     // _.union-----------------------------------------------------------------//
@@ -1442,7 +1524,7 @@
     **/
 
     function union(...arrays) {
-      return uniq(flatten(arrays))
+      return uniq(flatten(arrays));
     }
 
     // _.unionBy---------------------------------------------------------------//
@@ -1460,10 +1542,10 @@
     **/
 
     function unionBy(...args) {
-      let iteratee = last(args)
-      if(isArrayLikeObject(iteratee)) return union(...args)
-      let arrays = initial(args)
-      return uniqBy(flatten(arrays), iteratee)
+      let iteratee = last(args);
+      if (isArrayLikeObject(iteratee)) return union(...args);
+      let arrays = initial(args);
+      return uniqBy(flatten(arrays), iteratee);
     }
 
     // _.unionWith-------------------------------------------------------------//
@@ -1480,10 +1562,10 @@
     **/
 
     function unionWith(...args) {
-      let comparator = last(args)
-      if(isArrayLikeObject(comparator)) return union(...args)
-      let arrays = initial(args)
-      return uniqWith(flatten(arrays), comparator)
+      let comparator = last(args);
+      if (isArrayLikeObject(comparator)) return union(...args);
+      let arrays = initial(args);
+      return uniqWith(flatten(arrays), comparator);
     }
 
     // _.uniq------------------------------------------------------------------//
@@ -1499,7 +1581,10 @@
     **/
 
     function uniq(arr) {
-      return filter(arr, (item, index, collection) => collection.indexOf(item) === index)
+      return filter(
+        arr,
+        (item, index, collection) => collection.indexOf(item) === index
+      );
     }
 
     // _.uniqBy----------------------------------------------------------------//
@@ -1516,10 +1601,13 @@
     **/
 
     function uniqBy(arr, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
+      iteratee = _cb(iteratee, DMZ, 1);
       return filter(arr, (item, index, collection) => {
-        return findIndex(collection, it => iteratee(it) === iteratee(item)) === index
-      })
+        return (
+          findIndex(collection, (it) => iteratee(it) === iteratee(item)) ===
+          index
+        );
+      });
     }
 
     // _.uniqWith--------------------------------------------------------------//
@@ -1536,10 +1624,10 @@
     **/
 
     function uniqWith(arr, comparator) {
-      if (comparator === void 0) return uniq(arr)
+      if (comparator === void 0) return uniq(arr);
       return filter(arr, (item, index, collection) => {
-        return findIndex(collection, it => comparator(item, it)) === index
-      })
+        return findIndex(collection, (it) => comparator(item, it)) === index;
+      });
     }
 
     // _.unzip-----------------------------------------------------------------//
@@ -1554,7 +1642,7 @@
     **/
 
     function unzip(arr) {
-      return zip(...arr)
+      return zip(...arr);
     }
 
     // _.unzipWith-------------------------------------------------------------//
@@ -1570,8 +1658,8 @@
     **/
 
     function unzipWith(arr, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ)
-      return map(unzip(arr), it => iteratee(...it))
+      iteratee = _cb(iteratee, DMZ);
+      return map(unzip(arr), (it) => iteratee(...it));
     }
 
     // _.without---------------------------------------------------------------//
@@ -1588,7 +1676,7 @@
     **/
 
     function without(arr, ...values) {
-      return difference(arr, values)
+      return difference(arr, values);
     }
 
     // _.xor-------------------------------------------------------------------//
@@ -1603,11 +1691,19 @@
     **/
 
     function xor(...arrays) {
-      let flatArr = flatten(map(arrays, arr => {
-        return filter(arr, (item, index, collection) => collection.indexOf(item) === index)
-      }))
-      let compareArr = filter(flatArr, (item, index, collection) => collection.indexOf(item) !== index)
-      return filter(flatArr, item => !compareArr.includes(item))
+      let flatArr = flatten(
+        map(arrays, (arr) => {
+          return filter(
+            arr,
+            (item, index, collection) => collection.indexOf(item) === index
+          );
+        })
+      );
+      let compareArr = filter(
+        flatArr,
+        (item, index, collection) => collection.indexOf(item) !== index
+      );
+      return filter(flatArr, (item) => !compareArr.includes(item));
     }
 
     // _.xorBy-----------------------------------------------------------------//
@@ -1624,21 +1720,29 @@
     **/
 
     function xorBy(...args) {
-      let iteratee = last(args)
-      if(isArrayLikeObject(iteratee)) return xor(...args)
-      iteratee = _cb(iteratee, DMZ, 1)
-      let arrays = initial(args)
-      let flatArr = flatten(map(arrays, arr => {
-        return filter(arr, (item, index, collection) => {
-          return findIndex(collection, it => iteratee(it) === iteratee(item)) === index
+      let iteratee = last(args);
+      if (isArrayLikeObject(iteratee)) return xor(...args);
+      iteratee = _cb(iteratee, DMZ, 1);
+      let arrays = initial(args);
+      let flatArr = flatten(
+        map(arrays, (arr) => {
+          return filter(arr, (item, index, collection) => {
+            return (
+              findIndex(collection, (it) => iteratee(it) === iteratee(item)) ===
+              index
+            );
+          });
         })
-      }))
+      );
       let compareArr = filter(flatArr, (item, index, collection) => {
-        return findIndex(collection, it => iteratee(it) === iteratee(item)) !== index
-      })
-      return filter(flatArr, item => {
-        return every(compareArr, it => iteratee(it) !== iteratee(item))
-      })
+        return (
+          findIndex(collection, (it) => iteratee(it) === iteratee(item)) !==
+          index
+        );
+      });
+      return filter(flatArr, (item) => {
+        return every(compareArr, (it) => iteratee(it) !== iteratee(item));
+      });
     }
 
     // _.xorWith---------------------------------------------------------------//
@@ -1655,20 +1759,24 @@
     **/
 
     function xorWith(...args) {
-      let comparator = last(args)
-      if (isArrayLikeObject(comparator)) return xor(...args)
-      let arrays = initial(args)
-      let flatArr = flatten(map(arrays, arr => {
-        return filter(arr, (item, index, collection) => {
-          return findIndex(collection, it => comparator(item, it)) === index
+      let comparator = last(args);
+      if (isArrayLikeObject(comparator)) return xor(...args);
+      let arrays = initial(args);
+      let flatArr = flatten(
+        map(arrays, (arr) => {
+          return filter(arr, (item, index, collection) => {
+            return (
+              findIndex(collection, (it) => comparator(item, it)) === index
+            );
+          });
         })
-      }))
+      );
       let compareArr = filter(flatArr, (item, index, collection) => {
-        return findIndex(collection, it => comparator(item, it)) !== index
-      })
-      return filter(flatArr, item => {
-        return every(compareArr, it => !comparator(item, it))
-      })
+        return findIndex(collection, (it) => comparator(item, it)) !== index;
+      });
+      return filter(flatArr, (item) => {
+        return every(compareArr, (it) => !comparator(item, it));
+      });
     }
 
     // _.zip-------------------------------------------------------------------//
@@ -1683,14 +1791,14 @@
     **/
 
     function zip(...arrays) {
-      if(arrays.length === 0 || arrays[0].length === 0) return []
-      let result = Array.from({length: arrays[0].length}, () => [])
-      for(let i = 0; i < arrays.length; i++) {
-        for(let j = 0; j < arrays[i].length; j++) {
-          result[j][i] = arrays[i][j]
+      if (arrays.length === 0 || arrays[0].length === 0) return [];
+      let result = Array.from({ length: arrays[0].length }, () => []);
+      for (let i = 0; i < arrays.length; i++) {
+        for (let j = 0; j < arrays[i].length; j++) {
+          result[j][i] = arrays[i][j];
         }
       }
-      return result
+      return result;
     }
 
     // _.zipObject-------------------------------------------------------------//
@@ -1705,11 +1813,11 @@
     **/
 
     function zipObject(props = [], values = []) {
-      let result = {}
-      for(let i = 0; i < props.length; i++) {
-        result[props[i]] = values[i]
+      let result = {};
+      for (let i = 0; i < props.length; i++) {
+        result[props[i]] = values[i];
       }
-      return result
+      return result;
     }
 
     // _.zipObjectDeep---------------------------------------------------------//
@@ -1725,8 +1833,8 @@
 
     function zipObjectDeep(props = [], values = []) {
       return props.reduce((accumulator, path, index) => {
-        return _baseAddProperty(path, values[index], accumulator)
-      },null)
+        return _baseAddProperty(path, values[index], accumulator);
+      }, null);
     }
 
     // _.zipWith---------------------------------------------------------------//
@@ -1742,11 +1850,11 @@
     **/
 
     function zipWith(...args) {
-      let iteratee = last(args)
-      if(isArrayLikeObject(iteratee)) return zip(...args)
-      iteratee = _cb(iteratee, DMZ)
-      let arrays = initial(args)
-      return map(zip(...arrays), it => iteratee(...it))
+      let iteratee = last(args);
+      if (isArrayLikeObject(iteratee)) return zip(...args);
+      iteratee = _cb(iteratee, DMZ);
+      let arrays = initial(args);
+      return map(zip(...arrays), (it) => iteratee(...it));
     }
 
     //------------------------------------Collection------------------------------------
@@ -1764,18 +1872,18 @@
     **/
 
     function countBy(collection, iteratee = identity) {
-      let result = {}
-      let values = _values(collection)
-      iteratee = _cb(iteratee, DMZ, 1)
-      forEach(values,val => {
-        val = iteratee(val)
+      let result = {};
+      let values = _values(collection);
+      iteratee = _cb(iteratee, DMZ, 1);
+      forEach(values, (val) => {
+        val = iteratee(val);
         if (result.hasOwnProperty(val)) {
-          result[val] += 1
+          result[val] += 1;
         } else {
-          result[val] = 1
+          result[val] = 1;
         }
-      })
-      return result
+      });
+      return result;
     }
 
     // _.each - > forEach------------------------------------------------------//
@@ -1795,12 +1903,12 @@
     **/
 
     function each(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(collection)
-      keys.every(key => {
-        return iteratee(collection[key], key, collection) !== false
-      })
-      return collection
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(collection);
+      keys.every((key) => {
+        return iteratee(collection[key], key, collection) !== false;
+      });
+      return collection;
     }
 
     // _.eachRight - > forEachRight--------------------------------------------//
@@ -1815,12 +1923,12 @@
     **/
 
     function eachRight(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(collection)
-      keys.reverse().every(key => {
-        return iteratee(collection[key], key, collection) !== false
-      })
-      return collection
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(collection);
+      keys.reverse().every((key) => {
+        return iteratee(collection[key], key, collection) !== false;
+      });
+      return collection;
     }
 
     // _.every-----------------------------------------------------------------//
@@ -1838,9 +1946,9 @@
     **/
 
     function every(collection, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(collection)
-      return keys.every(key => predicate(collection[key], key, collection))
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(collection);
+      return keys.every((key) => predicate(collection[key], key, collection));
     }
 
     // _.filter----------------------------------------------------------------//
@@ -1858,9 +1966,11 @@
     **/
 
     function filter(collection, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(collection)
-      return keys.filter(key => predicate(collection[key], key, collection)).map(key => collection[key])
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(collection);
+      return keys
+        .filter((key) => predicate(collection[key], key, collection))
+        .map((key) => collection[key]);
     }
 
     // _.find------------------------------------------------------------------//
@@ -1877,10 +1987,12 @@
     **/
 
     function find(collection, predicate = identity, fromIndex = 0) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(collection)
-      let resultKey = keys.slice(fromIndex).find(key => predicate(collection[key], key, collection))
-      return collection[resultKey]
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(collection);
+      let resultKey = keys
+        .slice(fromIndex)
+        .find((key) => predicate(collection[key], key, collection));
+      return collection[resultKey];
     }
 
     // _.findLast--------------------------------------------------------------//
@@ -1895,11 +2007,18 @@
         (*): Returns the matched element, else undefined.
     **/
 
-    function findLast(collection, predicate = identity, fromIndex = collection.length - 1) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(collection)
-      let resultKey = keys.slice(0, fromIndex + 1).reverse().find(key => predicate(collection[key], key, collection))
-      return collection[resultKey]
+    function findLast(
+      collection,
+      predicate = identity,
+      fromIndex = collection.length - 1
+    ) {
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(collection);
+      let resultKey = keys
+        .slice(0, fromIndex + 1)
+        .reverse()
+        .find((key) => predicate(collection[key], key, collection));
+      return collection[resultKey];
     }
 
     // _.flatMap---------------------------------------------------------------//
@@ -1915,9 +2034,11 @@
     **/
 
     function flatMap(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(collection)
-      return flatten(keys.map(key => iteratee(collection[key], key, collection)))
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(collection);
+      return flatten(
+        keys.map((key) => iteratee(collection[key], key, collection))
+      );
     }
 
     // _.flatMapDeep-----------------------------------------------------------//
@@ -1932,9 +2053,11 @@
     **/
 
     function flatMapDeep(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(collection)
-      return flattenDeep(keys.map(key => iteratee(collection[key], key, collection)))
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(collection);
+      return flattenDeep(
+        keys.map((key) => iteratee(collection[key], key, collection))
+      );
     }
 
     // _.flatMapDepth----------------------------------------------------------//
@@ -1950,9 +2073,12 @@
     **/
 
     function flatMapDepth(collection, iteratee = identity, depth = 1) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(collection)
-      return flattenDepth(keys.map(key => iteratee(collection[key], key, collection)), depth)
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(collection);
+      return flattenDepth(
+        keys.map((key) => iteratee(collection[key], key, collection)),
+        depth
+      );
     }
 
     // _.forEach---------------------------------------------------------------//
@@ -1971,7 +2097,7 @@
     **/
 
     function forEach(collection, iteratee = identity) {
-      return each(collection, iteratee)
+      return each(collection, iteratee);
     }
 
     // _.forEachRight----------------------------------------------------------//
@@ -1986,7 +2112,7 @@
     **/
 
     function forEachRight(collection, iteratee = identity) {
-      return eachRight(collection, iteratee)
+      return eachRight(collection, iteratee);
     }
 
     // _.groupBy---------------------------------------------------------------//
@@ -2004,17 +2130,17 @@
     **/
 
     function groupBy(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      let result = {}
-      forEach(collection, val => {
-        let resultKey = iteratee(val)
+      iteratee = _cb(iteratee, DMZ, 1);
+      let result = {};
+      forEach(collection, (val) => {
+        let resultKey = iteratee(val);
         if (result.hasOwnProperty(resultKey)) {
-          result[resultKey].push(val)
+          result[resultKey].push(val);
         } else {
-          result[resultKey] = [val]
+          result[resultKey] = [val];
         }
-      })
-      return result
+      });
+      return result;
     }
 
     // _.includes--------------------------------------------------------------//
@@ -2031,9 +2157,9 @@
     **/
 
     function includes(collection, val, fromIndex = 0) {
-      if (!isArrayLike(collection)) collection = values(collection)
-      if (fromIndex < 0) fromIndex = Math.max(0, collection.length + fromIndex)
-      return collection.includes(val, fromIndex)
+      if (!isArrayLike(collection)) collection = values(collection);
+      if (fromIndex < 0) fromIndex = Math.max(0, collection.length + fromIndex);
+      return collection.includes(val, fromIndex);
     }
 
     // _.invokeMap-------------------------------------------------------------//
@@ -2051,15 +2177,16 @@
     **/
 
     function invokeMap(collection, path, ...args) {
-      let values = _values(collection)
+      let values = _values(collection);
       if (isFunction(path)) {
-        return values.map(val => path.call(val, ...args))
+        return values.map((val) => path.call(val, ...args));
       } else {
-        return values.map(val => {
-          let method = _baseGetValue(val, path, true, _flagSymbol)
-          if (method === _flagSymbol) throw new Error('invokeMap must call on a function')
-          return method.call(val, ...args)
-        })
+        return values.map((val) => {
+          let method = _baseGetValue(val, path, true, _flagSymbol);
+          if (method === _flagSymbol)
+            throw new Error("invokeMap must call on a function");
+          return method.call(val, ...args);
+        });
       }
     }
 
@@ -2077,14 +2204,14 @@
     **/
 
     function keyBy(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      let values = _values(collection)
-      let result = {}
-      values.forEach(val => {
-        let resultKey = iteratee(val)
-        result[resultKey] = val
-      })
-      return result
+      iteratee = _cb(iteratee, DMZ, 1);
+      let values = _values(collection);
+      let result = {};
+      values.forEach((val) => {
+        let resultKey = iteratee(val);
+        result[resultKey] = val;
+      });
+      return result;
     }
 
     // _.map-------------------------------------------------------------------//
@@ -2108,9 +2235,9 @@
     **/
 
     function map(collection, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(collection)
-      return keys.map(key => iteratee(collection[key], key, collection))
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(collection);
+      return keys.map((key) => iteratee(collection[key], key, collection));
     }
 
     // _.orderBy---------------------------------------------------------------//
@@ -2127,16 +2254,22 @@
         (Array): Returns the new sorted array.
     **/
 
-    function orderBy(collection, iteratees = [identity], orders = ['asc']) {
-      let values = _values(collection)
-      let valuesLen = values.length
-      let iterateesCopy = iteratees.slice()
-      let ordersCopy = orders.slice().reverse()
+    function orderBy(collection, iteratees = [identity], orders = ["asc"]) {
+      let values = _values(collection);
+      let valuesLen = values.length;
+      let iterateesCopy = iteratees.slice();
+      let ordersCopy = orders.slice().reverse();
       iterateesCopy.reverse().forEach((iteratee, index) => {
-        iteratee = _cb(iteratee, DMZ, 1)
-        values = _mergeSort(values, 0, valuesLen - 1, iteratee, ordersCopy[index])
-      })
-      return values
+        iteratee = _cb(iteratee, DMZ, 1);
+        values = _mergeSort(
+          values,
+          0,
+          valuesLen - 1,
+          iteratee,
+          ordersCopy[index]
+        );
+      });
+      return values;
     }
 
     // _.partition-------------------------------------------------------------//
@@ -2152,9 +2285,9 @@
     **/
 
     function partition(collection, predicate = identity) {
-      let filterArr = filter(collection, predicate)
-      let rejectArr = reject(collection, predicate)
-      return [filterArr, rejectArr]
+      let filterArr = filter(collection, predicate);
+      let rejectArr = reject(collection, predicate);
+      return [filterArr, rejectArr];
     }
 
     // _.reduce----------------------------------------------------------------//
@@ -2178,11 +2311,21 @@
     **/
 
     function reduce(collection, iteratee = identity, initialVal) {
-      iteratee = _cb(iteratee, DMZ, 4)
-      let keys = _keys(collection)
+      iteratee = _cb(iteratee, DMZ, 4);
+      let keys = _keys(collection);
       if (initialVal === void 0)
-        return keys.slice(1).reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), collection[keys[0]])
-      return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), initialVal)
+        return keys
+          .slice(1)
+          .reduce(
+            (accumulator, key) =>
+              iteratee(accumulator, collection[key], key, collection),
+            collection[keys[0]]
+          );
+      return keys.reduce(
+        (accumulator, key) =>
+          iteratee(accumulator, collection[key], key, collection),
+        initialVal
+      );
     }
 
     // _.reduceRight-----------------------------------------------------------//
@@ -2198,11 +2341,21 @@
     **/
 
     function reduceRight(collection, iteratee = identity, initialVal) {
-      iteratee = _cb(iteratee, DMZ, 4)
-      let keys = _keys(collection).reverse()
+      iteratee = _cb(iteratee, DMZ, 4);
+      let keys = _keys(collection).reverse();
       if (initialVal === void 0)
-        return keys.slice(1).reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), collection[keys[0]])
-      return keys.reduce((accumulator, key) => iteratee(accumulator, collection[key], key, collection), initialVal)
+        return keys
+          .slice(1)
+          .reduce(
+            (accumulator, key) =>
+              iteratee(accumulator, collection[key], key, collection),
+            collection[keys[0]]
+          );
+      return keys.reduce(
+        (accumulator, key) =>
+          iteratee(accumulator, collection[key], key, collection),
+        initialVal
+      );
     }
 
     // _.reject----------------------------------------------------------------//
@@ -2217,9 +2370,11 @@
     **/
 
     function reject(collection, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(collection)
-      return keys.filter(key => !predicate(collection[key], key, collection)).map(key => collection[key])
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(collection);
+      return keys
+        .filter((key) => !predicate(collection[key], key, collection))
+        .map((key) => collection[key]);
     }
 
     // _.sample----------------------------------------------------------------//
@@ -2233,8 +2388,12 @@
     **/
 
     function sample(collection) {
-      let initialCollection = isArrayLike(collection) ? collection : _values(collection)
-      return initialCollection[Math.floor(Math.random() * initialCollection.length)]
+      let initialCollection = isArrayLike(collection)
+        ? collection
+        : _values(collection);
+      return initialCollection[
+        Math.floor(Math.random() * initialCollection.length)
+      ];
     }
 
     // _.sampleSize------------------------------------------------------------//
@@ -2249,9 +2408,9 @@
     **/
 
     function sampleSize(collection, n = 1) {
-      let shuffledArr = shuffle(collection)
-      let size = n < 0 ? 0 : n
-      return shuffledArr.slice(0, size)
+      let shuffledArr = shuffle(collection);
+      let size = n < 0 ? 0 : n;
+      return shuffledArr.slice(0, size);
     }
 
     // _.shuffle---------------------------------------------------------------//
@@ -2265,14 +2424,14 @@
     **/
 
     function shuffle(collection) {
-      let values = _values(collection)
+      let values = _values(collection);
       //洗牌算法
-      let len = values.length
+      let len = values.length;
       for (let i = 0; i < len - 1; i++) {
-        let randomIndex = Math.floor(Math.random() * (len - i)) + i
-        _swap(values, i, randomIndex)
+        let randomIndex = Math.floor(Math.random() * (len - i)) + i;
+        _swap(values, i, randomIndex);
       }
-      return values
+      return values;
     }
 
     // _.size------------------------------------------------------------------//
@@ -2287,8 +2446,10 @@
     **/
 
     function size(collection) {
-      if (collection == null) return 0
-      return isArrayLike(collection) ? collection.length : keys(collection).length
+      if (collection == null) return 0;
+      return isArrayLike(collection)
+        ? collection.length
+        : keys(collection).length;
     }
 
     // _.some------------------------------------------------------------------//
@@ -2304,9 +2465,9 @@
     **/
 
     function some(collection, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(collection)
-      return keys.some(key => predicate(collection[key], key, collection))
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(collection);
+      return keys.some((key) => predicate(collection[key], key, collection));
     }
 
     // _.sortBy----------------------------------------------------------------//
@@ -2323,14 +2484,14 @@
     **/
 
     function sortBy(collection, iteratees = [identity]) {
-      let values = _values(collection)
-      let valuesLen = values.length
-      let iterateesCopy = isArray(iteratees) ? iteratees.slice() : [iteratees]
-      iterateesCopy.reverse().forEach(iteratee => {
-        iteratee = _cb(iteratee, DMZ, 1)
-        values = _mergeSort(values, 0, valuesLen - 1, iteratee, 'asc')
-      })
-      return values
+      let values = _values(collection);
+      let valuesLen = values.length;
+      let iterateesCopy = isArray(iteratees) ? iteratees.slice() : [iteratees];
+      iterateesCopy.reverse().forEach((iteratee) => {
+        iteratee = _cb(iteratee, DMZ, 1);
+        values = _mergeSort(values, 0, valuesLen - 1, iteratee, "asc");
+      });
+      return values;
     }
 
     //------------------------------------Date------------------------------------------
@@ -2343,7 +2504,7 @@
     **/
 
     function now() {
-      return Date.now()
+      return Date.now();
     }
 
     //------------------------------------Function--------------------------------------
@@ -2359,11 +2520,11 @@
     **/
 
     function after(timers, func) {
-      return function(...args) {
-        if(--timers <= 0) {
-          return func.call(this, ...args)
+      return function (...args) {
+        if (--timers <= 0) {
+          return func.call(this, ...args);
         }
-      }
+      };
     }
 
     // _.ary-------------------------------------------------------------------//
@@ -2378,9 +2539,9 @@
     **/
 
     function ary(func, argsCount = func.length) {
-      return function(...args) {
-        return func.call(this, ...args.slice(0, argsCount))
-      }
+      return function (...args) {
+        return func.call(this, ...args.slice(0, argsCount));
+      };
     }
 
     // _.before----------------------------------------------------------------//
@@ -2396,13 +2557,13 @@
     **/
 
     function before(times, func) {
-      let memo
+      let memo;
       return function (...args) {
-        if(--times > 0) {
-          memo = func.call(this, ...args)
+        if (--times > 0) {
+          memo = func.call(this, ...args);
         }
-        return memo
-      }
+        return memo;
+      };
     }
 
     // _.bind------------------------------------------------------------------//
@@ -2424,18 +2585,19 @@
 
     function bind(func, thisArg, ...partials) {
       // 占位符
-      let placeholder = bind.placeholder
-      let boundFunc = function(...args) {
-        if (!isFunction(func)) throw new Error('Bind must be called on a function')
+      let placeholder = bind.placeholder;
+      let boundFunc = function (...args) {
+        if (!isFunction(func))
+          throw new Error("Bind must be called on a function");
         // _replaceHolders 函数, 处理占位符的情况
-        let finalArgs = _replaceHolders(partials, args, placeholder)
+        let finalArgs = _replaceHolders(partials, args, placeholder);
         // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
-        return _executeBound(func, boundFunc, thisArg, this, finalArgs)
-      }
-      return boundFunc
+        return _executeBound(func, boundFunc, thisArg, this, finalArgs);
+      };
+      return boundFunc;
     }
 
-    bind.placeholder = __
+    bind.placeholder = __;
 
     // _.bindKey---------------------------------------------------------------//
 
@@ -2456,17 +2618,18 @@
     **/
 
     function bindKey(obj, key, ...partials) {
-      let placeholder = bindKey.placeholder
+      let placeholder = bindKey.placeholder;
       let boundFunc = function (...args) {
-        let func = obj[key]
-        if (!isFunction(func)) throw new Error('bindKey must be called on a function')
-        let finalArgs = _replaceHolders(partials, args, placeholder)
-        return _executeBound(func, boundFunc, obj, this, finalArgs)
-      }
-      return boundFunc
+        let func = obj[key];
+        if (!isFunction(func))
+          throw new Error("bindKey must be called on a function");
+        let finalArgs = _replaceHolders(partials, args, placeholder);
+        return _executeBound(func, boundFunc, obj, this, finalArgs);
+      };
+      return boundFunc;
     }
 
-    bindKey.placeholder = __
+    bindKey.placeholder = __;
 
     // _.curry-----------------------------------------------------------------//
 
@@ -2487,26 +2650,26 @@
 
     function curry(func, arity = func.length, guard, partial = []) {
       // guard 守卫, 防止传入多余参数
-      partial = guard === void 0 ? partial : []
+      partial = guard === void 0 ? partial : [];
       // 占位符
-      let placeholder = curry.placeholder
-      let boundFunc = function(...args) {
-        let argsLen = args.filter(arg => arg !== placeholder).length
+      let placeholder = curry.placeholder;
+      let boundFunc = function (...args) {
+        let argsLen = args.filter((arg) => arg !== placeholder).length;
         // _replaceHolders 函数, 处理占位符的情况
-        let finalArgs = _replaceHolders(partial, args, placeholder)
+        let finalArgs = _replaceHolders(partial, args, placeholder);
         // 判断是否达到指定数量参数
         if (argsLen >= arity) {
           // _executeBound 函数, 处理 new 调用boundFunc ,this失效问题
-          return _executeBound(func, boundFunc, this, this, finalArgs)
+          return _executeBound(func, boundFunc, this, this, finalArgs);
         } else {
           // 未达到指定数量参数, 返回新的函数, 并将之前参数传递到新函数
-          return curry(func, arity - argsLen, void 0, finalArgs)
+          return curry(func, arity - argsLen, void 0, finalArgs);
         }
-      }
-      return boundFunc
+      };
+      return boundFunc;
     }
 
-    curry.placeholder = __
+    curry.placeholder = __;
 
     // _.curryRight------------------------------------------------------------//
 
@@ -2526,22 +2689,24 @@
     **/
 
     function curryRight(func, arity = func.length, guard, partial = []) {
-      partial = guard === void 0 ? partial : []
-      let placeholder = curryRight.placeholder
+      partial = guard === void 0 ? partial : [];
+      let placeholder = curryRight.placeholder;
       let boundFunc = function (...args) {
-        let argsLen = args.filter(arg => arg !== placeholder).length
-        let arityArgs = new Array(arity - args.length).fill(placeholder).concat(args)
-        let finalArgs = _replaceHolders(partial, arityArgs, placeholder)
+        let argsLen = args.filter((arg) => arg !== placeholder).length;
+        let arityArgs = new Array(arity - args.length)
+          .fill(placeholder)
+          .concat(args);
+        let finalArgs = _replaceHolders(partial, arityArgs, placeholder);
         if (argsLen >= arity) {
-          return _executeBound(func, boundFunc, this, this, finalArgs)
+          return _executeBound(func, boundFunc, this, this, finalArgs);
         } else {
-          return curryRight(func, arity - argsLen, void 0, finalArgs)
+          return curryRight(func, arity - argsLen, void 0, finalArgs);
         }
-      }
-      return boundFunc
+      };
+      return boundFunc;
     }
 
-    curryRight.placeholder = __
+    curryRight.placeholder = __;
 
     // _.debounce--------------------------------------------------------------//
 
@@ -2572,32 +2737,32 @@
     **/
 
     function debounce(func, wait, immediate) {
-      let timeoutID = null
-      let result
+      let timeoutID = null;
+      let result;
       let later = function (context, ...args) {
-        timeoutID = null
-        result = func.call(context, ...args)
-      }
+        timeoutID = null;
+        result = func.call(context, ...args);
+      };
       let debounceFunc = function (...args) {
-        if (timeoutID) clearTimeout(timeoutID)
+        if (timeoutID) clearTimeout(timeoutID);
         if (immediate) {
-          let callNow = !timeoutID
+          let callNow = !timeoutID;
           timeoutID = setTimeout(() => {
-            later(this, ...args)
-          }, wait)
-          if (callNow) result = func.call(this, ...args)
+            later(this, ...args);
+          }, wait);
+          if (callNow) result = func.call(this, ...args);
         } else {
           timeoutID = setTimeout(() => {
-            later(this, ...args)
+            later(this, ...args);
           }, wait);
         }
-        return result
-      }
+        return result;
+      };
       debounceFunc.cancel = function () {
-        clearTimeout(timeoutID)
-        timeoutID = null
-      }
-      return debounceFunc
+        clearTimeout(timeoutID);
+        timeoutID = null;
+      };
+      return debounceFunc;
     }
 
     // _.defer-----------------------------------------------------------------//
@@ -2612,7 +2777,7 @@
     **/
 
     function defer(func, ...args) {
-      return delay(func, 0, ...args)
+      return delay(func, 0, ...args);
     }
 
     // _.delay-----------------------------------------------------------------//
@@ -2629,7 +2794,7 @@
 
     function delay(func, wait, ...args) {
       return setTimeout(() => {
-        return func.call(DMZ, ...args)
+        return func.call(DMZ, ...args);
       }, wait);
     }
 
@@ -2644,9 +2809,9 @@
     **/
 
     function flip(func) {
-      return function(...args) {
-        return func.call(this, ...args.reverse())
-      }
+      return function (...args) {
+        return func.call(this, ...args.reverse());
+      };
     }
 
     // _.memoize---------------------------------------------------------------//
@@ -2669,16 +2834,16 @@
 
     function memoize(func, resolver) {
       let memo = function (...args) {
-        let cache = memo.cache
-        let key = resolver ? resolver.call(this, ...args) : args[0]
-        if(!(cache.has(key))) {
-          let val = func.call(this, ...args)
-          cache.set(key, val)
+        let cache = memo.cache;
+        let key = resolver ? resolver.call(this, ...args) : args[0];
+        if (!cache.has(key)) {
+          let val = func.call(this, ...args);
+          cache.set(key, val);
         }
-        return cache.get(key)
-      }
-      memo.cache = new Map()
-      return memo
+        return cache.get(key);
+      };
+      memo.cache = new Map();
+      return memo;
     }
 
     // _.negate----------------------------------------------------------------//
@@ -2694,8 +2859,8 @@
 
     function negate(predicate) {
       return function (...args) {
-        return !predicate.call(this, ...args)
-      }
+        return !predicate.call(this, ...args);
+      };
     }
 
     // _.once------------------------------------------------------------------//
@@ -2710,7 +2875,7 @@
     **/
 
     function once(func) {
-      return before(2, func)
+      return before(2, func);
     }
 
     // _.overArgs--------------------------------------------------------------//
@@ -2726,9 +2891,9 @@
 
     function overArgs(func, transforms) {
       return function (...args) {
-        let finalArgs = args.map((arg, index) => transforms[index](arg))
-        return func.call(this, ...finalArgs)
-      }
+        let finalArgs = args.map((arg, index) => transforms[index](arg));
+        return func.call(this, ...finalArgs);
+      };
     }
 
     // _.partial---------------------------------------------------------------//
@@ -2749,16 +2914,17 @@
     **/
 
     function partial(func, ...partials) {
-      let placeholder = partial.placeholder
+      let placeholder = partial.placeholder;
       let boundFunc = function (...args) {
-        if (!isFunction(func)) throw new Error('partial must be called on a function')
-        let finalArgs = _replaceHolders(partials, args, placeholder)
-        return _executeBound(func, boundFunc, this, this, finalArgs)
-      }
-      return boundFunc
+        if (!isFunction(func))
+          throw new Error("partial must be called on a function");
+        let finalArgs = _replaceHolders(partials, args, placeholder);
+        return _executeBound(func, boundFunc, this, this, finalArgs);
+      };
+      return boundFunc;
     }
 
-    partial.placeholder = __
+    partial.placeholder = __;
 
     // _.partialRight----------------------------------------------------------//
     /**
@@ -2776,18 +2942,19 @@
     **/
 
     function partialRight(func, ...partials) {
-      let placeholder = partial.placeholder
+      let placeholder = partial.placeholder;
       let boundFunc = function (...args) {
-        if (!isFunction(func)) throw new Error('partialRight must be called on a function')
-        args.reverse()
-        partials.reverse()
-        let finalArgs = _replaceHolders(partials, args, placeholder).reverse()
-        return _executeBound(func, boundFunc, this, this, finalArgs)
-      }
-      return boundFunc
+        if (!isFunction(func))
+          throw new Error("partialRight must be called on a function");
+        args.reverse();
+        partials.reverse();
+        let finalArgs = _replaceHolders(partials, args, placeholder).reverse();
+        return _executeBound(func, boundFunc, this, this, finalArgs);
+      };
+      return boundFunc;
     }
 
-    partial.placeholder = __
+    partial.placeholder = __;
 
     // _.rearg-----------------------------------------------------------------//
 
@@ -2803,12 +2970,12 @@
 
     function rearg(func, indexes) {
       return function (...args) {
-        let finalArgs = Array.from({length: indexes.length})
+        let finalArgs = Array.from({ length: indexes.length });
         indexes.forEach((item, i) => {
-          finalArgs[i] = args[item]
-        })
-        return func.call(this, ...finalArgs)
-      }
+          finalArgs[i] = args[item];
+        });
+        return func.call(this, ...finalArgs);
+      };
     }
 
     // _.rest------------------------------------------------------------------//
@@ -2827,10 +2994,10 @@
 
     function rest(func, start = func.length - 1) {
       return function (...args) {
-        let args1 = args.slice(0, start)
-        let args2 = args.slice(start)
-        return func.call(this, ...args1, args2)
-      }
+        let args1 = args.slice(0, start);
+        let args2 = args.slice(start);
+        return func.call(this, ...args1, args2);
+      };
     }
 
     // _.spread----------------------------------------------------------------//
@@ -2848,8 +3015,8 @@
 
     function spread(func, start = 0) {
       return function (argsArr) {
-        return func.call(this, ...argsArr.slice(start))
-      }
+        return func.call(this, ...argsArr.slice(start));
+      };
     }
 
     // _.throttle--------------------------------------------------------------//
@@ -2879,47 +3046,47 @@
     **/
 
     function throttle(func, wait = 0, options = {}) {
-      let {leading = true} = options
-      let {trailing = true} = options
-      let previous = 0
-      let timeoutID = null
-      let result
+      let { leading = true } = options;
+      let { trailing = true } = options;
+      let previous = 0;
+      let timeoutID = null;
+      let result;
 
       let throttleFunc = function (...args) {
-        let runtime = Date.now()
+        let runtime = Date.now();
         if (previous === 0 && leading === false) {
-          previous = runtime
+          previous = runtime;
         }
 
         //需要等待多长时间后可以执行
-        let remaining = wait - (runtime - previous)
+        let remaining = wait - (runtime - previous);
         //remaining > wait 说明时间被调整过
         if (remaining <= 0 || remaining > wait) {
           if (timeoutID) {
-            clearTimeout(timeoutID)
-            timeoutID = null
+            clearTimeout(timeoutID);
+            timeoutID = null;
           }
-          previous = runtime
-          result = func.call(this, ...args)
-        } else if ( !timeoutID && trailing !== false) {
+          previous = runtime;
+          result = func.call(this, ...args);
+        } else if (!timeoutID && trailing !== false) {
           timeoutID = setTimeout(() => {
             //leading 为false时,每次触发后一定会延迟wait时间才会调用,如果不把previous重置
             //为0,那么中间间隔长时间remaining就会变为负数,下一次调用就会马上触发,不会延迟
-            previous = leading === false ? 0 : Date.now()
-            timeoutID = null
-            result = func.call(this, ...args)
+            previous = leading === false ? 0 : Date.now();
+            timeoutID = null;
+            result = func.call(this, ...args);
           }, remaining);
         }
-        return result
-      }
+        return result;
+      };
 
       throttleFunc.cancel = function () {
-        clearTimeout(timeoutID)
-        previous = 0
-        timeoutID = null
-      }
+        clearTimeout(timeoutID);
+        previous = 0;
+        timeoutID = null;
+      };
 
-      return throttleFunc
+      return throttleFunc;
     }
 
     // _.unary-----------------------------------------------------------------//
@@ -2933,7 +3100,7 @@
     **/
 
     function unary(func) {
-      return ary(func, 1)
+      return ary(func, 1);
     }
 
     // _.wrap------------------------------------------------------------------//
@@ -2951,8 +3118,8 @@
 
     function wrap(val, wrapper = identity) {
       return function (...args) {
-        return wrapper.call(this, val, ...args)
-      }
+        return wrapper.call(this, val, ...args);
+      };
     }
 
     //------------------------------------Lang------------------------------------------
@@ -2967,9 +3134,9 @@
     **/
 
     function castArray(...values) {
-      if(values.length === 0) return []
-      let val = values[0]
-      return isArray(val) ? val : [val]
+      if (values.length === 0) return [];
+      let val = values[0];
+      return isArray(val) ? val : [val];
     }
 
     // _.clone-----------------------------------------------------------------//
@@ -2988,7 +3155,7 @@
     **/
 
     function clone(val) {
-      return _baseClone(val)
+      return _baseClone(val);
     }
 
     // _.cloneDeep-------------------------------------------------------------//
@@ -3002,7 +3169,7 @@
     **/
 
     function cloneDeep(val) {
-      return _baseClone(val, true)
+      return _baseClone(val, true);
     }
 
     // _.cloneDeepWith---------------------------------------------------------//
@@ -3016,9 +3183,9 @@
     **/
 
     function cloneDeepWith(val, customizer) {
-      let customizerResult = customizer && customizer(val)
-      if (customizerResult !== void 0) return customizerResult
-      return _baseClone(val, true, customizer)
+      let customizerResult = customizer && customizer(val);
+      if (customizerResult !== void 0) return customizerResult;
+      return _baseClone(val, true, customizer);
     }
 
     // _.cloneWith-------------------------------------------------------------//
@@ -3035,9 +3202,9 @@
     **/
 
     function cloneWith(val, customizer) {
-      let customizerResult = customizer && customizer(val)
-      if (customizerResult !== void 0) return customizerResult
-      return _baseClone(val, false, customizer)
+      let customizerResult = customizer && customizer(val);
+      if (customizerResult !== void 0) return customizerResult;
+      return _baseClone(val, false, customizer);
     }
 
     // _.conformsTo------------------------------------------------------------//
@@ -3054,7 +3221,7 @@
     **/
 
     function conformsTo(obj, source) {
-      return _keys(source).every(item => source[item].call(DMZ, obj[item]))
+      return _keys(source).every((item) => source[item].call(DMZ, obj[item]));
     }
 
     // _.eq--------------------------------------------------------------------//
@@ -3069,7 +3236,7 @@
     **/
 
     function eq(val, other) {
-      return val === other || (isNaN(val) && isNaN(other))
+      return val === other || (isNaN(val) && isNaN(other));
     }
 
     // _.gt--------------------------------------------------------------------//
@@ -3084,7 +3251,7 @@
     **/
 
     function gt(val, other) {
-      return val > other
+      return val > other;
     }
 
     // _.gte-------------------------------------------------------------------//
@@ -3099,7 +3266,7 @@
     **/
 
     function gte(val, other) {
-      return val >= other
+      return val >= other;
     }
 
     // _.isArguments-----------------------------------------------------------//
@@ -3113,7 +3280,7 @@
     **/
 
     function isArguments(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Arguments
+      return _objectProto.toString.call(obj) === _typeMap.Arguments;
     }
 
     // _.isArray---------------------------------------------------------------//
@@ -3127,7 +3294,9 @@
     **/
 
     function isArray(obj) {
-      return Array.isArray ? Array.isArray(obj) : _objectProto.toString.call(obj) === _typeMap.Array
+      return Array.isArray
+        ? Array.isArray(obj)
+        : _objectProto.toString.call(obj) === _typeMap.Array;
     }
 
     // _.isArrayBuffer---------------------------------------------------------//
@@ -3142,7 +3311,7 @@
     **/
 
     function isArrayBuffer(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.ArrayBuffer
+      return _objectProto.toString.call(obj) === _typeMap.ArrayBuffer;
     }
 
     // _.isArrayLike-----------------------------------------------------------//
@@ -3157,8 +3326,8 @@
     **/
 
     function isArrayLike(obj) {
-      let len = obj['length']
-      return !isFunction(obj) && len >= 0 && len <= Number.MAX_SAFE_INTEGER
+      let len = obj["length"];
+      return !isFunction(obj) && len >= 0 && len <= Number.MAX_SAFE_INTEGER;
     }
 
     // _.isArrayLikeObject-----------------------------------------------------//
@@ -3172,7 +3341,7 @@
     **/
 
     function isArrayLikeObject(obj) {
-      return isArrayLike(obj) && isObjectLike(obj)
+      return isArrayLike(obj) && isObjectLike(obj);
     }
 
     // _.isBoolean-------------------------------------------------------------//
@@ -3186,7 +3355,7 @@
     **/
 
     function isBoolean(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Boolean
+      return _objectProto.toString.call(obj) === _typeMap.Boolean;
     }
 
     // _.isBuffer--------------------------------------------------------------//
@@ -3210,7 +3379,7 @@
     **/
 
     function isDate(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Date
+      return _objectProto.toString.call(obj) === _typeMap.Date;
     }
 
     // _.isElement-------------------------------------------------------------//
@@ -3226,7 +3395,7 @@
     **/
 
     function isElement(obj) {
-      return !!(obj && obj.nodeType === 1)
+      return !!(obj && obj.nodeType === 1);
     }
 
     // _.isEmpty---------------------------------------------------------------//
@@ -3245,14 +3414,17 @@
     **/
 
     function isEmpty(obj) {
-      if (obj == null) return true
-      if ( isArrayLike(obj) && (isArguments(obj) || isArray(obj) || isString(obj) || isTypedArray(obj))) {
-        return obj.length === 0
+      if (obj == null) return true;
+      if (
+        isArrayLike(obj) &&
+        (isArguments(obj) || isArray(obj) || isString(obj) || isTypedArray(obj))
+      ) {
+        return obj.length === 0;
       }
       if (isMap(obj) || isSet(obj)) {
-        return obj.size === 0
+        return obj.size === 0;
       }
-      return _keys(obj).length === 0
+      return _keys(obj).length === 0;
     }
 
     // .isEqual----------------------------------------------------------------//
@@ -3272,7 +3444,7 @@
     **/
 
     function isEqual(val, other) {
-      return _baseIsEqual(val, other)
+      return _baseIsEqual(val, other);
     }
 
     // .isEqualWith------------------------------------------------------------//
@@ -3290,10 +3462,10 @@
     **/
 
     function isEqualWith(val, other, customizer) {
-      let customizerResult = customizer && customizer(val, other)
+      let customizerResult = customizer && customizer(val, other);
       return customizerResult === void 0
         ? _baseIsEqual(val, other, customizer)
-        : !!customizerResult
+        : !!customizerResult;
     }
 
     // _.isError---------------------------------------------------------------//
@@ -3307,7 +3479,7 @@
     **/
 
     function isError(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Error
+      return _objectProto.toString.call(obj) === _typeMap.Error;
     }
 
     // _.isFinite--------------------------------------------------------------//
@@ -3323,7 +3495,7 @@
     **/
 
     function isFinite(obj) {
-      return Number.isFinite(obj)
+      return Number.isFinite(obj);
     }
 
     // _.isFunction------------------------------------------------------------//
@@ -3337,7 +3509,7 @@
     **/
 
     function isFunction(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Function
+      return _objectProto.toString.call(obj) === _typeMap.Function;
     }
 
     // _.isInteger------------------------------------------------------------//
@@ -3353,7 +3525,7 @@
     **/
 
     function isInteger(obj) {
-      return Number.isInteger(obj)
+      return Number.isInteger(obj);
     }
 
     // _.isLength--------------------------------------------------------------//
@@ -3369,7 +3541,7 @@
     **/
 
     function isLength(obj) {
-      return Number.isSafeInteger(obj) && obj >= 0
+      return Number.isSafeInteger(obj) && obj >= 0;
     }
 
     // _.isMap-----------------------------------------------------------------//
@@ -3383,7 +3555,7 @@
     **/
 
     function isMap(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Map
+      return _objectProto.toString.call(obj) === _typeMap.Map;
     }
 
     // _.isMatch---------------------------------------------------------------//
@@ -3403,8 +3575,8 @@
     **/
 
     function isMatch(obj, source) {
-      let compareObj = Object.assign({}, obj, source)
-      return isEqual(obj, compareObj)
+      let compareObj = Object.assign({}, obj, source);
+      return isEqual(obj, compareObj);
     }
 
     // _.isMatchWith-----------------------------------------------------------//
@@ -3421,10 +3593,10 @@
         (boolean): Returns true if object is a match, else false.
     **/
 
-      function isMatchWith(obj, source, customizer) {
-        let compareObj = assign({}, obj, source)
-        return isEqualWith(obj, compareObj, customizer)
-      }
+    function isMatchWith(obj, source, customizer) {
+      let compareObj = assign({}, obj, source);
+      return isEqualWith(obj, compareObj, customizer);
+    }
 
     // _.isNaN-----------------------------------------------------------------//
 
@@ -3440,7 +3612,7 @@
     **/
 
     function isNaN(obj) {
-      return isNumber(obj) && obj != +obj
+      return isNumber(obj) && obj != +obj;
     }
 
     // _.isNative--------------------------------------------------------------//
@@ -3460,7 +3632,7 @@
     **/
 
     function isNative(obj) {
-      return isFunction(obj) && /\[native code\]/.test('' + obj)
+      return isFunction(obj) && /\[native code\]/.test("" + obj);
     }
 
     // _.isNil-----------------------------------------------------------------//
@@ -3474,7 +3646,7 @@
     **/
 
     function isNil(obj) {
-      return obj == void 0
+      return obj == void 0;
     }
 
     // _.isNull----------------------------------------------------------------//
@@ -3488,7 +3660,7 @@
     **/
 
     function isNull(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Null
+      return _objectProto.toString.call(obj) === _typeMap.Null;
     }
 
     // _.isNumber--------------------------------------------------------------//
@@ -3504,7 +3676,7 @@
     **/
 
     function isNumber(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Number
+      return _objectProto.toString.call(obj) === _typeMap.Number;
     }
 
     // _.isObject--------------------------------------------------------------//
@@ -3518,8 +3690,8 @@
     **/
 
     function isObject(obj) {
-      let type = typeof obj
-      return !isNull(obj) && (type == 'object' || type == 'function')
+      let type = typeof obj;
+      return !isNull(obj) && (type == "object" || type == "function");
     }
 
     // _.isObjectLike----------------------------------------------------------//
@@ -3532,8 +3704,8 @@
         (boolean): Returns true if value is object-like, else false.
     **/
 
-    function isObjectLike (obj) {
-      return !isNull(obj) && typeof obj == 'object'
+    function isObjectLike(obj) {
+      return !isNull(obj) && typeof obj == "object";
     }
 
     // _.isPlainObject---------------------------------------------------------//
@@ -3547,10 +3719,13 @@
     **/
 
     function isPlainObject(obj) {
-      if (!isObjectLike(obj) || _objectProto.toString.call(obj) !== _typeMap.Object)
-        return false
-      let proto = Object.getPrototypeOf(obj)
-      return proto === null || proto === Object.prototype
+      if (
+        !isObjectLike(obj) ||
+        _objectProto.toString.call(obj) !== _typeMap.Object
+      )
+        return false;
+      let proto = Object.getPrototypeOf(obj);
+      return proto === null || proto === Object.prototype;
     }
 
     // _.isRegExp--------------------------------------------------------------//
@@ -3564,7 +3739,7 @@
     **/
 
     function isRegExp(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.RegExp
+      return _objectProto.toString.call(obj) === _typeMap.RegExp;
     }
 
     // _.isSafeInteger---------------------------------------------------------//
@@ -3581,7 +3756,7 @@
     **/
 
     function isSafeInteger(obj) {
-      return Number.isSafeInteger(obj)
+      return Number.isSafeInteger(obj);
     }
 
     // _.isSet-----------------------------------------------------------------//
@@ -3595,7 +3770,7 @@
     **/
 
     function isSet(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Set
+      return _objectProto.toString.call(obj) === _typeMap.Set;
     }
 
     // _.isString--------------------------------------------------------------//
@@ -3609,7 +3784,7 @@
     **/
 
     function isString(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.String
+      return _objectProto.toString.call(obj) === _typeMap.String;
     }
 
     // _.isSymbol--------------------------------------------------------------//
@@ -3623,7 +3798,7 @@
     **/
 
     function isSymbol(obj) {
-      return _objectProto.toString.call(obj) === _typeMap.Symbol
+      return _objectProto.toString.call(obj) === _typeMap.Symbol;
     }
 
     // _.isTypedArray----------------------------------------------------------//
@@ -3637,7 +3812,9 @@
     **/
 
     function isTypedArray(obj) {
-      return /\[object Uint(8|16|32)Array\]/.test(Object.prototype.toString.call(obj))
+      return /\[object Uint(8|16|32)Array\]/.test(
+        Object.prototype.toString.call(obj)
+      );
     }
 
     // _.isUndefined-----------------------------------------------------------//
@@ -3651,7 +3828,7 @@
     **/
 
     function isUndefined(obj) {
-      return obj === void 0
+      return obj === void 0;
     }
 
     // _.isWeakMap-------------------------------------------------------------//
@@ -3665,7 +3842,10 @@
     **/
 
     function isWeakMap(obj) {
-      return isObjectLike(obj) && _objectProto.toString.call(obj) === _typeMap.WeakMap
+      return (
+        isObjectLike(obj) &&
+        _objectProto.toString.call(obj) === _typeMap.WeakMap
+      );
     }
 
     // _.isWeakSet-------------------------------------------------------------//
@@ -3679,7 +3859,10 @@
     **/
 
     function isWeakSet(obj) {
-      return isObjectLike(obj) && _objectProto.toString.call(obj) === _typeMap.WeakSet
+      return (
+        isObjectLike(obj) &&
+        _objectProto.toString.call(obj) === _typeMap.WeakSet
+      );
     }
 
     // _.lt--------------------------------------------------------------------//
@@ -3694,7 +3877,7 @@
     **/
 
     function lt(val, other) {
-      return val < other
+      return val < other;
     }
 
     // _.lte-------------------------------------------------------------------//
@@ -3709,7 +3892,7 @@
     **/
 
     function lte(val, other) {
-      return val <= other
+      return val <= other;
     }
 
     // _.toArray---------------------------------------------------------------//
@@ -3723,17 +3906,13 @@
     **/
 
     function toArray(val) {
-      if (isString(val))
-        return val.split('')
-      if (!isObject(val))
-        return []
+      if (isString(val)) return val.split("");
+      if (!isObject(val)) return [];
       if (isArray(val) || isTypedArray(val) || isArrayBuffer(val))
-        return val.slice()
-      if (isArrayLike(val))
-        return _arrayProto.slice.call(val)
-      if (isSet(val) || isMap(val))
-        return Array.from(val.values())
-      return values(val)
+        return val.slice();
+      if (isArrayLike(val)) return _arrayProto.slice.call(val);
+      if (isSet(val) || isMap(val)) return Array.from(val.values());
+      return values(val);
     }
 
     // _.toFinite--------------------------------------------------------------//
@@ -3747,10 +3926,10 @@
     **/
 
     function toFinite(val) {
-      if (val === Infinity) return Number.MAX_VALUE
-      if (val === -Infinity) return Number.MIN_VALUE
-      let result = Number(val)
-      return isNaN(result) ? 0 : result
+      if (val === Infinity) return Number.MAX_VALUE;
+      if (val === -Infinity) return Number.MIN_VALUE;
+      let result = Number(val);
+      return isNaN(result) ? 0 : result;
     }
 
     // _.toInteger-------------------------------------------------------------//
@@ -3765,8 +3944,8 @@
     **/
 
     function toInteger(val) {
-      let result = toFinite(val)
-      return result - result % 1
+      let result = toFinite(val);
+      return result - (result % 1);
     }
 
     // _.toLength--------------------------------------------------------------//
@@ -3782,8 +3961,8 @@
     **/
 
     function toLength(val) {
-      let result = toInteger(val)
-      return result < 0 ? 0 : (result > 4294967295 ? 4294967295 : result)
+      let result = toInteger(val);
+      return result < 0 ? 0 : result > 4294967295 ? 4294967295 : result;
     }
 
     // _.toNumber--------------------------------------------------------------//
@@ -3797,7 +3976,7 @@
     **/
 
     function toNumber(val) {
-      return Number(val)
+      return Number(val);
     }
 
     // _.toPlainObject---------------------------------------------------------//
@@ -3811,14 +3990,14 @@
     **/
 
     function toPlainObject(val) {
-      let result = {}
-      if(!isString(val) && !isObject(val)) {
-        return result
+      let result = {};
+      if (!isString(val) && !isObject(val)) {
+        return result;
       }
-      for(let key in val) {
-        result[key] = val[key]
+      for (let key in val) {
+        result[key] = val[key];
       }
-      return result
+      return result;
     }
 
     // _.toSafeInteger---------------------------------------------------------//
@@ -3832,10 +4011,10 @@
     **/
 
     function toSafeInteger(val) {
-      var result = toInteger(val)
-      if (result >= Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
-      if (result <= Number.MIN_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
-      return result
+      var result = toInteger(val);
+      if (result >= Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER;
+      if (result <= Number.MIN_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER;
+      return result;
     }
 
     // _.toString--------------------------------------------------------------//
@@ -3849,12 +4028,12 @@
     **/
 
     function toString(val) {
-      if (val == void 0) return ''
-      if (isString(val)) return val
-      if (isArray(val)) return val.join()
-      if (isSymbol(val)) return val.toString()
-      if (Object.is(val, -0)) return '-0'
-      return '' + val
+      if (val == void 0) return "";
+      if (isString(val)) return val;
+      if (isArray(val)) return val.join();
+      if (isSymbol(val)) return val.toString();
+      if (Object.is(val, -0)) return "-0";
+      return "" + val;
     }
 
     //------------------------------------Math------------------------------------------
@@ -3870,7 +4049,7 @@
     **/
 
     function add(augend, addend) {
-      return augend + addend
+      return augend + addend;
     }
 
     // _.ceil------------------------------------------------------------------//
@@ -3885,8 +4064,8 @@
     **/
 
     function ceil(number, precision = 0) {
-      var digit = Math.pow(10, precision)
-      return Math.ceil(number * digit) / digit
+      var digit = Math.pow(10, precision);
+      return Math.ceil(number * digit) / digit;
     }
 
     // _.divide----------------------------------------------------------------//
@@ -3901,7 +4080,7 @@
     **/
 
     function divide(dividend, dividor) {
-      return dividend / dividor
+      return dividend / dividor;
     }
 
     // _.floor-----------------------------------------------------------------//
@@ -3916,8 +4095,8 @@
     **/
 
     function floor(number, precision = 0) {
-      var digit = Math.pow(10, precision)
-      return Math.floor(number * digit) / digit
+      var digit = Math.pow(10, precision);
+      return Math.floor(number * digit) / digit;
     }
 
     // _.max-------------------------------------------------------------------//
@@ -3931,8 +4110,8 @@
     **/
 
     function max(arr) {
-      var max = Math.max(...arr)
-      return max === -Infinity ? undefined : max
+      var max = Math.max(...arr);
+      return max === -Infinity ? undefined : max;
     }
 
     // _.maxBy-----------------------------------------------------------------//
@@ -3948,17 +4127,17 @@
     **/
 
     function maxBy(arr, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      let max = -Infinity
-      let result
-      forEach(arr, val => {
-        let tmp = iteratee(val)
+      iteratee = _cb(iteratee, DMZ, 1);
+      let max = -Infinity;
+      let result;
+      forEach(arr, (val) => {
+        let tmp = iteratee(val);
         if (max < tmp) {
-          result = val
-          max = tmp
+          result = val;
+          max = tmp;
         }
-      })
-      return result
+      });
+      return result;
     }
 
     // _.mean------------------------------------------------------------------//
@@ -3972,7 +4151,10 @@
     **/
 
     function mean(arr) {
-      return arr.reduce((accumulator, currentVal) => accumulator + currentVal) / arr.length
+      return (
+        arr.reduce((accumulator, currentVal) => accumulator + currentVal) /
+        arr.length
+      );
     }
 
     // _.meanBy----------------------------------------------------------------//
@@ -3988,8 +4170,11 @@
     **/
 
     function meanBy(arr, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      return arr.reduce((accumulator, item) => iteratee(item) + accumulator, 0) / arr.length
+      iteratee = _cb(iteratee, DMZ, 1);
+      return (
+        arr.reduce((accumulator, item) => iteratee(item) + accumulator, 0) /
+        arr.length
+      );
     }
 
     // _.min-------------------------------------------------------------------//
@@ -4003,8 +4188,8 @@
     **/
 
     function min(arr) {
-      var min = Math.min(...arr)
-      return min === Infinity ? undefined : min
+      var min = Math.min(...arr);
+      return min === Infinity ? undefined : min;
     }
 
     // _.minBy-----------------------------------------------------------------//
@@ -4020,17 +4205,17 @@
     **/
 
     function minBy(arr, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      let min = Infinity
-      let result
-      forEach(arr, val => {
-        let tmp = iteratee(val)
+      iteratee = _cb(iteratee, DMZ, 1);
+      let min = Infinity;
+      let result;
+      forEach(arr, (val) => {
+        let tmp = iteratee(val);
         if (min > tmp) {
-          result = val
-          min = tmp
+          result = val;
+          min = tmp;
         }
-      })
-      return result
+      });
+      return result;
     }
 
     // _.multiply--------------------------------------------------------------//
@@ -4045,7 +4230,7 @@
     **/
 
     function multiply(multiplier, multiplicand) {
-      return multiplier * multiplicand
+      return multiplier * multiplicand;
     }
 
     // _.round-----------------------------------------------------------------//
@@ -4060,8 +4245,8 @@
     **/
 
     function round(number, precision = 0) {
-      var digit = Math.pow(10, precision)
-      return Math.round(number * digit) / digit
+      var digit = Math.pow(10, precision);
+      return Math.round(number * digit) / digit;
     }
 
     // _.subtract--------------------------------------------------------------//
@@ -4076,7 +4261,7 @@
     **/
 
     function subtract(minuend, subtrahend) {
-      return minuend - subtrahend
+      return minuend - subtrahend;
     }
 
     // _.sum-------------------------------------------------------------------//
@@ -4090,7 +4275,7 @@
     **/
 
     function sum(arr) {
-      return arr.reduce((accumulator, currentVal) => accumulator + currentVal)
+      return arr.reduce((accumulator, currentVal) => accumulator + currentVal);
     }
 
     // _.sumBy-----------------------------------------------------------------//
@@ -4106,8 +4291,8 @@
     **/
 
     function sumBy(arr, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      return arr.reduce((accumulator, item) => iteratee(item) + accumulator, 0)
+      iteratee = _cb(iteratee, DMZ, 1);
+      return arr.reduce((accumulator, item) => iteratee(item) + accumulator, 0);
     }
 
     //------------------------------------Number----------------------------------------
@@ -4124,11 +4309,13 @@
     **/
 
     function clamp(number, lower, upper) {
-      let lowerBoundary = upper ? lower : -Infinity
-      let upperBoundary = upper ? upper : lower
+      let lowerBoundary = upper ? lower : -Infinity;
+      let upperBoundary = upper ? upper : lower;
       return number > upperBoundary
         ? upperBoundary
-        : number < lowerBoundary ? lowerBoundary : number
+        : number < lowerBoundary
+        ? lowerBoundary
+        : number;
     }
 
     // _.inRange---------------------------------------------------------------//
@@ -4146,14 +4333,14 @@
 
     function inRange(number, start, end) {
       if (start === void 0 && end === void 0) {
-        return false
+        return false;
       }
-      let startBoundary = end ? start : 0
-      let endBoundary = end ? end : start
+      let startBoundary = end ? start : 0;
+      let endBoundary = end ? end : start;
       if (startBoundary > endBoundary) {
-        [startBoundary, endBoundary] = [endBoundary, startBoundary]
+        [startBoundary, endBoundary] = [endBoundary, startBoundary];
       }
-      return number < endBoundary && number > startBoundary
+      return number < endBoundary && number > startBoundary;
     }
 
     // _.random----------------------------------------------------------------//
@@ -4173,9 +4360,9 @@
     **/
 
     function random(lower = 0, upper = 1, floating) {
-      let isFloat = floating || isInteger(lower) || isInteger(upper)
-      let result = Math.random() * (upper - lower) + lower
-      return isFloat ? Math.floor(result) : result
+      let isFloat = floating || isInteger(lower) || isInteger(upper);
+      let result = Math.random() * (upper - lower) + lower;
+      return isFloat ? Math.floor(result) : result;
     }
 
     //------------------------------------Object----------------------------------------
@@ -4194,7 +4381,7 @@
     **/
 
     function assign(obj, ...sources) {
-      return _baseAssign(obj, true, false, false, void 0, sources)
+      return _baseAssign(obj, true, false, false, void 0, sources);
     }
 
     // _.assignIn--------------------------------------------------------------//
@@ -4211,7 +4398,7 @@
     **/
 
     function assignIn(obj, ...sources) {
-      return _baseAssign(obj, true, true, false, void 0, sources)
+      return _baseAssign(obj, true, true, false, void 0, sources);
     }
 
     // _.assignInWith----------------------------------------------------------//
@@ -4232,11 +4419,11 @@
 
     function assignInWith(obj, ...sources) {
       if (isFunction(sources[sources.length - 1])) {
-        customizer = sources.pop()
+        customizer = sources.pop();
       } else {
-        customizer = void 0
+        customizer = void 0;
       }
-      return _baseAssign(obj, true, true, false, customizer, sources)
+      return _baseAssign(obj, true, true, false, customizer, sources);
     }
 
     // _.assignWith------------------------------------------------------------//
@@ -4257,11 +4444,11 @@
 
     function assignWith(obj, ...sources) {
       if (isFunction(sources[sources.length - 1])) {
-        customizer = sources.pop()
+        customizer = sources.pop();
       } else {
-        customizer = void 0
+        customizer = void 0;
       }
-      return _baseAssign(obj, true, false, false, customizer, sources)
+      return _baseAssign(obj, true, false, false, customizer, sources);
     }
 
     // _.at--------------------------------------------------------------------//
@@ -4276,7 +4463,7 @@
     **/
 
     function at(obj, paths) {
-      return paths.map(path => _baseGetValue(obj, path, true, void 0))
+      return paths.map((path) => _baseGetValue(obj, path, true, void 0));
     }
 
     // _.create----------------------------------------------------------------//
@@ -4292,7 +4479,7 @@
     **/
 
     function create(prororype, properties) {
-      return Object.create(prororype, properties)
+      return Object.create(prororype, properties);
     }
 
     // _.defaults--------------------------------------------------------------//
@@ -4310,7 +4497,7 @@
     **/
 
     function defaults(obj, ...sources) {
-      return _baseAssign(obj, false, true, false, void 0, sources)
+      return _baseAssign(obj, false, true, false, void 0, sources);
     }
 
     // _.defaultsDeep----------------------------------------------------------//
@@ -4327,7 +4514,7 @@
     **/
 
     function defaultsDeep(obj, ...sources) {
-      return _baseAssign(obj, false, true, true, void 0, sources)
+      return _baseAssign(obj, false, true, true, void 0, sources);
     }
 
     // _.entries -> toPairs----------------------------------------------------//
@@ -4342,7 +4529,7 @@
     **/
 
     function entries(obj) {
-      return _entries(obj)
+      return _entries(obj);
     }
 
     // _.entriesIn -> toPairsIn------------------------------------------------//
@@ -4357,14 +4544,14 @@
     **/
 
     function entriesIn(obj) {
-      if (!isObject(obj)) return []
-      if (isSet(obj) || isMap(obj)) return obj.entries()
-      let result = []
-      let isArr = isArray(obj)
-      for( let key in obj) {
-        result.push([isArr ? Number(key) : key, obj[key]])
+      if (!isObject(obj)) return [];
+      if (isSet(obj) || isMap(obj)) return obj.entries();
+      let result = [];
+      let isArr = isArray(obj);
+      for (let key in obj) {
+        result.push([isArr ? Number(key) : key, obj[key]]);
       }
-      return result
+      return result;
     }
 
     // _.extend -> assignIn----------------------------------------------------//
@@ -4381,7 +4568,7 @@
     **/
 
     function extend(obj, ...sources) {
-      return assignIn(obj, ...sources)
+      return assignIn(obj, ...sources);
     }
 
     // _.extendWith -> assignInWith--------------------------------------------//
@@ -4401,7 +4588,7 @@
     **/
 
     function extendWith(obj, ...sources) {
-      return assignInWith(obj, ...sources)
+      return assignInWith(obj, ...sources);
     }
 
     // _.findKey---------------------------------------------------------------//
@@ -4417,9 +4604,9 @@
     **/
 
     function findKey(obj, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(obj)
-      return keys.find(key => predicate(obj[key], key, obj))
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(obj);
+      return keys.find((key) => predicate(obj[key], key, obj));
     }
 
     // _.findLastKey-----------------------------------------------------------//
@@ -4434,9 +4621,9 @@
     **/
 
     function findLastKey(obj, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 3)
-      let keys = _keys(obj).reverse()
-      return keys.find(key => predicate(obj[key], key, obj))
+      predicate = _cb(predicate, DMZ, 3);
+      let keys = _keys(obj).reverse();
+      return keys.find((key) => predicate(obj[key], key, obj));
     }
 
     // _.forIn-----------------------------------------------------------------//
@@ -4453,13 +4640,13 @@
     **/
 
     function forIn(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let isArr = isArray(obj)
+      iteratee = _cb(iteratee, DMZ, 3);
+      let isArr = isArray(obj);
       for (let key in obj) {
-        var status = iteratee(obj[key], isArr ? Number(key) : key, obj)
-        if (status === false) return obj
+        var status = iteratee(obj[key], isArr ? Number(key) : key, obj);
+        if (status === false) return obj;
       }
-      return obj
+      return obj;
     }
 
     // _.forInRight------------------------------------------------------------//
@@ -4474,14 +4661,18 @@
     **/
 
     function forInRight(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let isArr = isArray(obj)
-      let keys = []
-      for(let key in obj) {
-        keys.push(key)
+      iteratee = _cb(iteratee, DMZ, 3);
+      let isArr = isArray(obj);
+      let keys = [];
+      for (let key in obj) {
+        keys.push(key);
       }
-      keys.reverse().some(key => iteratee(obj[key], isArr ? Number(key) : key, obj) === false)
-      return obj
+      keys
+        .reverse()
+        .some(
+          (key) => iteratee(obj[key], isArr ? Number(key) : key, obj) === false
+        );
+      return obj;
     }
 
     // _.forOwn----------------------------------------------------------------//
@@ -4497,10 +4688,10 @@
     **/
 
     function forOwn(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(obj)
-      keys.some(key => iteratee(obj[key], key, obj) === false)
-      return obj
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(obj);
+      keys.some((key) => iteratee(obj[key], key, obj) === false);
+      return obj;
     }
 
     // _.forOwnRight-----------------------------------------------------------//
@@ -4515,10 +4706,10 @@
     **/
 
     function forOwnRight(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(obj).reverse()
-      keys.some(key => iteratee(obj[key], key, obj) === false)
-      return obj
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(obj).reverse();
+      keys.some((key) => iteratee(obj[key], key, obj) === false);
+      return obj;
     }
 
     // _.functions-------------------------------------------------------------//
@@ -4532,13 +4723,13 @@
     **/
 
     function functions(obj) {
-      let result = []
-      for(let key in obj) {
-        if(obj.hasOwnProperty(key) && isFunction(obj[key])) {
-          result.push(key)
+      let result = [];
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key) && isFunction(obj[key])) {
+          result.push(key);
         }
       }
-      return result
+      return result;
     }
 
     // _.functionsIn-----------------------------------------------------------//
@@ -4552,13 +4743,13 @@
     **/
 
     function functionsIn(obj) {
-      let result = []
-      for(let key in obj) {
-        if(isFunction(obj[key])) {
-          result.push(key)
+      let result = [];
+      for (let key in obj) {
+        if (isFunction(obj[key])) {
+          result.push(key);
         }
       }
-      return result
+      return result;
     }
 
     // _.get-------------------------------------------------------------------//
@@ -4574,7 +4765,7 @@
     **/
 
     function get(obj, path, defaultValue) {
-      return _baseGetValue(obj, path, true, defaultValue)
+      return _baseGetValue(obj, path, true, defaultValue);
     }
 
     // _.has-------------------------------------------------------------------//
@@ -4589,7 +4780,7 @@
     **/
 
     function has(obj, path) {
-      return _baseGetValue(obj, path, false, _flagSymbol) !== _flagSymbol
+      return _baseGetValue(obj, path, false, _flagSymbol) !== _flagSymbol;
     }
 
     // _.hasIn-----------------------------------------------------------------//
@@ -4604,7 +4795,7 @@
     **/
 
     function hasIn(obj, path) {
-      return _baseGetValue(obj, path, true, _flagSymbol) !== _flagSymbol
+      return _baseGetValue(obj, path, true, _flagSymbol) !== _flagSymbol;
     }
 
     // _.invert----------------------------------------------------------------//
@@ -4619,14 +4810,14 @@
     **/
 
     function invert(obj) {
-      let entries = _entries(obj)
-      let result = {}
-      entries.forEach(item => {
+      let entries = _entries(obj);
+      let result = {};
+      entries.forEach((item) => {
         if (!isObject(item[1])) {
-          result[item[1]] = item[0]
+          result[item[1]] = item[0];
         }
-      })
-      return result
+      });
+      return result;
     }
 
     // _.invertBy--------------------------------------------------------------//
@@ -4643,20 +4834,20 @@
     **/
 
     function invertBy(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      let entries = _entries(obj)
-      let result = {}
-      entries.forEach(item => {
-        let tmp = iteratee(item[1])
+      iteratee = _cb(iteratee, DMZ, 1);
+      let entries = _entries(obj);
+      let result = {};
+      entries.forEach((item) => {
+        let tmp = iteratee(item[1]);
         if (!isObject(tmp)) {
-          if(result.hasOwnProperty(tmp)) {
-            result[tmp].push(item[0])
+          if (result.hasOwnProperty(tmp)) {
+            result[tmp].push(item[0]);
           } else {
-            result[tmp] = [item[0]]
+            result[tmp] = [item[0]];
           }
         }
-      })
-      return result
+      });
+      return result;
     }
 
     // _.invoke----------------------------------------------------------------//
@@ -4672,13 +4863,14 @@
     **/
 
     function invoke(obj, path, ...args) {
-      let pathArr = toPath(path)
-      let funcName = pathArr.pop()
-      let context = _baseGetValue(obj, pathArr, true, _flagSymbol)
-      if (context === _flagSymbol) throw new Error('can not find value in obj')
-      let func = Object.getPrototypeOf(context)[funcName]
-      if (!isFunction(func)) throw new Error('invoke must be passed function names')
-      return func.call(context, ...args)
+      let pathArr = toPath(path);
+      let funcName = pathArr.pop();
+      let context = _baseGetValue(obj, pathArr, true, _flagSymbol);
+      if (context === _flagSymbol) throw new Error("can not find value in obj");
+      let func = Object.getPrototypeOf(context)[funcName];
+      if (!isFunction(func))
+        throw new Error("invoke must be passed function names");
+      return func.call(context, ...args);
     }
 
     // _.keys------------------------------------------------------------------//
@@ -4694,7 +4886,7 @@
     **/
 
     function keys(obj) {
-      return _keys(obj)
+      return _keys(obj);
     }
 
     // _.keysIn----------------------------------------------------------------//
@@ -4710,12 +4902,12 @@
     **/
 
     function keysIn(obj) {
-      let result = []
-      let isArr = isArray(obj)
-      for(let key in obj) {
-        result.push(isArr ? Number(key) : key)
+      let result = [];
+      let isArr = isArray(obj);
+      for (let key in obj) {
+        result.push(isArr ? Number(key) : key);
       }
-      return result
+      return result;
     }
 
     // _.mapKeys---------------------------------------------------------------//
@@ -4731,14 +4923,14 @@
     **/
 
     function mapKeys(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(obj)
-      let result = {}
-      keys.forEach(key => {
-        let newKey = iteratee(obj[key], key, obj)
-        result[newKey] = obj[key]
-      })
-      return result
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(obj);
+      let result = {};
+      keys.forEach((key) => {
+        let newKey = iteratee(obj[key], key, obj);
+        result[newKey] = obj[key];
+      });
+      return result;
     }
 
     // _.mapValues-------------------------------------------------------------//
@@ -4754,14 +4946,14 @@
     **/
 
     function mapValues(obj, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 3)
-      let keys = _keys(obj)
-      let result = {}
-      keys.forEach(key => {
-        let newVal = iteratee(obj[key], key, obj)
-        result[key] = newVal
-      })
-      return result
+      iteratee = _cb(iteratee, DMZ, 3);
+      let keys = _keys(obj);
+      let result = {};
+      keys.forEach((key) => {
+        let newVal = iteratee(obj[key], key, obj);
+        result[key] = newVal;
+      });
+      return result;
     }
 
     // _.merge-----------------------------------------------------------------//
@@ -4782,7 +4974,7 @@
     **/
 
     function merge(obj, ...sources) {
-      return _baseAssign(obj, true, true, true, void 0, sources)
+      return _baseAssign(obj, true, true, true, void 0, sources);
     }
 
     // _.mergeWith-------------------------------------------------------------//
@@ -4803,11 +4995,11 @@
 
     function mergeWith(obj, ...sources) {
       if (isFunction(sources[sources.length - 1])) {
-        customizer = sources.pop()
+        customizer = sources.pop();
       } else {
-        customizer = void 0
+        customizer = void 0;
       }
-      return _baseAssign(obj, true, true, true, customizer, sources)
+      return _baseAssign(obj, true, true, true, customizer, sources);
     }
 
     // _.omit------------------------------------------------------------------//
@@ -4826,11 +5018,15 @@
 
     function omit(obj, paths) {
       // 只考虑 普通对象和数组
-      let objPaths = _baseGetPaths(obj, true)
-      paths = paths.map(path => toPath(path))
-      let omitPaths = objPaths.filter(objPath => !paths.some(path => isEqual(path, objPath)))
-      let objValues = omitPaths.map(objPath => _baseGetValue(obj, objPath, true, _flagSymbol))
-      return zipObjectDeep(omitPaths, objValues)
+      let objPaths = _baseGetPaths(obj, true);
+      paths = paths.map((path) => toPath(path));
+      let omitPaths = objPaths.filter(
+        (objPath) => !paths.some((path) => isEqual(path, objPath))
+      );
+      let objValues = omitPaths.map((objPath) =>
+        _baseGetValue(obj, objPath, true, _flagSymbol)
+      );
+      return zipObjectDeep(omitPaths, objValues);
     }
 
     // _.omitBy----------------------------------------------------------------//
@@ -4846,13 +5042,16 @@
     **/
 
     function omitBy(obj, predicate) {
-      predicate = _cb(predicate, DMZ, 2)
-      let paths = _baseGetPaths(obj, true)
-      let values = paths.map(path => _baseGetValue(obj, path, true, void 0))
-      let omitPaths = paths.filter((path, index) => predicate(values[index], path) !== true)
-      let omitValues = omitPaths.map(omitPath => _baseGetValue(obj, omitPath, true, void 0))
-      return zipObjectDeep(omitPaths, omitValues)
-
+      predicate = _cb(predicate, DMZ, 2);
+      let paths = _baseGetPaths(obj, true);
+      let values = paths.map((path) => _baseGetValue(obj, path, true, void 0));
+      let omitPaths = paths.filter(
+        (path, index) => predicate(values[index], path) !== true
+      );
+      let omitValues = omitPaths.map((omitPath) =>
+        _baseGetValue(obj, omitPath, true, void 0)
+      );
+      return zipObjectDeep(omitPaths, omitValues);
     }
 
     // _.pick------------------------------------------------------------------//
@@ -4867,16 +5066,18 @@
     **/
 
     function pick(obj, paths) {
-      let values = paths.map(path => _baseGetValue(obj, path, true, _flagSymbol))
-      let finnalPaths = paths.slice()
+      let values = paths.map((path) =>
+        _baseGetValue(obj, path, true, _flagSymbol)
+      );
+      let finnalPaths = paths.slice();
       values.filter((val, index) => {
         if (val === _flagSymbol) {
-          finnalPaths.splice(index, 1)
-          return false
+          finnalPaths.splice(index, 1);
+          return false;
         }
-        return true
-      })
-      return zipObjectDeep(finnalPaths, values)
+        return true;
+      });
+      return zipObjectDeep(finnalPaths, values);
     }
 
     // _.pickBy----------------------------------------------------------------//
@@ -4892,12 +5093,16 @@
     **/
 
     function pickBy(obj, predicate = identity) {
-      predicate = _cb(predicate, DMZ, 2)
-      let paths = _baseGetPaths(obj, true)
-      let values = paths.map(path => _baseGetValue(obj, path, true, void 0))
-      let pickPaths = paths.filter((path, index) => predicate(values[index], path) === true)
-      let pickValues = pickPaths.map(pickPath => _baseGetValue(obj, pickPath, true, void 0))
-      return zipObjectDeep(pickPaths, pickValues)
+      predicate = _cb(predicate, DMZ, 2);
+      let paths = _baseGetPaths(obj, true);
+      let values = paths.map((path) => _baseGetValue(obj, path, true, void 0));
+      let pickPaths = paths.filter(
+        (path, index) => predicate(values[index], path) === true
+      );
+      let pickValues = pickPaths.map((pickPath) =>
+        _baseGetValue(obj, pickPath, true, void 0)
+      );
+      return zipObjectDeep(pickPaths, pickValues);
     }
 
     // _.result----------------------------------------------------------------//
@@ -4914,8 +5119,8 @@
     **/
 
     function result(obj, path, defaultValue) {
-      let tmpResult = _baseGetValue(obj, path, true, defaultValue)
-      return isFunction(tmpResult) ? tmpResult.call(obj) : tmpResult
+      let tmpResult = _baseGetValue(obj, path, true, defaultValue);
+      return isFunction(tmpResult) ? tmpResult.call(obj) : tmpResult;
     }
 
     // _.set-------------------------------------------------------------------//
@@ -4934,7 +5139,7 @@
     **/
 
     function set(obj, path, val) {
-      return _baseAddProperty(path, val, obj)
+      return _baseAddProperty(path, val, obj);
     }
 
     // _.setWith---------------------------------------------------------------//
@@ -4955,7 +5160,7 @@
     **/
 
     function setWith(obj, path, val, customizer) {
-      return _baseAddProperty(path, val, obj, identity, customizer)
+      return _baseAddProperty(path, val, obj, identity, customizer);
     }
 
     // _.toPairs---------------------------------------------------------------//
@@ -4970,7 +5175,7 @@
     **/
 
     function toPairs(obj) {
-      return _entries(obj)
+      return _entries(obj);
     }
 
     // _.toPairsIn-------------------------------------------------------------//
@@ -4985,7 +5190,7 @@
     **/
 
     function toPairsIn(obj) {
-      return entriesIn(obj)
+      return entriesIn(obj);
     }
 
     // _.transform-------------------------------------------------------------//
@@ -5004,14 +5209,14 @@
     **/
 
     function transform(obj, iteratee = identity, initialVal) {
-      iteratee = _cb(iteratee, DMZ, 4)
-      let isArr = isArray(obj)
-      initialVal = initialVal ? initialVal : isArr ? [] : {}
-      let keys = _keys(obj)
-      keys.some(key => {
-        return iteratee(initialVal, obj[key], key, obj) === false
-      })
-      return initialVal
+      iteratee = _cb(iteratee, DMZ, 4);
+      let isArr = isArray(obj);
+      initialVal = initialVal ? initialVal : isArr ? [] : {};
+      let keys = _keys(obj);
+      keys.some((key) => {
+        return iteratee(initialVal, obj[key], key, obj) === false;
+      });
+      return initialVal;
     }
 
     // _.unset-----------------------------------------------------------------//
@@ -5028,21 +5233,21 @@
     **/
 
     function unset(obj, path) {
-      let pathArr = toPath(path)
-      let tmp = obj
-      let len = pathArr.length
+      let pathArr = toPath(path);
+      let tmp = obj;
+      let len = pathArr.length;
       return pathArr.slice(0, len - 1).every((item, index) => {
-        let tmpReturn = item in root.Object(tmp)
-        tmp = tmp[item]
+        let tmpReturn = item in root.Object(tmp);
+        tmp = tmp[item];
         if (index === len - 2) {
           if (pathArr[len - 1] in root.Object(tmp)) {
-            delete tmp[pathArr[len - 1]]
-            return true
+            delete tmp[pathArr[len - 1]];
+            return true;
           }
-          return false
+          return false;
         }
-        return tmpReturn
-      })
+        return tmpReturn;
+      });
     }
 
     // _.update----------------------------------------------------------------//
@@ -5061,8 +5266,8 @@
     **/
 
     function update(obj, path, updater = identity) {
-      let val = _baseGetValue(obj, path, true, void 0)
-      return _baseAddProperty(path, val, obj, updater)
+      let val = _baseGetValue(obj, path, true, void 0);
+      return _baseAddProperty(path, val, obj, updater);
     }
 
     // _.updateWith------------------------------------------------------------//
@@ -5083,8 +5288,8 @@
     **/
 
     function updateWith(obj, path, updater = identity, customizer) {
-      let val = _baseGetValue(obj, path, true, void 0)
-      return _baseAddProperty(path, val, obj, updater, customizer)
+      let val = _baseGetValue(obj, path, true, void 0);
+      return _baseAddProperty(path, val, obj, updater, customizer);
     }
 
     // _.values----------------------------------------------------------------//
@@ -5100,7 +5305,7 @@
     **/
 
     function values(obj) {
-      return _values(obj)
+      return _values(obj);
     }
 
     // _.valuesIn--------------------------------------------------------------//
@@ -5116,13 +5321,12 @@
     **/
 
     function valuesIn(obj) {
-      let result = []
-      for(let key in obj) {
-        result.push(obj[key])
+      let result = [];
+      for (let key in obj) {
+        result.push(obj[key]);
       }
-      return result
+      return result;
     }
-
 
     //------------------------------------Seq-------------------------------------------
     // _-----------------------------------------------------------------------//
@@ -5146,9 +5350,9 @@
         (Object): Returns the new lodash wrapper instance.
     **/
     function chain(val) {
-      let instance = __(val)
-      instance._chain = true
-      return instance
+      let instance = __(val);
+      instance._chain = true;
+      return instance;
     }
 
     // _.tap-------------------------------------------------------------------//
@@ -5164,8 +5368,8 @@
     **/
 
     function tap(val, interceptor) {
-      interceptor(val)
-      return val
+      interceptor(val);
+      return val;
     }
 
     // _.thru------------------------------------------------------------------//
@@ -5181,7 +5385,7 @@
     **/
 
     function thru(val, interceptor) {
-      return interceptor(val)
+      return interceptor(val);
     }
 
     // _.prototype[Symbol.iterator]--------------------------------------------//
@@ -5260,7 +5464,7 @@
         ( * ): Returns the resolved unwrapped value.
     **/
 
-    __.prototype.toJSON = __.prototype.value
+    __.prototype.toJSON = __.prototype.value;
 
     // _.prototype.value-------------------------------------------------------//
 
@@ -5270,9 +5474,9 @@
         ( * ): Returns the resolved unwrapped value.
     **/
 
-      __.prototype.value = function () {
-        return this._wrapped
-      }
+    __.prototype.value = function () {
+      return this._wrapped;
+    };
 
     // _.prototype.valueOf -> value--------------------------------------------//
 
@@ -5282,7 +5486,7 @@
         ( * ): Returns the resolved unwrapped value.
     **/
 
-    __.prototype.valueOf = __.prototype.value
+    __.prototype.valueOf = __.prototype.value;
 
     //------------------------------------String----------------------------------------
     // _.camelCase-------------------------------------------------------------//
@@ -5295,11 +5499,13 @@
         (string): Returns the camel cased string.
     **/
 
-    function camelCase(str = '') {
-      return _baseWordSeparate(str).map((item, index) => {
-        if(index === 0) return item.toLowerCase()
-        return item[0].toUpperCase() + item.slice(1).toLowerCase()
-      }).join('')
+    function camelCase(str = "") {
+      return _baseWordSeparate(str)
+        .map((item, index) => {
+          if (index === 0) return item.toLowerCase();
+          return item[0].toUpperCase() + item.slice(1).toLowerCase();
+        })
+        .join("");
     }
 
     // _.capitalize------------------------------------------------------------//
@@ -5312,8 +5518,8 @@
         (string): Returns the capitalized string.
     **/
 
-    function capitalize(str = '') {
-      return str[0].toUpperCase() + str.slice(1).toLowerCase()
+    function capitalize(str = "") {
+      return str[0].toUpperCase() + str.slice(1).toLowerCase();
     }
 
     // _.deburr----------------------------------------------------------------//
@@ -5327,7 +5533,6 @@
         (string): Returns the deburred string.
     **/
 
-
     // _.endsWith--------------------------------------------------------------//
 
     /**
@@ -5340,8 +5545,8 @@
         (boolean): Returns true if string ends with target, else false.
     **/
 
-    function endsWith(string = '', target, position = string.length) {
-      return string.endsWith(target, position)
+    function endsWith(string = "", target, position = string.length) {
+      return string.endsWith(target, position);
     }
 
     // _.escape----------------------------------------------------------------//
@@ -5362,8 +5567,8 @@
         (string): Returns the escaped string.
     **/
 
-    function escape(str = '') {
-      return str.replace(/[&<>"']/g, $0 => _htmlEscapes[$0])
+    function escape(str = "") {
+      return str.replace(/[&<>"']/g, ($0) => _htmlEscapes[$0]);
     }
 
     // _.escapeRegExp----------------------------------------------------------//
@@ -5376,9 +5581,9 @@
         (string): Returns the escaped string.
     **/
 
-    function escapeRegExp(str = '') {
+    function escapeRegExp(str = "") {
       //"^", "$", "", ".", "*", "+", "?", "(", ")", "[", "]", "{", "}", and "|"
-      return str.replace(/[\^\$\.\*\+\?\(\)\[\]\{\}\|]/g, $0 => '\\' + $0)
+      return str.replace(/[\^\$\.\*\+\?\(\)\[\]\{\}\|]/g, ($0) => "\\" + $0);
     }
 
     // _.kebabCase-------------------------------------------------------------//
@@ -5391,10 +5596,12 @@
         (string): Returns the kebab cased string.
     **/
 
-    function kebabCase(str = '') {
-      return _baseWordSeparate(str).map(item => {
-        return item.toLowerCase()
-      }).join('-')
+    function kebabCase(str = "") {
+      return _baseWordSeparate(str)
+        .map((item) => {
+          return item.toLowerCase();
+        })
+        .join("-");
     }
 
     // _.lowerCase-------------------------------------------------------------//
@@ -5407,10 +5614,12 @@
         (string): Returns the lower cased string.
     **/
 
-    function lowerCase(str = '') {
-      return _baseWordSeparate(str).map(item => {
-        return item.toLowerCase()
-      }).join(' ')
+    function lowerCase(str = "") {
+      return _baseWordSeparate(str)
+        .map((item) => {
+          return item.toLowerCase();
+        })
+        .join(" ");
     }
 
     // _.lowerFirst------------------------------------------------------------//
@@ -5423,8 +5632,8 @@
         (string): Returns the converted string.
     **/
 
-    function lowerFirst(str = '') {
-      return str[0].toLowerCase() + str.slice(1)
+    function lowerFirst(str = "") {
+      return str[0].toLowerCase() + str.slice(1);
     }
 
     // _.pad-------------------------------------------------------------------//
@@ -5440,12 +5649,12 @@
         (string): Returns the padded string.
     **/
 
-    function pad(str = '', targetLen = 0, chars = ' ') {
-      let strLen = str.length
-      let addLen = targetLen - strLen > 0 ? targetLen - strLen : 0
-      if (addLen === 0) return str
-      let leftLen = Math.floor(addLen / 2)
-      return padEnd(padStart(str, leftLen + strLen, chars), targetLen, chars)
+    function pad(str = "", targetLen = 0, chars = " ") {
+      let strLen = str.length;
+      let addLen = targetLen - strLen > 0 ? targetLen - strLen : 0;
+      if (addLen === 0) return str;
+      let leftLen = Math.floor(addLen / 2);
+      return padEnd(padStart(str, leftLen + strLen, chars), targetLen, chars);
     }
 
     // _.padEnd----------------------------------------------------------------//
@@ -5460,8 +5669,8 @@
         (string): Returns the padded string.
     **/
 
-    function padEnd(str = '', targetLen = 0, chars = ' ') {
-      return str.padEnd(targetLen, chars)
+    function padEnd(str = "", targetLen = 0, chars = " ") {
+      return str.padEnd(targetLen, chars);
     }
 
     // _.padStart--------------------------------------------------------------//
@@ -5476,8 +5685,8 @@
         (string): Returns the padded string.
     **/
 
-    function padStart(str = '', targetLen = 0, chars = ' ') {
-      return str.padStart(targetLen, chars)
+    function padStart(str = "", targetLen = 0, chars = " ") {
+      return str.padStart(targetLen, chars);
     }
 
     // _.parseInt--------------------------------------------------------------//
@@ -5495,8 +5704,8 @@
     **/
 
     function parseInt(str, radix = 10, guard) {
-      if (guard) radix = 10
-      return root.parseInt(str, radix)
+      if (guard) radix = 10;
+      return root.parseInt(str, radix);
     }
 
     // _.repeat----------------------------------------------------------------//
@@ -5510,9 +5719,9 @@
         (string): Returns the repeated string.
     **/
 
-    function repeat(str = '', timers = 1, guard) {
-      if (guard) timers = 1
-      return str.repeat(timers)
+    function repeat(str = "", timers = 1, guard) {
+      if (guard) timers = 1;
+      return str.repeat(timers);
     }
 
     // _.replace---------------------------------------------------------------//
@@ -5529,8 +5738,8 @@
         (string): Returns the modified string.
     **/
 
-    function replace(str = '', pattern, replacement) {
-      return str.replace(pattern, replacement)
+    function replace(str = "", pattern, replacement) {
+      return str.replace(pattern, replacement);
     }
 
     // _.snakeCase-------------------------------------------------------------//
@@ -5543,10 +5752,12 @@
         (string): Returns the snake cased string.
     **/
 
-    function snakeCase(str = '') {
-      return _baseWordSeparate(str).map(item => {
-        return item.toLowerCase()
-      }).join('_')
+    function snakeCase(str = "") {
+      return _baseWordSeparate(str)
+        .map((item) => {
+          return item.toLowerCase();
+        })
+        .join("_");
     }
 
     // _.split-----------------------------------------------------------------//
@@ -5563,8 +5774,8 @@
         (Array): Returns the new array of chunks.
     **/
 
-    function split(str = '', separator, limit) {
-      return str.split(separator, limit)
+    function split(str = "", separator, limit) {
+      return str.split(separator, limit);
     }
 
     // _.startCase-------------------------------------------------------------//
@@ -5577,10 +5788,12 @@
         (string): Returns the start cased string.
     **/
 
-    function startCase(str = '') {
-      return _baseWordSeparate(str).map(item => {
-        return item[0].toUpperCase() + item.slice(1)
-      }).join(' ')
+    function startCase(str = "") {
+      return _baseWordSeparate(str)
+        .map((item) => {
+          return item[0].toUpperCase() + item.slice(1);
+        })
+        .join(" ");
     }
 
     // _.startsWith------------------------------------------------------------//
@@ -5595,8 +5808,8 @@
         (boolean): Returns true if string starts with target, else false.
     **/
 
-    function startsWith(str = '', target, position = 0) {
-      return str.startsWith(target, position)
+    function startsWith(str = "", target, position = 0) {
+      return str.startsWith(target, position);
     }
 
     // _.template--------------------------------------------------------------//
@@ -5619,8 +5832,8 @@
         (string): Returns the lower cased string.
     **/
 
-    function toLower(str = '') {
-      return str.toLowerCase()
+    function toLower(str = "") {
+      return str.toLowerCase();
     }
 
     // _.toUpper---------------------------------------------------------------//
@@ -5633,8 +5846,8 @@
         (string): Returns the upper cased string.
     **/
 
-    function toUpper(str = '') {
-      return str.toUpperCase()
+    function toUpper(str = "") {
+      return str.toUpperCase();
     }
 
     // _.trim------------------------------------------------------------------//
@@ -5648,10 +5861,10 @@
         (string): Returns the trimmed string.
     **/
 
-    function trim(str = '', chars = ' ', guard) {
-      if (guard) chars = ' '
-      if (chars === ' ') return str.trim()
-      return trimStart(trimEnd(str, chars), chars)
+    function trim(str = "", chars = " ", guard) {
+      if (guard) chars = " ";
+      if (chars === " ") return str.trim();
+      return trimStart(trimEnd(str, chars), chars);
     }
 
     // _.trimEnd---------------------------------------------------------------//
@@ -5665,15 +5878,15 @@
         (string): Returns the trimmed string.
     **/
 
-    function trimEnd(str = '', chars = ' ', guard) {
-      if (guard) chars = ' '
-      if(chars === ' ') return str.trimRight()
-      for(var i = str.length - 1; i >= 0; i--) {
-        if(!chars.includes(str[i])) {
-          break
+    function trimEnd(str = "", chars = " ", guard) {
+      if (guard) chars = " ";
+      if (chars === " ") return str.trimRight();
+      for (var i = str.length - 1; i >= 0; i--) {
+        if (!chars.includes(str[i])) {
+          break;
         }
       }
-      return i === -1 ? str : str.slice(0, i + 1)
+      return i === -1 ? str : str.slice(0, i + 1);
     }
 
     // _.trimStart-------------------------------------------------------------//
@@ -5687,15 +5900,15 @@
         (string): Returns the trimmed string.
     **/
 
-    function trimStart(str = '', chars = ' ', guard) {
-      if (guard) chars = ' '
-      if(chars === ' ') return str.trimLeft()
-      for(var i = 0; i < str.length; i++) {
-        if(!chars.includes(str[i])) {
-          break
+    function trimStart(str = "", chars = " ", guard) {
+      if (guard) chars = " ";
+      if (chars === " ") return str.trimLeft();
+      for (var i = 0; i < str.length; i++) {
+        if (!chars.includes(str[i])) {
+          break;
         }
       }
-      return i === str.length ? str : str.slice(i)
+      return i === str.length ? str : str.slice(i);
     }
 
     // _.truncate--------------------------------------------------------------//
@@ -5713,17 +5926,19 @@
         (string): Returns the truncated string.
     **/
 
-    function truncate(str = '', options = {}) {
-      let {length = 30} = options
-      let {omission = '...'} = options
-      let {separator} = options
-      let strLen = length - omission.length > 0 ? length - omission.length : 0
+    function truncate(str = "", options = {}) {
+      let { length = 30 } = options;
+      let { omission = "..." } = options;
+      let { separator } = options;
+      let strLen = length - omission.length > 0 ? length - omission.length : 0;
       if (separator === void 0) {
-        return str.substr(0, strLen) + omission
+        return str.substr(0, strLen) + omission;
       }
-      let result = str.substr(0, strLen)
-      let lastMatch = isRegExp(separator) ? result.match(new RegExp(separator, 'g')).pop() : separator
-      return result.slice(0, result.lastIndexOf(lastMatch)) + omission
+      let result = str.substr(0, strLen);
+      let lastMatch = isRegExp(separator)
+        ? result.match(new RegExp(separator, "g")).pop()
+        : separator;
+      return result.slice(0, result.lastIndexOf(lastMatch)) + omission;
     }
 
     // _.unescape--------------------------------------------------------------//
@@ -5739,8 +5954,11 @@
         (string): Returns the unescaped string.
     **/
 
-    function unescape(str = '') {
-      return str.replace(/(&amp;|&lt;|&gt;|&quot;|&#39;)/g, $0 => _htmlUnescapes[$0])
+    function unescape(str = "") {
+      return str.replace(
+        /(&amp;|&lt;|&gt;|&quot;|&#39;)/g,
+        ($0) => _htmlUnescapes[$0]
+      );
     }
 
     // _.upperCase-------------------------------------------------------------//
@@ -5753,10 +5971,12 @@
         (string): Returns the upper cased string.
     **/
 
-    function upperCase(str = '') {
-      return _baseWordSeparate(str).map(item => {
-        return item.toUpperCase()
-      }).join(' ')
+    function upperCase(str = "") {
+      return _baseWordSeparate(str)
+        .map((item) => {
+          return item.toUpperCase();
+        })
+        .join(" ");
     }
 
     // _.upperFirst------------------------------------------------------------//
@@ -5769,8 +5989,8 @@
         (string): Returns the converted string.
     **/
 
-    function upperFirst(str = '') {
-      return str[0].toUpperCase() + str.slice(1)
+    function upperFirst(str = "") {
+      return str[0].toUpperCase() + str.slice(1);
     }
 
     // _.words-----------------------------------------------------------------//
@@ -5784,9 +6004,9 @@
         (Array): Returns the words of string.
     **/
 
-    function words(str = '', pattern, guard) {
-      if (guard || !pattern) pattern = /[a-zA-Z0-9]+/g
-      return str.match(pattern)
+    function words(str = "", pattern, guard) {
+      if (guard || !pattern) pattern = /[a-zA-Z0-9]+/g;
+      return str.match(pattern);
     }
 
     //------------------------------------Util------------------------------------------
@@ -5804,9 +6024,9 @@
 
     function attempt(func, ...args) {
       try {
-        return func.call(DMZ, ...args)
+        return func.call(DMZ, ...args);
       } catch (err) {
-        return isError(err) ? err : new Error(err)
+        return isError(err) ? err : new Error(err);
       }
     }
 
@@ -5824,12 +6044,13 @@
     **/
 
     function bindAll(obj, methodNames) {
-      if (!isArray(methodNames) && !isFunction(methodNames)) throw new Error('bindAll must be passed function names')
-      methodNames = isArray(methodNames) ? methodNames : [methodNames]
-      methodNames.forEach(methodName => {
-        obj[methodName] = bind(obj[methodName], obj)
-      })
-      return obj
+      if (!isArray(methodNames) && !isFunction(methodNames))
+        throw new Error("bindAll must be passed function names");
+      methodNames = isArray(methodNames) ? methodNames : [methodNames];
+      methodNames.forEach((methodName) => {
+        obj[methodName] = bind(obj[methodName], obj);
+      });
+      return obj;
     }
 
     // _.cond------------------------------------------------------------------//
@@ -5845,9 +6066,9 @@
 
     function cond(pairs) {
       return function (...args) {
-        let index = pairs.findIndex(pair => pair[0].call(this, ...args))
-        return pairs[index][1].call(this, ...args)
-      }
+        let index = pairs.findIndex((pair) => pair[0].call(this, ...args));
+        return pairs[index][1].call(this, ...args);
+      };
     }
 
     // _.conforms--------------------------------------------------------------//
@@ -5865,8 +6086,8 @@
 
     function conforms(source) {
       return function (obj) {
-        return conformsTo(obj, source)
-      }
+        return conformsTo(obj, source);
+      };
     }
 
     // _.constant--------------------------------------------------------------//
@@ -5881,8 +6102,8 @@
 
     function constant(val) {
       return function () {
-        return val
-      }
+        return val;
+      };
     }
 
     // _.defaultTo-------------------------------------------------------------//
@@ -5898,7 +6119,7 @@
     **/
 
     function defaultTo(val, defaultValue) {
-      return isNil(val) || isNaN(val) ? defaultValue : val
+      return isNil(val) || isNaN(val) ? defaultValue : val;
     }
 
     // _.flow------------------------------------------------------------------//
@@ -5915,10 +6136,10 @@
     function flow(funcs) {
       return function (...args) {
         return funcs.reduce((accumulator, currentVal, index) => {
-          if (index === 0) return currentVal.call(DMZ, ...accumulator)
-          return currentVal.call(DMZ, accumulator)
-        }, args)
-      }
+          if (index === 0) return currentVal.call(DMZ, ...accumulator);
+          return currentVal.call(DMZ, accumulator);
+        }, args);
+      };
     }
 
     // _.flowRight-------------------------------------------------------------//
@@ -5932,7 +6153,7 @@
     **/
 
     function flowRight(funcs) {
-      return flow(funcs.reverse())
+      return flow(funcs.reverse());
     }
 
     // _.identity--------------------------------------------------------------//
@@ -5946,7 +6167,7 @@
     **/
 
     function identity(val) {
-      return val
+      return val;
     }
 
     // _.iteratee--------------------------------------------------------------//
@@ -5963,7 +6184,7 @@
     **/
 
     function iterate(val) {
-      return _cb(val, DMZ, Infinity)
+      return _cb(val, DMZ, Infinity);
     }
 
     // _.matches---------------------------------------------------------------//
@@ -5984,8 +6205,8 @@
 
     function matches(source) {
       return function (obj) {
-        return isMatch(obj, source)
-      }
+        return isMatch(obj, source);
+      };
     }
 
     // _.matchesProperty-------------------------------------------------------//
@@ -6004,7 +6225,7 @@
     **/
 
     function matchesProperty(path, srcValue) {
-      return _baseMatchesProperty(path, srcValue)
+      return _baseMatchesProperty(path, srcValue);
     }
 
     // _.method----------------------------------------------------------------//
@@ -6019,11 +6240,11 @@
     **/
 
     function method(path, ...args) {
-      let pathArr = toPath(path)
+      let pathArr = toPath(path);
       return function (obj) {
-        let func = _baseGetValue(obj, pathArr, true, void 0)
-        return func.call(this, ...args)
-      }
+        let func = _baseGetValue(obj, pathArr, true, void 0);
+        return func.call(this, ...args);
+      };
     }
 
     // _.methodOf--------------------------------------------------------------//
@@ -6040,10 +6261,10 @@
 
     function methodOf(obj, ...args) {
       return function (path) {
-        let pathArr = toPath(path)
-        let func = _baseGetValue(obj, pathArr, true, void 0)
-        return func.call(this, ...args)
-      }
+        let pathArr = toPath(path);
+        let func = _baseGetValue(obj, pathArr, true, void 0);
+        return func.call(this, ...args);
+      };
     }
 
     // _.mixin-----------------------------------------------------------------//
@@ -6062,24 +6283,24 @@
         ( * ): Returns object.
     **/
 
-    function mixin(obj, source, options = {chain: true}) {
+    function mixin(obj, source, options = { chain: true }) {
       if (source === void 0) {
-        source = obj
-        obj = __
+        source = obj;
+        obj = __;
       }
-      let funcArr = functions(source)
-      let {chain: optionChain} = options
-      forEach(funcArr, funcName => {
-        let func = obj[funcName] = source[funcName]
+      let funcArr = functions(source);
+      let { chain: optionChain } = options;
+      forEach(funcArr, (funcName) => {
+        let func = (obj[funcName] = source[funcName]);
         obj.prototype[funcName] = function (...args) {
-          args.unshift(this._wrapped)
+          args.unshift(this._wrapped);
           if (optionChain === true && this._chain) {
-            return chain(func.call(obj, ...args))
+            return chain(func.call(obj, ...args));
           }
-          return func.call(obj, ...args)
-        }
-      })
-      return obj
+          return func.call(obj, ...args);
+        };
+      });
+      return obj;
     }
 
     // _.noConflict------------------------------------------------------------//
@@ -6092,19 +6313,19 @@
 
     function noConflict() {
       if (root.__ === this) {
-        root.__ = _tcdian
+        root.__ = _tcdian;
       }
-      return this
+      return this;
     }
 
     // _.noop------------------------------------------------------------------//
 
     /**
-      * This method returns undefined.
-    **/
+     * This method returns undefined.
+     **/
 
     function noop() {
-      return void 0
+      return void 0;
     }
 
     // _.nthArg----------------------------------------------------------------//
@@ -6119,8 +6340,8 @@
 
     function nthArg(n = 0) {
       return function (...args) {
-        return args[n < 0 ? args.length + n : n]
-      }
+        return args[n < 0 ? args.length + n : n];
+      };
     }
 
     // _.over------------------------------------------------------------------//
@@ -6135,8 +6356,8 @@
 
     function over(iteratees = [identity]) {
       return function (...args) {
-        return iteratees.map(iteratee => iteratee(...args))
-      }
+        return iteratees.map((iteratee) => iteratee(...args));
+      };
     }
 
     // _.overEvery-------------------------------------------------------------//
@@ -6151,8 +6372,8 @@
 
     function overEvery(predicates = [identity]) {
       return function (...args) {
-        return predicates.every(predicate => predicate(...args) === true)
-      }
+        return predicates.every((predicate) => predicate(...args) === true);
+      };
     }
 
     // _.overSome--------------------------------------------------------------//
@@ -6167,8 +6388,8 @@
 
     function overSome(predicates = [identity]) {
       return function (...args) {
-        return predicates.some(predicate => predicate(...args) === true)
-      }
+        return predicates.some((predicate) => predicate(...args) === true);
+      };
     }
 
     // _.property--------------------------------------------------------------//
@@ -6183,9 +6404,9 @@
 
     function property(path) {
       return function (obj) {
-        let result = _baseGetValue(obj, path, true, _flagSymbol)
-        return result === _flagSymbol ? void 0 : result
-      }
+        let result = _baseGetValue(obj, path, true, _flagSymbol);
+        return result === _flagSymbol ? void 0 : result;
+      };
     }
 
     // _.propertyOf------------------------------------------------------------//
@@ -6200,9 +6421,9 @@
 
     function propertyOf(obj) {
       return function (path) {
-        let result = _baseGetValue(obj, path, true, _flagSymbol)
-        return result === _flagSymbol ? void 0 : result
-      }
+        let result = _baseGetValue(obj, path, true, _flagSymbol);
+        return result === _flagSymbol ? void 0 : result;
+      };
     }
 
     // _.range-----------------------------------------------------------------//
@@ -6221,26 +6442,24 @@
     **/
 
     function range(start, end, step) {
-      let endBoundary = end !== void 0 ? end : start
-      let startBoundary = end !== void 0 ? start : 0
-      step = step !== void 0
-        ? step
-        : endBoundary > startBoundary ? 1 : -1
+      let endBoundary = end !== void 0 ? end : start;
+      let startBoundary = end !== void 0 ? start : 0;
+      step = step !== void 0 ? step : endBoundary > startBoundary ? 1 : -1;
       if (endBoundary > startBoundary && step === 0) {
-        return new Array(endBoundary - startBoundary).fill(startBoundary)
+        return new Array(endBoundary - startBoundary).fill(startBoundary);
       }
-      if ((endBoundary - startBoundary) * step <= 0) return []
-      let result = []
+      if ((endBoundary - startBoundary) * step <= 0) return [];
+      let result = [];
       if (endBoundary > startBoundary) {
         for (let i = startBoundary; i < endBoundary; i += step) {
-          result.push(i)
+          result.push(i);
         }
       } else {
-        for(let i = startBoundary; i > endBoundary; i += step) {
-          result.push(i)
+        for (let i = startBoundary; i > endBoundary; i += step) {
+          result.push(i);
         }
       }
-      return result
+      return result;
     }
 
     // _.rangeRight------------------------------------------------------------//
@@ -6256,7 +6475,7 @@
     **/
 
     function rangeRight(start, end, step) {
-      return range(start, end, step).reverse()
+      return range(start, end, step).reverse();
     }
 
     // _.runInContext----------------------------------------------------------//
@@ -6270,7 +6489,7 @@
     **/
 
     function runInContext(context = root) {
-      return _runInContext(context)
+      return _runInContext(context);
     }
 
     // _.stubArray-------------------------------------------------------------//
@@ -6282,7 +6501,7 @@
     **/
 
     function stubArray() {
-      return []
+      return [];
     }
 
     // _.stubFalse-------------------------------------------------------------//
@@ -6294,7 +6513,7 @@
     **/
 
     function stubFalse() {
-      return false
+      return false;
     }
 
     // _.stubObject------------------------------------------------------------//
@@ -6306,7 +6525,7 @@
     **/
 
     function stubObject() {
-      return {}
+      return {};
     }
 
     // _.stubString------------------------------------------------------------//
@@ -6318,7 +6537,7 @@
     **/
 
     function stubString() {
-      return ''
+      return "";
     }
 
     // _.stubTrue--------------------------------------------------------------//
@@ -6330,7 +6549,7 @@
     **/
 
     function stubTrue() {
-      return true
+      return true;
     }
 
     // _.times-----------------------------------------------------------------//
@@ -6346,9 +6565,9 @@
     **/
 
     function times(n, iteratee = identity) {
-      iteratee = _cb(iteratee, DMZ, 1)
-      let result = map(new Array(n), (val, index) => index)
-      return result.map(item => iteratee(item))
+      iteratee = _cb(iteratee, DMZ, 1);
+      let result = map(new Array(n), (val, index) => index);
+      return result.map((item) => iteratee(item));
     }
 
     // _.toPath----------------------------------------------------------------//
@@ -6362,9 +6581,11 @@
     **/
 
     function toPath(val) {
-      if(isSymbol(val)) return [val]
-      if(isArray(val)) return val
-      return toString(val).split(/[\[\]\.]+/).filter(it => it !== '')
+      if (isSymbol(val)) return [val];
+      if (isArray(val)) return val;
+      return toString(val)
+        .split(/[\[\]\.]+/)
+        .filter((it) => it !== "");
     }
     // _.uniqueId--------------------------------------------------------------//
 
@@ -6377,15 +6598,15 @@
     **/
 
     function uniqueId(prefix) {
-      return toString(prefix) + idCounter++
+      return toString(prefix) + idCounter++;
     }
 
     //------------------------------------Properties------------------------------------
     // _.VERSION---------------------------------------------------------------//
 
     /**
-      * (string): The semantic version number.
-    **/
+     * (string): The semantic version number.
+     **/
 
     // _.templateSettings------------------------------------------------------//
 
@@ -6461,769 +6682,768 @@
     //_.parseJson ----------------------------------------------
     //简易json解析器
     function parseJson(jsonStr) {
-      var index = 0
+      var index = 0;
 
       function typeParse(jsonStr) {
-        if (jsonStr[index] === '{') {
-          return parseObject(jsonStr)
-        } else if (jsonStr[index] === '[') {
-          return parseArray(jsonStr)
-        } else if (jsonStr[index] === 'n') {
-          return parseNull(jsonStr)
-        } else if (jsonStr[index] === 't') {
-          return parseTrue(jsonStr)
-        } else if (jsonStr[index] === 'f') {
-          return parseFalse(jsonStr)
+        if (jsonStr[index] === "{") {
+          return parseObject(jsonStr);
+        } else if (jsonStr[index] === "[") {
+          return parseArray(jsonStr);
+        } else if (jsonStr[index] === "n") {
+          return parseNull(jsonStr);
+        } else if (jsonStr[index] === "t") {
+          return parseTrue(jsonStr);
+        } else if (jsonStr[index] === "f") {
+          return parseFalse(jsonStr);
         } else if (jsonStr[index] === '"') {
-          return parseString(jsonStr)
+          return parseString(jsonStr);
         } else {
-          return parseNumber(jsonStr)
+          return parseNumber(jsonStr);
         }
       }
 
       function parseObject(jsonStr) {
-        index++
-        var part = {}
-        while (jsonStr[index] !== '}') {
-          var key = typeParse(jsonStr)
-          index++
-          var val = typeParse(jsonStr)
-          part[key] = val
-          if (jsonStr[index] === '}') {
-            index++
-            break
+        index++;
+        var part = {};
+        while (jsonStr[index] !== "}") {
+          var key = typeParse(jsonStr);
+          index++;
+          var val = typeParse(jsonStr);
+          part[key] = val;
+          if (jsonStr[index] === "}") {
+            index++;
+            break;
           }
-          index++
+          index++;
         }
-        return part
+        return part;
       }
 
       function parseArray(jsonStr) {
-        index++
-        var part = []
-        while (jsonStr[index] !== ']') {
-          if (jsonStr[index] === ',') {
-            index++
+        index++;
+        var part = [];
+        while (jsonStr[index] !== "]") {
+          if (jsonStr[index] === ",") {
+            index++;
           } else {
-            part.push(typeParse(jsonStr))
+            part.push(typeParse(jsonStr));
           }
         }
-        index++
-        return part
+        index++;
+        return part;
       }
 
       function parseNull(jsonStr) {
-        var part = jsonStr.substr(index, 4)
-        if (part === 'null') {
-          index += 4
-          return null
+        var part = jsonStr.substr(index, 4);
+        if (part === "null") {
+          index += 4;
+          return null;
         } else {
-          throw new Error('found Error at' + index)
+          throw new Error("found Error at" + index);
         }
       }
 
       function parseTrue(jsonStr) {
-        var part = jsonStr.substr(index, 4)
-        if (part === 'true') {
-          index += 4
-          return true
+        var part = jsonStr.substr(index, 4);
+        if (part === "true") {
+          index += 4;
+          return true;
         } else {
-          throw new Error('found Error at' + index)
+          throw new Error("found Error at" + index);
         }
       }
 
       function parseFalse(jsonStr) {
-        var part = jsonStr.substr(index, 5)
-        if (part === 'false') {
-          index += 5
-          return false
+        var part = jsonStr.substr(index, 5);
+        if (part === "false") {
+          index += 5;
+          return false;
         } else {
-          throw new Error('found Error at' + index)
+          throw new Error("found Error at" + index);
         }
       }
 
       function parseString(jsonStr) {
-        var part = ''
-        index++
+        var part = "";
+        index++;
         while (jsonStr[index] !== '"') {
-          part += jsonStr[index]
-          index++
+          part += jsonStr[index];
+          index++;
         }
-        index++
-        return part
+        index++;
+        return part;
       }
 
       function parseNumber(jsonStr) {
-        var part = ''
+        var part = "";
         while (isNumberChar(jsonStr[index])) {
-          part += jsonStr[index]
-          index++
+          part += jsonStr[index];
+          index++;
         }
-        return parseFloat(part)
+        return parseFloat(part);
       }
 
       function isNumberChar(char) {
         //[0-9.+\-e]/i.test(undefined) === true
-        return !!char ? (/[0-9.+\-e]/i.test(char)) : false
+        return !!char ? /[0-9.+\-e]/i.test(char) : false;
       }
-      return typeParse(jsonStr)
+      return typeParse(jsonStr);
     }
 
-      //------------------------------------Array-----------------------------------------
-      /* _.chunk-------------------------------- */
-      __.chunk = chunk
-      /* _.compact------------------------------ */
-      __.compact = compact
-      /* _.concat------------------------------- */
-      __.concat = concat
-      /* _.difference--------------------------- */
-      __.difference = difference
-      /* _.differenceBy------------------------- */
-      __.differenceBy = differenceBy
-      /* _.differenceWith----------------------- */
-      __.differenceWith = differenceWith
-      /* _.drop--------------------------------- */
-      __.drop = drop
-      /* _.dropRight---------------------------- */
-      __.dropRight = dropRight
-      /* _.dropRightWhile----------------------- */
-      __.dropRightWhile = dropRightWhile
-      /* _.dropWhile---------------------------- */
-      __.dropWhile = dropWhile
-      /* _.fill--------------------------------- */
-      __.fill = fill
-      /* _.findIndex---------------------------- */
-      __.findIndex = findIndex
-      /* _.findLastIndex------------------------ */
-      __.findLastIndex = findLastIndex
-      /* _.first - > head----------------------- */
-      __.first = first
-      /* _.flatten------------------------------ */
-      __.flatten = flatten
-      /* _.flattenDeep-------------------------- */
-      __.flattenDeep = flattenDeep
-      /* _.flattenDepth------------------------- */
-      __.flattenDepth = flattenDepth
-      /* _.fromPairs---------------------------- */
-      __.fromPairs = fromPairs
-      /* _.head--------------------------------- */
-      __.head = head
-      /* _.indexOf------------------------------ */
-      __.indexOf = indexOf
-      /* _.initial------------------------------ */
-      __.initial = initial
-      /* _.intersection------------------------- */
-      __.intersection = intersection
-      /* _.intersectionBy----------------------- */
-      __.intersectionBy = intersectionBy
-      /* _.intersectionWith--------------------- */
-      __.intersectionWith = intersectionWith
-      /* _.join--------------------------------- */
-      __.join = join
-      /* _.last--------------------------------- */
-      __.last = last
-      /* _.lastIndexOf-------------------------- */
-      __.lastIndexOf = lastIndexOf
-      /* _.nth---------------------------------- */
-      __.nth = nth
-      /* _.pull--------------------------------- */
-      __.pull = pull
-      /* _.pullAll------------------------------ */
-      __.pullAll = pullAll
-      /* _.pullAllBy---------------------------- */
-      __.pullAllBy = pullAllBy
-      /* _.pullAllWith-------------------------- */
-      __.pullAllWith = pullAllWith
-      /* _.pullAt------------------------------- */
-      __.pullAt = pullAt
-      /* _.remove------------------------------- */
-      __.remove = remove
-      /* _.reverse------------------------------ */
-      __.reverse = reverse
-      /* _.slice-------------------------------- */
-      __.slice = slice
-      /* _.sortedIndex-------------------------- */
-      __.sortedIndex = sortedIndex
-      /* _.sortedIndexBy------------------------ */
-      __.sortedIndexBy = sortedIndexBy
-      /* _.sortedIndexOf------------------------ */
-      __.sortedIndexOf = sortedIndexOf
-      /* _.sortedLastIndex---------------------- */
-      __.sortedLastIndex = sortedLastIndex
-      /* _.sortedLastIndexBy-------------------- */
-      __.sortedLastIndexBy = sortedLastIndexBy
-      /* _.sortedLastIndexOf-------------------- */
-      __.sortedLastIndexOf = sortedLastIndexOf
-      /* _.sortedUniq--------------------------- */
-      __.sortedUniq = sortedUniq
-      /* _.sortedUniqBy------------------------- */
-      __.sortedUniqBy = sortedUniqBy
-      /* _.tail--------------------------------- */
-      __.tail = tail
-      /* _.take--------------------------------- */
-      __.take = take
-      /* _.takeRight---------------------------- */
-      __.takeRight = takeRight
-      /* _.takeRightWhile----------------------- */
-      __.takeRightWhile = takeRightWhile
-      /* _.takeWhile---------------------------- */
-      __.takeWhile = takeWhile
-      /* _.union-------------------------------- */
-      __.union = union
-      /* _.unionBy------------------------------ */
-      __.unionBy = unionBy
-      /* _.unionWith---------------------------- */
-      __.unionWith = unionWith
-      /* _.uniq--------------------------------- */
-      __.uniq = uniq
-      /* _.uniqBy------------------------------- */
-      __.uniqBy = uniqBy
-      /* _.uniqWith----------------------------- */
-      __.uniqWith = uniqWith
-      /* _.unzip-------------------------------- */
-      __.unzip = unzip
-      /* _.unzipWith---------------------------- */
-      __.unzipWith = unzipWith
-      /* _.without------------------------------ */
-      __.without = without
-      /* _.xor---------------------------------- */
-      __.xor = xor
-      /* _.xorBy-------------------------------- */
-      __.xorBy = xorBy
-      /* _.xorWith------------------------------ */
-      __.xorWith = xorWith
-      /* _.zip---------------------------------- */
-      __.zip = zip
-      /* _.zipObject---------------------------- */
-      __.zipObject = zipObject
-      /* _.zipObjectDeep------------------------ */
-      __.zipObjectDeep = zipObjectDeep
-      /* _.zipWith------------------------------ */
-      __.zipWith = zipWith
-      //------------------------------------Collection------------------------------------
-      /* _.countBy------------------------------ */
-      __.countBy = countBy
-      /* _.each -> forEach---------------------- */
-      __.each = each
-      /* _.eachRight -> forEachRight------------ */
-      __.eachRight = eachRight
-      /* _.every-------------------------------- */
-      __.every = every
-      /* _.filter------------------------------- */
-      __.filter = filter
-      /* _.find--------------------------------- */
-      __.find = find
-      /* _.findLast----------------------------- */
-      __.findLast = findLast
-      /* _.flatMap------------------------------ */
-      __.flatMap = flatMap
-      /* _.flatMapDeep-------------------------- */
-      __.flatMapDeep = flatMapDeep
-      /* _.flatMapDepth------------------------- */
-      __.flatMapDepth = flatMapDepth
-      /* _.forEach------------------------------ */
-      __.forEach = forEach
-      /* _.forEachRight------------------------- */
-      __.forEachRight = forEachRight
-      /* _.groupBy------------------------------ */
-      __.groupBy = groupBy
-      /* _.includes----------------------------- */
-      __.includes = includes
-      /* _.invokeMap---------------------------- */
-      __.invokeMap = invokeMap
-      /* _.keyBy-------------------------------- */
-      __.keyBy = keyBy
-      /* _.map---------------------------------- */
-      __.map = map
-      /* _.orderBy------------------------------ */
-      __.orderBy = orderBy
-      /* _.partition---------------------------- */
-      __.partition = partition
-      /* _.reduce------------------------------- */
-      __.reduce = reduce
-      /* _.reduceRight-------------------------- */
-      __.reduceRight = reduceRight
-      /* _.reject------------------------------- */
-      __.reject = reject
-      /* _.sample------------------------------- */
-      __.sample = sample
-      /* _.sampleSize--------------------------- */
-      __.sampleSize = sampleSize
-      /* _.shuffle------------------------------ */
-      __.shuffle = shuffle
-      /* _.size--------------------------------- */
-      __.size = size
-      /* _.some--------------------------------- */
-      __.some = some
-      /* _.sortBy------------------------------- */
-      __.sortBy = sortBy
-      //------------------------------------Date------------------------------------------
-      /* _.now---------------------------------- */
-      __.now = now
-      //------------------------------------Function--------------------------------------
-      /* _.after-------------------------------- */
-      __.after = after
-      /* _.ary---------------------------------- */
-      __.ary = ary
-      /* _.before------------------------------- */
-      __.before = before
-      /* _.bind--------------------------------- */
-      __.bind = bind
-      /* _.bindKey------------------------------ */
-      __.bindKey = bindKey
-      /* _.curry-------------------------------- */
-      __.curry = curry
-      /* _.curryRight--------------------------- */
-      __.curryRight = curryRight
-      /* _.debounce----------------------------- */
-      __.debounce = debounce
-      /* _.defer-------------------------------- */
-      __.defer = defer
-      /* _.delay-------------------------------- */
-      __.delay = delay
-      /* _.flip--------------------------------- */
-      __.flip = flip
-      /* _.memoize------------------------------ */
-      __.memoize = memoize
-      /* _.negate------------------------------- */
-      __.negate = negate
-      /* _.once--------------------------------- */
-      __.once = once
-      /* _.overArgs----------------------------- */
-      __.overArgs = overArgs
-      /* _.partial------------------------------ */
-      __.partial = partial
-      /* _.partialRight------------------------- */
-      __.partialRight = partialRight
-      /* _.rearg-------------------------------- */
-      __.rearg = rearg
-      /* _.rest--------------------------------- */
-      __.rest = rest
-      /* _.spread------------------------------- */
-      __.spread = spread
-      /* _.throttle----------------------------- */
-      __.throttle = throttle
-      /* _.unary-------------------------------- */
-      __.unary = unary
-      /* _.wrap--------------------------------- */
-      __.wrap = wrap
-      //------------------------------------Lang------------------------------------------
-      /* _.castArray---------------------------- */
-      __.castArray = castArray
-      /* _.clone-------------------------------- */
-      __.clone = clone
-      /* _.cloneDeep---------------------------- */
-      __.cloneDeep = cloneDeep
-      /* _.cloneDeepWith------------------------ */
-      __.cloneDeepWith = cloneDeepWith
-      /* _.cloneWith---------------------------- */
-      __.cloneWith = cloneWith
-      /* _.conformsTo--------------------------- */
-      __.conformsTo = conformsTo
-      /* _.eq----------------------------------- */
-      __.eq = eq
-      /* _.gt----------------------------------- */
-      __.gt = gt
-      /* _.gte---------------------------------- */
-      __.gte = gte
-      /* _.isArguments-------------------------- */
-      __.isArguments = isArguments
-      /* _.isArray------------------------------ */
-      __.isArray = isArray
-      /* _.isArrayBuffer------------------------ */
-      __.isArrayBuffer = isArrayBuffer
-      /* _.isArrayLike-------------------------- */
-      __.isArrayLike = isArrayLike
-      /* _.isArrayLikeObject-------------------- */
-      __.isArrayLikeObject = isArrayLikeObject
-      /* _.isBoolean---------------------------- */
-      __.isBoolean = isBoolean
-      /* _.isBuffer----------------------------- */
-      /* _.isDate------------------------------- */
-      __.isDate = isDate
-      /* _.isElement---------------------------- */
-      __.isElement = isElement
-      /* _.isEmpty------------------------------ */
-      __.isEmpty = isEmpty
-      /* _.isEqual------------------------------ */
-      __.isEqual = isEqual
-      /* _.isEqualWith-------------------------- */
-      __.isEqualWith = isEqualWith
-      /* _.isError------------------------------ */
-      __.isError = isError
-      /* _.isFinite----------------------------- */
-      __.isFinite = isFinite
-      /* _.isFunction--------------------------- */
-      __.isFunction = isFunction
-      /* _.isInteger---------------------------- */
-      __.isInteger = isInteger
-      /* _.isLength----------------------------- */
-      __.isLength = isLength
-      /* _.isMap-------------------------------- */
-      __.isMap = isMap
-      /* _.isMatch------------------------------ */
-      __.isMatch = isMatch
-      /* _.isMatchWith-------------------------- */
-      __.isMatchWith = isMatchWith
-      /* _.isNaN-------------------------------- */
-      __.isNaN = isNaN
-      /* _.isNative----------------------------- */
-      __.isNative = isNative
-      /* _.isNil-------------------------------- */
-      __.isNil = isNil
-      /* _.isNull------------------------------- */
-      __.isNull = isNull
-      /* _.isNumber----------------------------- */
-      __.isNumber = isNumber
-      /* _.isObject----------------------------- */
-      __.isObject = isObject
-      /* _.isObjectLike------------------------- */
-      __.isObjectLike = isObjectLike
-      /* _.isPlainObject------------------------ */
-      __.isPlainObject = isPlainObject
-      /* _.isRegExp----------------------------- */
-      __.isRegExp = isRegExp
-      /* _.isSafeInteger------------------------ */
+    //------------------------------------Array-----------------------------------------
+    /* _.chunk-------------------------------- */
+    __.chunk = chunk;
+    /* _.compact------------------------------ */
+    __.compact = compact;
+    /* _.concat------------------------------- */
+    __.concat = concat;
+    /* _.difference--------------------------- */
+    __.difference = difference;
+    /* _.differenceBy------------------------- */
+    __.differenceBy = differenceBy;
+    /* _.differenceWith----------------------- */
+    __.differenceWith = differenceWith;
+    /* _.drop--------------------------------- */
+    __.drop = drop;
+    /* _.dropRight---------------------------- */
+    __.dropRight = dropRight;
+    /* _.dropRightWhile----------------------- */
+    __.dropRightWhile = dropRightWhile;
+    /* _.dropWhile---------------------------- */
+    __.dropWhile = dropWhile;
+    /* _.fill--------------------------------- */
+    __.fill = fill;
+    /* _.findIndex---------------------------- */
+    __.findIndex = findIndex;
+    /* _.findLastIndex------------------------ */
+    __.findLastIndex = findLastIndex;
+    /* _.first - > head----------------------- */
+    __.first = first;
+    /* _.flatten------------------------------ */
+    __.flatten = flatten;
+    /* _.flattenDeep-------------------------- */
+    __.flattenDeep = flattenDeep;
+    /* _.flattenDepth------------------------- */
+    __.flattenDepth = flattenDepth;
+    /* _.fromPairs---------------------------- */
+    __.fromPairs = fromPairs;
+    /* _.head--------------------------------- */
+    __.head = head;
+    /* _.indexOf------------------------------ */
+    __.indexOf = indexOf;
+    /* _.initial------------------------------ */
+    __.initial = initial;
+    /* _.intersection------------------------- */
+    __.intersection = intersection;
+    /* _.intersectionBy----------------------- */
+    __.intersectionBy = intersectionBy;
+    /* _.intersectionWith--------------------- */
+    __.intersectionWith = intersectionWith;
+    /* _.join--------------------------------- */
+    __.join = join;
+    /* _.last--------------------------------- */
+    __.last = last;
+    /* _.lastIndexOf-------------------------- */
+    __.lastIndexOf = lastIndexOf;
+    /* _.nth---------------------------------- */
+    __.nth = nth;
+    /* _.pull--------------------------------- */
+    __.pull = pull;
+    /* _.pullAll------------------------------ */
+    __.pullAll = pullAll;
+    /* _.pullAllBy---------------------------- */
+    __.pullAllBy = pullAllBy;
+    /* _.pullAllWith-------------------------- */
+    __.pullAllWith = pullAllWith;
+    /* _.pullAt------------------------------- */
+    __.pullAt = pullAt;
+    /* _.remove------------------------------- */
+    __.remove = remove;
+    /* _.reverse------------------------------ */
+    __.reverse = reverse;
+    /* _.slice-------------------------------- */
+    __.slice = slice;
+    /* _.sortedIndex-------------------------- */
+    __.sortedIndex = sortedIndex;
+    /* _.sortedIndexBy------------------------ */
+    __.sortedIndexBy = sortedIndexBy;
+    /* _.sortedIndexOf------------------------ */
+    __.sortedIndexOf = sortedIndexOf;
+    /* _.sortedLastIndex---------------------- */
+    __.sortedLastIndex = sortedLastIndex;
+    /* _.sortedLastIndexBy-------------------- */
+    __.sortedLastIndexBy = sortedLastIndexBy;
+    /* _.sortedLastIndexOf-------------------- */
+    __.sortedLastIndexOf = sortedLastIndexOf;
+    /* _.sortedUniq--------------------------- */
+    __.sortedUniq = sortedUniq;
+    /* _.sortedUniqBy------------------------- */
+    __.sortedUniqBy = sortedUniqBy;
+    /* _.tail--------------------------------- */
+    __.tail = tail;
+    /* _.take--------------------------------- */
+    __.take = take;
+    /* _.takeRight---------------------------- */
+    __.takeRight = takeRight;
+    /* _.takeRightWhile----------------------- */
+    __.takeRightWhile = takeRightWhile;
+    /* _.takeWhile---------------------------- */
+    __.takeWhile = takeWhile;
+    /* _.union-------------------------------- */
+    __.union = union;
+    /* _.unionBy------------------------------ */
+    __.unionBy = unionBy;
+    /* _.unionWith---------------------------- */
+    __.unionWith = unionWith;
+    /* _.uniq--------------------------------- */
+    __.uniq = uniq;
+    /* _.uniqBy------------------------------- */
+    __.uniqBy = uniqBy;
+    /* _.uniqWith----------------------------- */
+    __.uniqWith = uniqWith;
+    /* _.unzip-------------------------------- */
+    __.unzip = unzip;
+    /* _.unzipWith---------------------------- */
+    __.unzipWith = unzipWith;
+    /* _.without------------------------------ */
+    __.without = without;
+    /* _.xor---------------------------------- */
+    __.xor = xor;
+    /* _.xorBy-------------------------------- */
+    __.xorBy = xorBy;
+    /* _.xorWith------------------------------ */
+    __.xorWith = xorWith;
+    /* _.zip---------------------------------- */
+    __.zip = zip;
+    /* _.zipObject---------------------------- */
+    __.zipObject = zipObject;
+    /* _.zipObjectDeep------------------------ */
+    __.zipObjectDeep = zipObjectDeep;
+    /* _.zipWith------------------------------ */
+    __.zipWith = zipWith;
+    //------------------------------------Collection------------------------------------
+    /* _.countBy------------------------------ */
+    __.countBy = countBy;
+    /* _.each -> forEach---------------------- */
+    __.each = each;
+    /* _.eachRight -> forEachRight------------ */
+    __.eachRight = eachRight;
+    /* _.every-------------------------------- */
+    __.every = every;
+    /* _.filter------------------------------- */
+    __.filter = filter;
+    /* _.find--------------------------------- */
+    __.find = find;
+    /* _.findLast----------------------------- */
+    __.findLast = findLast;
+    /* _.flatMap------------------------------ */
+    __.flatMap = flatMap;
+    /* _.flatMapDeep-------------------------- */
+    __.flatMapDeep = flatMapDeep;
+    /* _.flatMapDepth------------------------- */
+    __.flatMapDepth = flatMapDepth;
+    /* _.forEach------------------------------ */
+    __.forEach = forEach;
+    /* _.forEachRight------------------------- */
+    __.forEachRight = forEachRight;
+    /* _.groupBy------------------------------ */
+    __.groupBy = groupBy;
+    /* _.includes----------------------------- */
+    __.includes = includes;
+    /* _.invokeMap---------------------------- */
+    __.invokeMap = invokeMap;
+    /* _.keyBy-------------------------------- */
+    __.keyBy = keyBy;
+    /* _.map---------------------------------- */
+    __.map = map;
+    /* _.orderBy------------------------------ */
+    __.orderBy = orderBy;
+    /* _.partition---------------------------- */
+    __.partition = partition;
+    /* _.reduce------------------------------- */
+    __.reduce = reduce;
+    /* _.reduceRight-------------------------- */
+    __.reduceRight = reduceRight;
+    /* _.reject------------------------------- */
+    __.reject = reject;
+    /* _.sample------------------------------- */
+    __.sample = sample;
+    /* _.sampleSize--------------------------- */
+    __.sampleSize = sampleSize;
+    /* _.shuffle------------------------------ */
+    __.shuffle = shuffle;
+    /* _.size--------------------------------- */
+    __.size = size;
+    /* _.some--------------------------------- */
+    __.some = some;
+    /* _.sortBy------------------------------- */
+    __.sortBy = sortBy;
+    //------------------------------------Date------------------------------------------
+    /* _.now---------------------------------- */
+    __.now = now;
+    //------------------------------------Function--------------------------------------
+    /* _.after-------------------------------- */
+    __.after = after;
+    /* _.ary---------------------------------- */
+    __.ary = ary;
+    /* _.before------------------------------- */
+    __.before = before;
+    /* _.bind--------------------------------- */
+    __.bind = bind;
+    /* _.bindKey------------------------------ */
+    __.bindKey = bindKey;
+    /* _.curry-------------------------------- */
+    __.curry = curry;
+    /* _.curryRight--------------------------- */
+    __.curryRight = curryRight;
+    /* _.debounce----------------------------- */
+    __.debounce = debounce;
+    /* _.defer-------------------------------- */
+    __.defer = defer;
+    /* _.delay-------------------------------- */
+    __.delay = delay;
+    /* _.flip--------------------------------- */
+    __.flip = flip;
+    /* _.memoize------------------------------ */
+    __.memoize = memoize;
+    /* _.negate------------------------------- */
+    __.negate = negate;
+    /* _.once--------------------------------- */
+    __.once = once;
+    /* _.overArgs----------------------------- */
+    __.overArgs = overArgs;
+    /* _.partial------------------------------ */
+    __.partial = partial;
+    /* _.partialRight------------------------- */
+    __.partialRight = partialRight;
+    /* _.rearg-------------------------------- */
+    __.rearg = rearg;
+    /* _.rest--------------------------------- */
+    __.rest = rest;
+    /* _.spread------------------------------- */
+    __.spread = spread;
+    /* _.throttle----------------------------- */
+    __.throttle = throttle;
+    /* _.unary-------------------------------- */
+    __.unary = unary;
+    /* _.wrap--------------------------------- */
+    __.wrap = wrap;
+    //------------------------------------Lang------------------------------------------
+    /* _.castArray---------------------------- */
+    __.castArray = castArray;
+    /* _.clone-------------------------------- */
+    __.clone = clone;
+    /* _.cloneDeep---------------------------- */
+    __.cloneDeep = cloneDeep;
+    /* _.cloneDeepWith------------------------ */
+    __.cloneDeepWith = cloneDeepWith;
+    /* _.cloneWith---------------------------- */
+    __.cloneWith = cloneWith;
+    /* _.conformsTo--------------------------- */
+    __.conformsTo = conformsTo;
+    /* _.eq----------------------------------- */
+    __.eq = eq;
+    /* _.gt----------------------------------- */
+    __.gt = gt;
+    /* _.gte---------------------------------- */
+    __.gte = gte;
+    /* _.isArguments-------------------------- */
+    __.isArguments = isArguments;
+    /* _.isArray------------------------------ */
+    __.isArray = isArray;
+    /* _.isArrayBuffer------------------------ */
+    __.isArrayBuffer = isArrayBuffer;
+    /* _.isArrayLike-------------------------- */
+    __.isArrayLike = isArrayLike;
+    /* _.isArrayLikeObject-------------------- */
+    __.isArrayLikeObject = isArrayLikeObject;
+    /* _.isBoolean---------------------------- */
+    __.isBoolean = isBoolean;
+    /* _.isBuffer----------------------------- */
+    /* _.isDate------------------------------- */
+    __.isDate = isDate;
+    /* _.isElement---------------------------- */
+    __.isElement = isElement;
+    /* _.isEmpty------------------------------ */
+    __.isEmpty = isEmpty;
+    /* _.isEqual------------------------------ */
+    __.isEqual = isEqual;
+    /* _.isEqualWith-------------------------- */
+    __.isEqualWith = isEqualWith;
+    /* _.isError------------------------------ */
+    __.isError = isError;
+    /* _.isFinite----------------------------- */
+    __.isFinite = isFinite;
+    /* _.isFunction--------------------------- */
+    __.isFunction = isFunction;
+    /* _.isInteger---------------------------- */
+    __.isInteger = isInteger;
+    /* _.isLength----------------------------- */
+    __.isLength = isLength;
+    /* _.isMap-------------------------------- */
+    __.isMap = isMap;
+    /* _.isMatch------------------------------ */
+    __.isMatch = isMatch;
+    /* _.isMatchWith-------------------------- */
+    __.isMatchWith = isMatchWith;
+    /* _.isNaN-------------------------------- */
+    __.isNaN = isNaN;
+    /* _.isNative----------------------------- */
+    __.isNative = isNative;
+    /* _.isNil-------------------------------- */
+    __.isNil = isNil;
+    /* _.isNull------------------------------- */
+    __.isNull = isNull;
+    /* _.isNumber----------------------------- */
+    __.isNumber = isNumber;
+    /* _.isObject----------------------------- */
+    __.isObject = isObject;
+    /* _.isObjectLike------------------------- */
+    __.isObjectLike = isObjectLike;
+    /* _.isPlainObject------------------------ */
+    __.isPlainObject = isPlainObject;
+    /* _.isRegExp----------------------------- */
+    __.isRegExp = isRegExp;
+    /* _.isSafeInteger------------------------ */
 
-      __.isSafeInteger = isSafeInteger
-      /* _.isSet-------------------------------- */
-      __.isSet = isSet
-      /* _.isString----------------------------- */
-      __.isString = isString
-      /* _.isSymbol----------------------------- */
-      __.isSymbol = isSymbol
-      /* _.isTypedArray------------------------- */
-      __.isTypedArray = isTypedArray
-      /* _.isUndefined-------------------------- */
-      __.isUndefined = isUndefined
-      /* _.isWeakMap---------------------------- */
-      __.isWeakMap = isWeakMap
-      /* _.isWeakSet---------------------------- */
-      __.isWeakSet = isWeakSet
-      /* _.lt----------------------------------- */
-      __.lt = lt
-      /* _.lte---------------------------------- */
-      __.lte = lte
-      /* _.toArray------------------------------ */
-      __.toArray = toArray
-      /* _.toFinite----------------------------- */
-      __.toFinite = toFinite
-      /* _.toInteger---------------------------- */
-      __.toInteger = toInteger
-      /* _.toLength----------------------------- */
-      __.toLength = toLength
-      /* _.toNumber----------------------------- */
-      __.toNumber = toNumber
-      /* _.toPlainObject------------------------ */
-      __.toPlainObject = toPlainObject
-      /* _.toSafeInteger------------------------ */
-      __.toSafeInteger = toSafeInteger
-      /* _.toString----------------------------- */
-      __.toString = toString
-      //------------------------------------Math------------------------------------------
-      /* _.add---------------------------------- */
-      __.add = add
-      /* _.ceil--------------------------------- */
-      __.ceil = ceil
-      /* _.divide------------------------------- */
-      __.divide = divide
-      /* _.floor-------------------------------- */
-      __.floor = floor
-      /* _.max---------------------------------- */
-      __.max = max
-      /* _.maxBy-------------------------------- */
-      __.maxBy = maxBy
-      /* _.mean--------------------------------- */
-      __.mean = mean
-      /* _.meanBy------------------------------- */
-      __.meanBy = meanBy
-      /* _.min---------------------------------- */
-      __.min = min
-      /* _.minBy-------------------------------- */
-      __.minBy = minBy
-      /* _.multiply----------------------------- */
-      __.multiply = multiply
-      /* _.round-------------------------------- */
-      __.round = round
-      /* _.subtract----------------------------- */
-      __.subtract = subtract
-      /* _.sum---------------------------------- */
-      __.sum = sum
-      /* _.sumBy-------------------------------- */
-      __.sumBy = sumBy
-      //------------------------------------Number----------------------------------------
-      /* _.clamp-------------------------------- */
-      __.clamp = clamp
-      /* _.inRange------------------------------ */
-      __.inRange = inRange
-      /* _.random------------------------------- */
-      __.random = random
-      //------------------------------------Object----------------------------------------
-      /* _.assign------------------------------- */
-      __.assign = assign
-      /* _.assignIn----------------------------- */
-      __.assignIn = assignIn
-      /* _.assignInWith------------------------- */
-      __.assignInWith = assignInWith
-      /* _.assignWith--------------------------- */
-      __.assignWith = assignWith
-      /* _.at----------------------------------- */
-      __.at = at
-      /* _.create------------------------------- */
-      __.create = create
-      /* _.defaults----------------------------- */
-      __.defaults = defaults
-      /* _.defaultsDeep------------------------- */
-      __.defaultsDeep = defaultsDeep
-      /* _.entries -> toPairs------------------- */
-      __.entries = entries
-      /* _.entriesIn -> toPairsIn--------------- */
-      __.entriesIn = entriesIn
-      /* _.extend -> assignIn------------------- */
-      __.extend = extend
-      /* _.extendWith -> assignInWith----------- */
-      __.extendWith = extendWith
-      /* _.findKey------------------------------ */
-      __.findKey = findKey
-      /* _.findLastKey-------------------------- */
-      __.findLastKey = findLastKey
-      /* _.forIn-------------------------------- */
-      __.forIn = forIn
-      /* _.forInRight--------------------------- */
-      __.forInRight = forInRight
-      /* _.forOwn------------------------------- */
-      __.forOwn = forOwn
-      /* _.forOwnRight-------------------------- */
-      __.forOwnRight = forOwnRight
-      /* _.functions---------------------------- */
-      __.functions = functions
-      /* _.functionsIn-------------------------- */
-      __.functionsIn = functionsIn
-      /* _.get---------------------------------- */
-      __.get = get
-      /* _.has---------------------------------- */
-      __.has = has
-      /* _.hasIn-------------------------------- */
-      __.hasIn = hasIn
-      /* _.invert------------------------------- */
-      __.invert = invert
-      /* _.invertBy----------------------------- */
-      __.invertBy = invertBy
-      /* _.invoke------------------------------- */
-      __.invoke = invoke
-      /* _.keys--------------------------------- */
-      __.keys = keys
-      /* _.keysIn------------------------------- */
-      __.keysIn = keysIn
-      /* _.mapKeys------------------------------ */
-      __.mapKeys = mapKeys
-      /* _.mapValues---------------------------- */
-      __.mapValues = mapValues
-      /* _.merge-------------------------------- */
-      __.merge = merge
-      /* _.mergeWith---------------------------- */
-      __.mergeWith = mergeWith
-      /* _.omit--------------------------------- */
-      __.omit = omit
-      /* _.omitBy------------------------------- */
-      __.omitBy = omitBy
-      /* _.pick--------------------------------- */
-      __.pick = pick
-      /* _.pickBy------------------------------- */
-      __.pickBy = pickBy
-      /* _.result------------------------------- */
-      __.result = result
-      /* _.set---------------------------------- */
-      __.set = set
-      /* _.setWith------------------------------ */
-      __.setWith = setWith
-      /* _.toPairs------------------------------ */
-      __.toPairs = toPairs
-      /* _.toPairsIn---------------------------- */
-      __.toPairsIn = toPairsIn
-      /* _.transform---------------------------- */
-      __.transform = transform
-      /* _.unset-------------------------------- */
-      __.unset = unset
-      /* _.update------------------------------- */
-      __.update = update
-      /* _.updateWith--------------------------- */
-      __.updateWith = updateWith
-      /* _.values------------------------------- */
-      __.values = values
-      /* _.valuesIn----------------------------- */
-      __.valuesIn = valuesIn
-      //------------------------------------Seq-------------------------------------------
-      /* _-------------------------------------- */
-      /* _.chain-------------------------------- */
-      __.chain = chain
-      /* _.tap---------------------------------- */
-      __.tap = tap
-      /* _.thru--------------------------------- */
-      __.thru = thru
-      /* _.prototype[Symbol.iterator]----------- */
-      /* _.prototype.at------------------------- */
-      /* _.prototype.chain---------------------- */
-      /* _.prototype.commit--------------------- */
-      /* _.prototype.next----------------------- */
-      /* _.prototype.plant---------------------- */
-      /* _.prototype.reverse-------------------- */
-      /* _.prototype.toJSON -> value------------ */
+    __.isSafeInteger = isSafeInteger;
+    /* _.isSet-------------------------------- */
+    __.isSet = isSet;
+    /* _.isString----------------------------- */
+    __.isString = isString;
+    /* _.isSymbol----------------------------- */
+    __.isSymbol = isSymbol;
+    /* _.isTypedArray------------------------- */
+    __.isTypedArray = isTypedArray;
+    /* _.isUndefined-------------------------- */
+    __.isUndefined = isUndefined;
+    /* _.isWeakMap---------------------------- */
+    __.isWeakMap = isWeakMap;
+    /* _.isWeakSet---------------------------- */
+    __.isWeakSet = isWeakSet;
+    /* _.lt----------------------------------- */
+    __.lt = lt;
+    /* _.lte---------------------------------- */
+    __.lte = lte;
+    /* _.toArray------------------------------ */
+    __.toArray = toArray;
+    /* _.toFinite----------------------------- */
+    __.toFinite = toFinite;
+    /* _.toInteger---------------------------- */
+    __.toInteger = toInteger;
+    /* _.toLength----------------------------- */
+    __.toLength = toLength;
+    /* _.toNumber----------------------------- */
+    __.toNumber = toNumber;
+    /* _.toPlainObject------------------------ */
+    __.toPlainObject = toPlainObject;
+    /* _.toSafeInteger------------------------ */
+    __.toSafeInteger = toSafeInteger;
+    /* _.toString----------------------------- */
+    __.toString = toString;
+    //------------------------------------Math------------------------------------------
+    /* _.add---------------------------------- */
+    __.add = add;
+    /* _.ceil--------------------------------- */
+    __.ceil = ceil;
+    /* _.divide------------------------------- */
+    __.divide = divide;
+    /* _.floor-------------------------------- */
+    __.floor = floor;
+    /* _.max---------------------------------- */
+    __.max = max;
+    /* _.maxBy-------------------------------- */
+    __.maxBy = maxBy;
+    /* _.mean--------------------------------- */
+    __.mean = mean;
+    /* _.meanBy------------------------------- */
+    __.meanBy = meanBy;
+    /* _.min---------------------------------- */
+    __.min = min;
+    /* _.minBy-------------------------------- */
+    __.minBy = minBy;
+    /* _.multiply----------------------------- */
+    __.multiply = multiply;
+    /* _.round-------------------------------- */
+    __.round = round;
+    /* _.subtract----------------------------- */
+    __.subtract = subtract;
+    /* _.sum---------------------------------- */
+    __.sum = sum;
+    /* _.sumBy-------------------------------- */
+    __.sumBy = sumBy;
+    //------------------------------------Number----------------------------------------
+    /* _.clamp-------------------------------- */
+    __.clamp = clamp;
+    /* _.inRange------------------------------ */
+    __.inRange = inRange;
+    /* _.random------------------------------- */
+    __.random = random;
+    //------------------------------------Object----------------------------------------
+    /* _.assign------------------------------- */
+    __.assign = assign;
+    /* _.assignIn----------------------------- */
+    __.assignIn = assignIn;
+    /* _.assignInWith------------------------- */
+    __.assignInWith = assignInWith;
+    /* _.assignWith--------------------------- */
+    __.assignWith = assignWith;
+    /* _.at----------------------------------- */
+    __.at = at;
+    /* _.create------------------------------- */
+    __.create = create;
+    /* _.defaults----------------------------- */
+    __.defaults = defaults;
+    /* _.defaultsDeep------------------------- */
+    __.defaultsDeep = defaultsDeep;
+    /* _.entries -> toPairs------------------- */
+    __.entries = entries;
+    /* _.entriesIn -> toPairsIn--------------- */
+    __.entriesIn = entriesIn;
+    /* _.extend -> assignIn------------------- */
+    __.extend = extend;
+    /* _.extendWith -> assignInWith----------- */
+    __.extendWith = extendWith;
+    /* _.findKey------------------------------ */
+    __.findKey = findKey;
+    /* _.findLastKey-------------------------- */
+    __.findLastKey = findLastKey;
+    /* _.forIn-------------------------------- */
+    __.forIn = forIn;
+    /* _.forInRight--------------------------- */
+    __.forInRight = forInRight;
+    /* _.forOwn------------------------------- */
+    __.forOwn = forOwn;
+    /* _.forOwnRight-------------------------- */
+    __.forOwnRight = forOwnRight;
+    /* _.functions---------------------------- */
+    __.functions = functions;
+    /* _.functionsIn-------------------------- */
+    __.functionsIn = functionsIn;
+    /* _.get---------------------------------- */
+    __.get = get;
+    /* _.has---------------------------------- */
+    __.has = has;
+    /* _.hasIn-------------------------------- */
+    __.hasIn = hasIn;
+    /* _.invert------------------------------- */
+    __.invert = invert;
+    /* _.invertBy----------------------------- */
+    __.invertBy = invertBy;
+    /* _.invoke------------------------------- */
+    __.invoke = invoke;
+    /* _.keys--------------------------------- */
+    __.keys = keys;
+    /* _.keysIn------------------------------- */
+    __.keysIn = keysIn;
+    /* _.mapKeys------------------------------ */
+    __.mapKeys = mapKeys;
+    /* _.mapValues---------------------------- */
+    __.mapValues = mapValues;
+    /* _.merge-------------------------------- */
+    __.merge = merge;
+    /* _.mergeWith---------------------------- */
+    __.mergeWith = mergeWith;
+    /* _.omit--------------------------------- */
+    __.omit = omit;
+    /* _.omitBy------------------------------- */
+    __.omitBy = omitBy;
+    /* _.pick--------------------------------- */
+    __.pick = pick;
+    /* _.pickBy------------------------------- */
+    __.pickBy = pickBy;
+    /* _.result------------------------------- */
+    __.result = result;
+    /* _.set---------------------------------- */
+    __.set = set;
+    /* _.setWith------------------------------ */
+    __.setWith = setWith;
+    /* _.toPairs------------------------------ */
+    __.toPairs = toPairs;
+    /* _.toPairsIn---------------------------- */
+    __.toPairsIn = toPairsIn;
+    /* _.transform---------------------------- */
+    __.transform = transform;
+    /* _.unset-------------------------------- */
+    __.unset = unset;
+    /* _.update------------------------------- */
+    __.update = update;
+    /* _.updateWith--------------------------- */
+    __.updateWith = updateWith;
+    /* _.values------------------------------- */
+    __.values = values;
+    /* _.valuesIn----------------------------- */
+    __.valuesIn = valuesIn;
+    //------------------------------------Seq-------------------------------------------
+    /* _-------------------------------------- */
+    /* _.chain-------------------------------- */
+    __.chain = chain;
+    /* _.tap---------------------------------- */
+    __.tap = tap;
+    /* _.thru--------------------------------- */
+    __.thru = thru;
+    /* _.prototype[Symbol.iterator]----------- */
+    /* _.prototype.at------------------------- */
+    /* _.prototype.chain---------------------- */
+    /* _.prototype.commit--------------------- */
+    /* _.prototype.next----------------------- */
+    /* _.prototype.plant---------------------- */
+    /* _.prototype.reverse-------------------- */
+    /* _.prototype.toJSON -> value------------ */
 
-      //__.prototype.toJSON
-      /* _.prototype.value---------------------- */
+    //__.prototype.toJSON
+    /* _.prototype.value---------------------- */
 
-      // _.prototype.value
-      /* _.prototype.valueOf -> value----------- */
+    // _.prototype.value
+    /* _.prototype.valueOf -> value----------- */
 
-      // _.prototype.valueOf
-      //------------------------------------String----------------------------------------
-      /* _.camelCase---------------------------- */
-      __.camelCase = camelCase
-      /* _.capitalize--------------------------- */
-      __.capitalize = capitalize
-      /* _.deburr------------------------------- */
-      /* _.endsWith----------------------------- */
-      __.endsWith = endsWith
-      /* _.escape------------------------------- */
-      __.escape = escape
-      /* _.escapeRegExp------------------------- */
-      __.escapeRegExp = escapeRegExp
-      /* _.kebabCase---------------------------- */
-      __.kebabCase = kebabCase
-      /* _.lowerCase---------------------------- */
-      __.lowerCase = lowerCase
-      /* _.lowerFirst--------------------------- */
-      __.lowerFirst = lowerFirst
-      /* _.pad---------------------------------- */
-      __.pad = pad
-      /* _.padEnd------------------------------- */
-      __.padEnd = padEnd
-      /* _.padStart----------------------------- */
-      __.padStart = padStart
-      /* _.parseInt----------------------------- */
-      __.parseInt = parseInt
-      /* _.repeat------------------------------- */
-      __.repeat = repeat
-      /* _.replace------------------------------ */
-      __.replace = replace
-      /* _.snakeCase---------------------------- */
-      __.snakeCase = snakeCase
-      /* _.split-------------------------------- */
-      __.split = split
-      /* _.startCase---------------------------- */
-      __.startCase = startCase
-      /* _.startsWith--------------------------- */
-      __.startsWith = startsWith
-      /* _.template----------------------------- */
-      /* _.toLower------------------------------ */
-      __.toLower = toLower
-      /* _.toUpper------------------------------ */
-      __.toUpper = toUpper
-      /* _.trim--------------------------------- */
-      __.trim = trim
-      /* _.trimEnd------------------------------ */
-      __.trimEnd = trimEnd
-      /* _.trimStart---------------------------- */
-      __.trimStart = trimStart
-      /* _.truncate----------------------------- */
-      __.truncate = truncate
-      /* _.unescape----------------------------- */
-      __.unescape = unescape
-      /* _.upperCase---------------------------- */
-      __.upperCase = upperCase
-      /* _.upperFirst--------------------------- */
-      __.upperFirst = upperFirst
-      /* _.words-------------------------------- */
-      __.words = words
-      //------------------------------------Util------------------------------------------
-      /* _.attempt------------------------------ */
-      __.attempt = attempt
-      /* _.bindAll------------------------------ */
-      __.bindAll = bindAll
-      /* _.cond--------------------------------- */
-      __.cond = cond
-      /* _.conforms----------------------------- */
-      __.conforms = conforms
-      /* _.constant----------------------------- */
-      __.constant = constant
-      /* _.defaultTo---------------------------- */
-      __.defaultTo = defaultTo
-      /* _.flow--------------------------------- */
-      __.flow = flow
-      /* _.flowRight---------------------------- */
-      __.flowRight = flowRight
-      /* _.identity----------------------------- */
-      __.identity = identity
-      /* _.iteratee----------------------------- */
-      __.iterate = iterate
-      /* _.matches------------------------------ */
-      __.matches = matches
-      /* _.matchesProperty---------------------- */
-      __.matchesProperty = matchesProperty
-      /* _.method------------------------------- */
-      __.method = method
-      /* _.methodOf----------------------------- */
-      __.methodOf = methodOf
-      /* _.mixin-------------------------------- */
-      __.mixin = mixin
-      /* _.noConflict--------------------------- */
-      __.noConflict = noConflict
-      /* _.noop--------------------------------- */
-      __.noop = noop
-      /* _.nthArg------------------------------- */
-      __.nthArg = nthArg
-      /* _.over--------------------------------- */
-      __.over = over
-      /* _.overEvery---------------------------- */
-      __.overEvery = overEvery
-      /* _.overSome----------------------------- */
-      __.overSome = overSome
-      /* _.property----------------------------- */
-      __.property = property
-      /* _.propertyOf--------------------------- */
-      __.propertyOf = propertyOf
-      /* _.range-------------------------------- */
-      __.range = range
-      /* _.rangeRight--------------------------- */
-      __.rangeRight = rangeRight
-      /* _.runInContext------------------------- */
-      __.runInContext = runInContext
-      /* _.stubArray---------------------------- */
-      __.stubArray = stubArray
-      /* _.stubFalse---------------------------- */
-      __.stubFalse = stubFalse
-      /* _.stubObject--------------------------- */
-      __.stubObject = stubObject
-      /* _.stubString--------------------------- */
-      __.stubString = stubString
-      /* _.stubTrue----------------------------- */
-      __.stubTrue = stubTrue
-      /* _.times-------------------------------- */
-      __.times = times
-      /* _.toPath------------------------------- */
-      __.toPath = toPath
-      /* _.uniqueId----------------------------- */
-      __.uniqueId = uniqueId
-      //------------------------------------Properties------------------------------------
-      /* _.VERSION------------------------------ */
-      /* _.templateSettings--------------------- */
-      /* _.templateSettings.escape-------------- */
-      /* _.templateSettings.evaluate------------ */
-      /* _.templateSettings.imports------------- */
-      /* _.templateSettings.interpolate--------- */
-      /* _.templateSettings.variable------------ */
-      //------------------------------------Methods---------------------------------------
-      /* _.templateSettings.imports._----------- */
-      //parseJson
-      __.parseJson = parseJson
+    // _.prototype.valueOf
+    //------------------------------------String----------------------------------------
+    /* _.camelCase---------------------------- */
+    __.camelCase = camelCase;
+    /* _.capitalize--------------------------- */
+    __.capitalize = capitalize;
+    /* _.deburr------------------------------- */
+    /* _.endsWith----------------------------- */
+    __.endsWith = endsWith;
+    /* _.escape------------------------------- */
+    __.escape = escape;
+    /* _.escapeRegExp------------------------- */
+    __.escapeRegExp = escapeRegExp;
+    /* _.kebabCase---------------------------- */
+    __.kebabCase = kebabCase;
+    /* _.lowerCase---------------------------- */
+    __.lowerCase = lowerCase;
+    /* _.lowerFirst--------------------------- */
+    __.lowerFirst = lowerFirst;
+    /* _.pad---------------------------------- */
+    __.pad = pad;
+    /* _.padEnd------------------------------- */
+    __.padEnd = padEnd;
+    /* _.padStart----------------------------- */
+    __.padStart = padStart;
+    /* _.parseInt----------------------------- */
+    __.parseInt = parseInt;
+    /* _.repeat------------------------------- */
+    __.repeat = repeat;
+    /* _.replace------------------------------ */
+    __.replace = replace;
+    /* _.snakeCase---------------------------- */
+    __.snakeCase = snakeCase;
+    /* _.split-------------------------------- */
+    __.split = split;
+    /* _.startCase---------------------------- */
+    __.startCase = startCase;
+    /* _.startsWith--------------------------- */
+    __.startsWith = startsWith;
+    /* _.template----------------------------- */
+    /* _.toLower------------------------------ */
+    __.toLower = toLower;
+    /* _.toUpper------------------------------ */
+    __.toUpper = toUpper;
+    /* _.trim--------------------------------- */
+    __.trim = trim;
+    /* _.trimEnd------------------------------ */
+    __.trimEnd = trimEnd;
+    /* _.trimStart---------------------------- */
+    __.trimStart = trimStart;
+    /* _.truncate----------------------------- */
+    __.truncate = truncate;
+    /* _.unescape----------------------------- */
+    __.unescape = unescape;
+    /* _.upperCase---------------------------- */
+    __.upperCase = upperCase;
+    /* _.upperFirst--------------------------- */
+    __.upperFirst = upperFirst;
+    /* _.words-------------------------------- */
+    __.words = words;
+    //------------------------------------Util------------------------------------------
+    /* _.attempt------------------------------ */
+    __.attempt = attempt;
+    /* _.bindAll------------------------------ */
+    __.bindAll = bindAll;
+    /* _.cond--------------------------------- */
+    __.cond = cond;
+    /* _.conforms----------------------------- */
+    __.conforms = conforms;
+    /* _.constant----------------------------- */
+    __.constant = constant;
+    /* _.defaultTo---------------------------- */
+    __.defaultTo = defaultTo;
+    /* _.flow--------------------------------- */
+    __.flow = flow;
+    /* _.flowRight---------------------------- */
+    __.flowRight = flowRight;
+    /* _.identity----------------------------- */
+    __.identity = identity;
+    /* _.iteratee----------------------------- */
+    __.iterate = iterate;
+    /* _.matches------------------------------ */
+    __.matches = matches;
+    /* _.matchesProperty---------------------- */
+    __.matchesProperty = matchesProperty;
+    /* _.method------------------------------- */
+    __.method = method;
+    /* _.methodOf----------------------------- */
+    __.methodOf = methodOf;
+    /* _.mixin-------------------------------- */
+    __.mixin = mixin;
+    /* _.noConflict--------------------------- */
+    __.noConflict = noConflict;
+    /* _.noop--------------------------------- */
+    __.noop = noop;
+    /* _.nthArg------------------------------- */
+    __.nthArg = nthArg;
+    /* _.over--------------------------------- */
+    __.over = over;
+    /* _.overEvery---------------------------- */
+    __.overEvery = overEvery;
+    /* _.overSome----------------------------- */
+    __.overSome = overSome;
+    /* _.property----------------------------- */
+    __.property = property;
+    /* _.propertyOf--------------------------- */
+    __.propertyOf = propertyOf;
+    /* _.range-------------------------------- */
+    __.range = range;
+    /* _.rangeRight--------------------------- */
+    __.rangeRight = rangeRight;
+    /* _.runInContext------------------------- */
+    __.runInContext = runInContext;
+    /* _.stubArray---------------------------- */
+    __.stubArray = stubArray;
+    /* _.stubFalse---------------------------- */
+    __.stubFalse = stubFalse;
+    /* _.stubObject--------------------------- */
+    __.stubObject = stubObject;
+    /* _.stubString--------------------------- */
+    __.stubString = stubString;
+    /* _.stubTrue----------------------------- */
+    __.stubTrue = stubTrue;
+    /* _.times-------------------------------- */
+    __.times = times;
+    /* _.toPath------------------------------- */
+    __.toPath = toPath;
+    /* _.uniqueId----------------------------- */
+    __.uniqueId = uniqueId;
+    //------------------------------------Properties------------------------------------
+    /* _.VERSION------------------------------ */
+    /* _.templateSettings--------------------- */
+    /* _.templateSettings.escape-------------- */
+    /* _.templateSettings.evaluate------------ */
+    /* _.templateSettings.imports------------- */
+    /* _.templateSettings.interpolate--------- */
+    /* _.templateSettings.variable------------ */
+    //------------------------------------Methods---------------------------------------
+    /* _.templateSettings.imports._----------- */
+    //parseJson
+    __.parseJson = parseJson;
 
-      //方法挂在到prototype上
-      __.mixin(__)
+    //方法挂在到prototype上
+    __.mixin(__);
 
-      return __
-  }
+    return __;
+  };
 
-  root.tcdian = root.__ = _runInContext()
-
-}).call(this)
+  root.tcdian = root.__ = _runInContext();
+}.call(this));
