@@ -66,7 +66,7 @@
             '<': '&lt;',
             '>': '&gt;',
             '"': '&quot;',
-            "'": '&#39;',
+            '\'': '&#39;',
         };
 
         // Used to map HTML entities to characters.
@@ -75,7 +75,7 @@
             '&lt;': '<',
             '&gt;': '>',
             '&quot;': '"',
-            '&#39;': "'",
+            '&#39;': '\'',
         };
         // Demilitarized zone
         var DMZ = Object.create(null);
