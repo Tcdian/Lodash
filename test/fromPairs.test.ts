@@ -1,19 +1,11 @@
 import _ from 'lodash';
 import fromPairs from '../source/fromPairs';
 
-test(`fromPairs([['a', 1], ['b', 2]]) => ${_.fromPairs([
+const pairs: [string, number][] = [
     ['a', 1],
     ['b', 2],
-])}`, () => {
-    expect(
-        fromPairs([
-            ['a', 1],
-            ['b', 2],
-        ])
-    ).toEqual(
-        _.fromPairs([
-            ['a', 1],
-            ['b', 2],
-        ])
-    );
+];
+
+test(`fromPairs([['a', 1], ['b', 2]]) => ${_.fromPairs(pairs)}`, () => {
+    expect(fromPairs(pairs)).toEqual(_.fromPairs(pairs));
 });
