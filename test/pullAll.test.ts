@@ -8,13 +8,16 @@ beforeEach(() => {
     arr2 = ['a', 'b', 'c', 'b', 'c'];
 });
 
-test("pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a']) => ['b', 'c', 'b', 'c']", () => {
+test(`pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a']) => ${pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a'])}`, () => {
     _.pullAll(arr1, ['a']);
     pullAll(arr2, ['a']);
     expect(arr1).toEqual(arr2);
 });
 
-test("pullAll(['a', 'b', 'c', 'a', 'b', 'c'], 'a', 'c') => ['b', 'b']", () => {
+test(`pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a', 'c']) => ${pullAll(
+    ['a', 'b', 'c', 'a', 'b', 'c'],
+    ['a', 'c']
+)}`, () => {
     _.pullAll(arr1, ['a', 'c']);
     pullAll(arr2, ['a', 'c']);
     expect(arr1).toEqual(arr2);

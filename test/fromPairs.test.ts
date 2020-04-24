@@ -6,6 +6,6 @@ const pairs: [string, number][] = [
     ['b', 2],
 ];
 
-test(`fromPairs([['a', 1], ['b', 2]]) => ${_.fromPairs(pairs)}`, () => {
+test(`fromPairs([['a', 1], ['b', 2]]) => ${fromPairs(pairs)}`, () => {
     expect(fromPairs(pairs)).toEqual(_.fromPairs(pairs));
 });
