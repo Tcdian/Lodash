@@ -1,12 +1,14 @@
-interface Dictionary {
-    [propertyKey: string]: any;
+interface Dictionary<T> {
+    [propertyKey: string]: T;
 }
 
-function fromPairs(pairs: [string, any][]): Dictionary {
-    const result: Dictionary = {};
+type PropertyName = string | number | symbol;
+
+function fromPairs<T>(pairs: [PropertyName, T][]): Dictionary<T> {
+    const result: Dictionary<T> = {};
     for (let i = 0; i < pairs.length; i++) {
         const [key, value] = pairs[i];
-        result[key] = value;
+        Object.assign(result, { [key]: value });
     }
     return result;
 }
