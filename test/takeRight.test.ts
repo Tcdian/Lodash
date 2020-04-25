@@ -16,3 +16,7 @@ test(`takeRight([1, 2, 3], 5) => ${takeRight([1, 2, 3], 5)}`, () => {
 test(`takeRight([1, 2, 3], 0) => ${takeRight([1, 2, 3], 0)}`, () => {
     expect(takeRight([1, 2, 3], 0)).toEqual(_.takeRight([1, 2, 3], 0));
 });
+
+test(`takeRight([1, 2, 3], 0) => ${takeRight([1, 2, 3], 0)}`, () => {
+    expect(takeRight([1, 2, 3], 0)).toEqual(_.takeRight([1, 2, 3], 0));
+});
