@@ -14,7 +14,6 @@ function sortedIndex<T>(array: T[], value: T): number {
             right = mid;
         }
     }
-
     return left;
 }
 

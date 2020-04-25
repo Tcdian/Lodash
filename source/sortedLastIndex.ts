@@ -5,7 +5,6 @@ function sortedLastIndex<T>(array: T[], value: T): number {
 
     let left = 0;
     let right = array.length - 1;
-
     while (left < right) {
         const mid = Math.ceil((left + right) / 2);
         if (array[mid] > value) {
@@ -14,7 +13,6 @@ function sortedLastIndex<T>(array: T[], value: T): number {
             left = mid;
         }
     }
-
     return left + 1;
 }
 
