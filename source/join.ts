@@ -1,4 +1,4 @@
-function join<T>(array: T[], separator: string = ','): string {
+function join(array: any[], separator: string = ','): string {
     return array.join(separator);
 }
 
