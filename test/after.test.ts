@@ -2,11 +2,11 @@ import after from '../source/after';
 
 test('after 函数测试', () => {
     const mockFn = jest.fn();
-    const afterCalledFunc = after(2, mockFn);
-    afterCalledFunc();
+    const calledFunc = after(2, mockFn);
+    calledFunc();
     expect(mockFn).not.toBeCalled();
-    afterCalledFunc();
-    expect(mockFn).toBeCalled();
-    afterCalledFunc();
+    calledFunc();
+    expect(mockFn).toBeCalledTimes(1);
+    calledFunc();
     expect(mockFn).toBeCalledTimes(2);
 });
