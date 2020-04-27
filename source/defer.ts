@@ -1,9 +1,7 @@
-const ø = Object.create(null);
+import delay from './delay';
 
 function defer(func: (...args: any[]) => any, ...args: any[]): number {
-    return setTimeout(() => {
-        return func.call(ø, ...args);
-    }, 1);
+    return delay(func, 0, ...args);
 }
 
 export default defer;
