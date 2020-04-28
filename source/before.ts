@@ -1,6 +1,6 @@
 type Func = (...args: any[]) => any;
 
-function before<TFunc extends Func>(n: number, func: TFunc): TFunc;
+function before<T extends Func>(n: number, func: T): T;
 function before(n: number, func: Func): Func {
     let result: any;
     return function (this: any, ...args: any[]): any {
