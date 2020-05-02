@@ -15,7 +15,9 @@ type TypeTag =
     | '[object Set]'
     | '[object String]'
     | '[object Symbol]'
-    | '[object Undefined]';
+    | '[object Undefined]'
+    | '[object WeakMap]'
+    | '[object WeakSet]';
 
 const objectProto = Object.prototype;
 
