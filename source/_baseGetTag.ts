@@ -17,8 +17,10 @@ type TypeTag =
     | '[object Symbol]'
     | '[object Undefined]';
 
+const objectProto = Object.prototype;
+
 function _baseGetTag(value: any): TypeTag {
-    return Object.prototype.toString.call(value) as TypeTag;
+    return objectProto.toString.call(value) as TypeTag;
 }
 
 export default _baseGetTag;
