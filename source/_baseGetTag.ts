@@ -1,5 +1,6 @@
 type TypeTag =
     | '[object Array]'
+    | '[object ArrayBuffer]'
     | '[object AsyncFunction]'
     | '[object Boolean]'
     | '[object Date]'
