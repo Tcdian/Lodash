@@ -1,7 +1,10 @@
 import isEmpty from './isEmpty';
 
-function max(array: number[]): number | undefined {
-    return isEmpty(array) ? undefined : Math.max(...array);
+function max<T>(array: T[]): T | undefined {
+    if (isEmpty(array)) {
+        return undefined;
+    }
+    return array.reduce((previous, current) => (previous > current ? previous : current));
 }
 
 export default max;
