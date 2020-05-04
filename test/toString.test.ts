@@ -16,3 +16,7 @@ test(`toString([1, 2, 3]) => ${toString([1, 2, 3])}`, () => {
 test(`toString(Symbol(1)) => ${toString(Symbol(1))}`, () => {
     expect(toString(Symbol(1))).toBe(_.toString(Symbol(1)));
 });
+
+test(`toString([Symbol(1), Symbol(2), Symbol(3)]) => ${toString([Symbol(1), Symbol(2), Symbol(3)])}`, () => {
+    expect(toString([Symbol(1), Symbol(2), Symbol(3)])).toBe(_.toString([Symbol(1), Symbol(2), Symbol(3)]));
+});

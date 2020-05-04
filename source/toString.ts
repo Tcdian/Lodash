@@ -13,7 +13,7 @@ function toString(value: any): string {
         return value;
     }
     if (isArray(value)) {
-        return value.join();
+        return value.map((item) => toString(item)) + '';
     }
     if (isSymbol(value)) {
         return symbolProto.toString.call(value);
