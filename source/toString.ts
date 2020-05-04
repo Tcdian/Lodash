@@ -1,0 +1,25 @@
+import isNil from './isNil';
+import isString from './isString';
+import isArray from './isArray';
+import isSymbol from './isSymbol';
+
+const symbolProto = Symbol.prototype;
+
+function toString(value: any): string {
+    if (isNil(value)) {
+        return '';
+    }
+    if (isString(value)) {
+        return value;
+    }
+    if (isArray(value)) {
+        return value.join();
+    }
+    if (isSymbol(value)) {
+        return symbolProto.toString.call(value);
+    }
+    let result = value + '';
+    return result === '0' && 1 / value == -Infinity ? '-0' : result;
+}
+
+export default toString;
