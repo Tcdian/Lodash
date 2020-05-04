@@ -17,6 +17,22 @@ class Bar {
     }
 }
 
+let foo: Foo;
+let bar: Bar;
+
+beforeEach(() => {
+    foo = new Foo();
+    bar = new Bar();
+});
+
 test('assign', () => {
-    expect(assign({ a: 0 }, new Foo(), new Bar())).toEqual(_.assign({ a: 0 }, new Foo(), new Bar()));
+    expect(assign({ a: 0 }, foo)).toEqual(_.assign({ a: 0 }, foo));
+});
+
+test('assign', () => {
+    expect(assign({ a: 0 }, bar)).toEqual(_.assign({ a: 0 }, bar));
+});
+
+test('assign', () => {
+    expect(assign({ a: 0 }, foo, bar)).toEqual(_.assign({ a: 0 }, foo, bar));
 });
