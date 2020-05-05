@@ -1,8 +1,9 @@
 import _ from 'lodash';
+import create from '../source/create';
 import entries from '../source/entries';
 
-test(`entries({ a: 1, b: 2 }) => ${entries({ a: 1, b: 2 })}`, () => {
-    expect(entries({ a: 1, b: 2 })).toEqual(_.entries({ a: 1, b: 2 }));
+test(`entries(create({ a: 1 }, { b: 2 })) => ${entries(create({ a: 1 }, { b: 2 }))}`, () => {
+    expect(entries(create({ a: 1 }, { b: 2 }))).toEqual(_.entries(create({ a: 1 }, { b: 2 })));
 });
 
 test(`entries(new Set([1])) => ${entries(new Set([1]))}`, () => {
