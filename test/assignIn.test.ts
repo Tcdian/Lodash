@@ -1,28 +1,13 @@
 import _ from 'lodash';
+import create from '../source/create';
 import assignIn from '../source/assignIn';
 
-class Foo {
-    static b = 2;
-    public a: number;
-    constructor() {
-        this.a = 1;
-    }
-}
-
-class Bar {
-    static d = 4;
-    public c: number;
-    constructor() {
-        this.c = 3;
-    }
-}
-
-let foo: Foo;
-let bar: Bar;
+let foo: { a: number; b: number };
+let bar: { c: number; d: number };
 
 beforeEach(() => {
-    foo = new Foo();
-    bar = new Bar();
+    foo = create({ b: 2 }, { a: 1 });
+    bar = create({ d: 4 }, { c: 3 });
 });
 
 test('assignIn', () => {
