@@ -4316,8 +4316,8 @@
         (Object): Returns the new object.
     **/
 
-        function create(prororype, properties) {
-            return Object.create(prororype, properties);
+        function create(prototype, properties) {
+            return Object.create(prototype, properties);
         }
 
         // _.defaults--------------------------------------------------------------//
