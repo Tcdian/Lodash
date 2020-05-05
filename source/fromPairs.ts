@@ -1,5 +1,5 @@
 interface Dictionary<T> {
-    [propertyKey: string]: T;
+    [index: string]: T;
 }
 
 type PropertyName = string | number | symbol;
