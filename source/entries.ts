@@ -8,6 +8,7 @@ interface Dictionary<T> {
 interface NumericDictionary<T> {
     [index: number]: T;
 }
+
 function entries<T>(object: Dictionary<T> | NumericDictionary<T>): [string, T][];
 function entries<T>(set: Set<T>): [T, T][];
 function entries<T, U>(map: Map<T, U>): [T, U][];

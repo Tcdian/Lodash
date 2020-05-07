@@ -1,6 +1,5 @@
 import isFunction from './isFunction';
 
-function functionsIn<T extends object, U extends keyof T>(object: T): U[];
 function functionsIn(object: any): string[] {
     const result: string[] = [];
     for (let key in object) {
