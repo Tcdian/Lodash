@@ -1,4 +1,7 @@
-function trimStart(string: string, chars: string = ' '): string {
+function trimStart(string: string, chars?: string, guard?: any): string {
+    if (guard || chars === undefined) {
+        return string.trimStart();
+    }
     const cache = new Set(chars);
     let start = 0;
     for (let i = 0; i < string.length; i++) {
