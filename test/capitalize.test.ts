@@ -4,3 +4,7 @@ import capitalize from '../source/capitalize';
 test(`capitalize('FRED') => ${capitalize('FRED')}`, () => {
     expect(capitalize('FRED')).toBe(_.capitalize('FRED'));
 });
+
+test(`capitalize('Fred') => ${capitalize('Fred')}`, () => {
+    expect(capitalize('Fred')).toBe(_.capitalize('Fred'));
+});
