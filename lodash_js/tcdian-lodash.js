@@ -222,8 +222,8 @@
             };
         }
 
-        // _baseregexpTest 正则 test 方法
-        function _baseregexpTest(val) {
+        // _baseRegExpTest 正则 test 方法
+        function _baseRegExpTest(val) {
             return function (obj) {
                 return val.test(obj);
             };
@@ -236,7 +236,7 @@
             if (isObject(val)) {
                 if (isArray(val)) return _baseMatchesProperty(val[0], val[1]);
                 //lodash 没有考虑正则匹配
-                if (isRegExp(val)) return _baseregexpTest(val);
+                if (isRegExp(val)) return _baseRegExpTest(val);
                 return matches(val);
             }
             return property(val);
