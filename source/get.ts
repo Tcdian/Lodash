@@ -39,9 +39,9 @@ function get<
     TKey3 extends keyof TObject[TKey1][TKey2],
     TDefault
 >(object: TObject, path: [TKey1, TKey2, TKey3]): Exclude<TObject[TKey1][TKey2][TKey3], undefined> | TDefault;
-function get<T>(object: Dictionary<T> | NumericDictionary<T>, path: PropertyPath): T;
+function get<T>(object: T[] | Dictionary<T> | NumericDictionary<T>, path: PropertyPath): T;
 function get<T, TDefault>(
-    object: Dictionary<T> | NumericDictionary<T>,
+    object: T[] | Dictionary<T> | NumericDictionary<T>,
     path: PropertyPath,
     defaultValue: TDefault
 ): Exclude<T, undefined> | TDefault;

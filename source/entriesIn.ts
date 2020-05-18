@@ -9,7 +9,7 @@ interface NumericDictionary<T> {
     [index: number]: T;
 }
 
-function entriesIn<T>(object: Dictionary<T> | NumericDictionary<T>): [string, T][];
+function entriesIn<T>(object: T[] | Dictionary<T> | NumericDictionary<T>): [string, T][];
 function entriesIn<T>(set: Set<T>): [T, T][];
 function entriesIn<T, U>(map: Map<T, U>): [T, U][];
 function entriesIn<T>(object: Dictionary<T>): [string, T][] {
