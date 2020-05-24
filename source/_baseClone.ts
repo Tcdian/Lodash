@@ -54,14 +54,14 @@ function _baseClone(
             return [...value];
         }
         result = new Array(value.length);
-        value.forEach((subValue, index) => {
-            result[index] = _baseClone(subValue, bitmask, customizer, index, value, cache);
-        });
-        return result;
     } else {
         const tag = _baseGetTag(value);
-        if (tag === '[object Object]' || tag === '[object Set]' || tag === '[object Map]') {
+        if (tag === '[object Object]') {
             result = Object.create(Object.getPrototypeOf(value));
+        } else if (tag === '[object Set]') {
+            result = new Set();
+        } else if (tag === '[object Map]') {
+            result = new Map();
         } else {
             // todo ... 函数，正则和其它包装对象
             result = {};
@@ -73,15 +73,24 @@ function _baseClone(
     }
     cache.set(value, result);
 
+    if (isArray(value)) {
+        value.forEach((subValue, index) => {
+            result[index] = _baseClone(subValue, bitmask, customizer, index, value, cache);
+        });
+        return result;
+    }
+
     if (isSet(value)) {
         value.forEach((subValue) => {
             result.add(_baseClone(subValue, bitmask, customizer, subValue, value, cache));
         });
+        return result;
     }
     if (isMap(value)) {
         value.forEach((subValue, key) => {
             result.set(key, _baseClone(subValue, bitmask, customizer, key, value, cache));
         });
+        return result;
     }
     const keysFunc = isFlat ? (isFull ? getAllKeys : keysIn) : isFull ? getAllKeysIn : keys;
     keysFunc(value).forEach((key) => {

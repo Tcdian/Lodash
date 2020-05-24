@@ -15,6 +15,7 @@ test("cloneDeep([ { a: 1, [Symbol('a')]: 1 }, { b: 2, [Symbol('b')]: 2 } ])", ()
 interface RecursiveArray extends Array<RecursiveArray> {}
 
 const recursiveArray: RecursiveArray = [];
+recursiveArray[0] = recursiveArray;
 
 test('cloneDeep 循环引用数组', () => {
     const shallow = cloneDeep(recursiveArray);
@@ -43,4 +44,14 @@ test('cloneDeep 循环引用对象', () => {
     expect(shallow).toEqual(recursiveObject1);
     expect(shallow).not.toBe(recursiveObject1);
     expect(shallow.quote).not.toBe(recursiveObject1.quote);
+});
+
+const set = new Set([
+    { a: 1, b: 1 },
+    { a: 2, b: 2 },
+]);
+
+test('cloneDeep(new Set([ { a: 1, b: 1 }, { a: 2, b: 2 } ]))', () => {
+    const shallow = cloneDeep(set);
+    expect(shallow).toEqual(set);
 });
