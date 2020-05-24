@@ -54,6 +54,10 @@ function _baseClone(
             return [...value];
         }
         result = new Array(value.length);
+        value.forEach((subValue, index) => {
+            result[index] = _baseClone(subValue, bitmask, customizer, index, value, cache);
+        });
+        return result;
     } else {
         const tag = _baseGetTag(value);
         if (tag === '[object Object]' || tag === '[object Set]' || tag === '[object Map]') {
@@ -82,7 +86,7 @@ function _baseClone(
     const keysFunc = isFlat ? (isFull ? getAllKeys : keysIn) : isFull ? getAllKeysIn : keys;
     keysFunc(value).forEach((key) => {
         Object.assign(result, {
-            key: _baseClone((value as any)[key], bitmask, customizer, isArray(value) ? Number(key) : key, value, cache),
+            [key]: _baseClone((value as any)[key], bitmask, customizer, key, value, cache),
         });
     });
     return result;
