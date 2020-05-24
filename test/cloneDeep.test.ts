@@ -1,8 +1,11 @@
 import cloneDeep from '../source/cloneDeep';
 
-const objects = [{ a: 1 }, { b: 2 }];
+const objects = [
+    { a: 1, [Symbol('a')]: 1 },
+    { b: 2, [Symbol('b')]: 2 },
+];
 
-test('cloneDeep([{ a: 1 }, { b: 2 }])', () => {
+test("cloneDeep([ { a: 1, [Symbol('a')]: 1 }, { b: 2, [Symbol('b')]: 2 } ])", () => {
     const shallow = cloneDeep(objects);
     expect(shallow).toEqual(objects);
     expect(shallow).not.toBe(objects);
