@@ -56,15 +56,38 @@ function _baseClone(
         result = new Array(value.length);
     } else {
         const tag = _baseGetTag(value);
-        if (tag === '[object Object]') {
-            result = Object.create(Object.getPrototypeOf(value));
-        } else if (tag === '[object Set]') {
-            result = new Set();
-        } else if (tag === '[object Map]') {
-            result = new Map();
-        } else {
-            // todo ... 函数，正则和其它包装对象
-            result = {};
+        switch (tag) {
+            case '[object Object]':
+                result = Object.create(Object.getPrototypeOf(value));
+                break;
+            case '[object Set]':
+                result = new Set();
+                break;
+            case '[object Map]':
+                result = new Map();
+                break;
+            case '[object RegExp]':
+                result = new RegExp((value as RegExp).source, (value as RegExp).flags);
+                result.lastIndex = (value as RegExp).lastIndex;
+                break;
+            case '[object Date]':
+                result = new Date((value as Date).valueOf());
+                break;
+            case '[object String]':
+                result = new String((value as String).valueOf());
+                break;
+            case '[object Boolean]':
+                result = new Boolean((value as Boolean).valueOf());
+                break;
+            case '[object Number]':
+                result = new Number((value as Number).valueOf());
+                break;
+            case '[object Symbol]':
+                result = Object(Symbol.prototype.valueOf.call(value as Symbol));
+                break;
+            default:
+                result = {};
+                break;
         }
     }
 
@@ -77,22 +100,20 @@ function _baseClone(
         value.forEach((subValue, index) => {
             result[index] = _baseClone(subValue, bitmask, customizer, index, value, cache);
         });
-        return result;
     }
 
     if (isSet(value)) {
         value.forEach((subValue) => {
             result.add(_baseClone(subValue, bitmask, customizer, subValue, value, cache));
         });
-        return result;
     }
     if (isMap(value)) {
         value.forEach((subValue, key) => {
             result.set(key, _baseClone(subValue, bitmask, customizer, key, value, cache));
         });
-        return result;
     }
-    const keysFunc = isFlat ? (isFull ? getAllKeys : keysIn) : isFull ? getAllKeysIn : keys;
+
+    const keysFunc = isFlat ? (isFull ? getAllKeysIn : keysIn) : isFull ? getAllKeys : keys;
     keysFunc(value).forEach((key) => {
         Object.assign(result, {
             [key]: _baseClone((value as any)[key], bitmask, customizer, key, value, cache),
