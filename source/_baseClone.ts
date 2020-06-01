@@ -101,7 +101,6 @@ function _baseClone(
             result[index] = _baseClone(subValue, bitmask, customizer, index, value, cache);
         });
     }
-
     if (isSet(value)) {
         value.forEach((subValue) => {
             result.add(_baseClone(subValue, bitmask, customizer, subValue, value, cache));
