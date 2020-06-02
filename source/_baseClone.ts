@@ -9,29 +9,16 @@ import keysIn from './keysIn';
 import getAllKeys from './getAllKeys';
 import getAllKeysIn from './getAllKeysIn';
 
-type CloneWithCustomizer<TSource, TTarget> = (
-    value: TSource,
-    key?: any,
-    object?: object,
-    cache?: Map<TSource, TSource | TTarget>
-) => TTarget;
+type Func = (...args: any) => any;
 
 const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_FLAT_FLAG = 1 << 1;
 const CLONE_SYMBOLS_FLAG = 1 << 2;
 
-function _baseClone<TSource, TTarget>(
-    value: TSource,
-    bitmask: number,
-    customizer?: CloneWithCustomizer<TSource, TTarget>,
-    key?: any,
-    Object?: any,
-    cache?: Map<TSource, TSource | TTarget>
-): TSource | TTarget;
 function _baseClone(
     value: any,
     bitmask: number,
-    customizer?: any,
+    customizer?: Func,
     key?: any,
     object?: any,
     cache: Map<any, any> = new Map()
