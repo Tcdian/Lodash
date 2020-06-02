@@ -35,7 +35,7 @@ test('debounce flush', () => {
     expect(mockFn).toBeCalled();
 });
 
-test('debounce', () => {
+test('debounce leading = true', () => {
     const mockFn = jest.fn();
     const debounced = debounce(mockFn, 1000, { leading: true });
     debounced();
