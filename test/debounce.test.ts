@@ -3,7 +3,7 @@ import debounce from '../source/debounce';
 jest.useFakeTimers();
 
 test('debounce', () => {
-    const mockFn = jest.fn((x: number) => x);
+    const mockFn = jest.fn();
     const debounced = debounce(mockFn, 1000);
     debounced(1);
     expect(mockFn).not.toBeCalled();
