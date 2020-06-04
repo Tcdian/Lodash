@@ -29,6 +29,15 @@ function throttle(
     let lastThis: any;
     let lastArgs: any[] | undefined;
 
+    function invokeFunc(time: number) {
+        if (lastArgs !== undefined) {
+            result = func.call(lastThis, ...lastArgs);
+            lastInvokeTime = time;
+            timer = lastThis = lastArgs = undefined;
+        }
+        return result;
+    }
+
     function throttled(this: any, ...args: any) {
         const time = Date.now();
         lastThis = this;
@@ -44,33 +53,24 @@ function throttle(
                 timer = undefined;
             }
             result = invokeFunc(time);
-        } else if (trailing && !timer) {
+        } else if (trailing && timer === undefined) {
             timer = setTimeout(() => {
-                if (!leading) {
-                    lastInvokeTime = 0;
-                }
-                result = invokeFunc();
+                result = invokeFunc(leading ? Date.now() : 0);
             }, remaining);
         }
-    }
-
-    function invokeFunc(time: number = Date.now()) {
-        if (lastArgs !== undefined) {
-            result = func.call(lastThis, ...lastArgs);
-        }
-        lastInvokeTime = time;
-        timer = lastThis = lastArgs = undefined;
         return result;
     }
 
     throttled.cancel = function () {
-        clearTimeout(timer);
+        if (timer !== undefined) {
+            clearTimeout(timer);
+        }
         timer = lastThis = lastArgs = undefined;
         lastInvokeTime = 0;
     };
 
     throttled.flush = function () {
-        return trailing ? invokeFunc(Date.now()) : result;
+        return timer === undefined ? result : invokeFunc(leading ? Date.now() : 0);
     };
 
     return throttled;

@@ -9,7 +9,6 @@ test('throttle', () => {
     expect(mockFn).toBeCalledTimes(1);
     expect(mockFn).toBeCalledWith(1);
     throttled(2);
-    jest.advanceTimersByTime(500);
     expect(mockFn).toBeCalledTimes(1);
     expect(mockFn).toBeCalledWith(1);
     jest.advanceTimersByTime(1000);
@@ -21,7 +20,6 @@ test('throttle cancel', () => {
     const mockFn = jest.fn();
     const throttled = throttle(mockFn, 1000);
     throttled();
-    jest.advanceTimersByTime(500);
     expect(mockFn).toBeCalledTimes(1);
     throttled.cancel();
     jest.advanceTimersByTime(1000);
@@ -49,6 +47,10 @@ test('throttle leading = false', () => {
     expect(mockFn).toBeCalledTimes(1);
     jest.advanceTimersByTime(1000);
     expect(mockFn).toBeCalledTimes(2);
+    throttled();
+    expect(mockFn).toBeCalledTimes(2);
+    jest.advanceTimersByTime(1000);
+    expect(mockFn).toBeCalledTimes(3);
 });
 
 test('throttle trailing = false', () => {
@@ -57,6 +59,6 @@ test('throttle trailing = false', () => {
     throttled();
     expect(mockFn).toBeCalledTimes(1);
     throttled();
-    jest.advanceTimersByTime(2000);
+    jest.advanceTimersByTime(1000);
     expect(mockFn).toBeCalledTimes(1);
 });
