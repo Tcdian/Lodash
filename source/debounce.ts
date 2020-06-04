@@ -23,6 +23,14 @@ function debounce(
     let lastThis: any;
     let lastArgs: any[] | undefined;
 
+    function invokeFunc() {
+        if (lastArgs !== undefined) {
+            result = func.call(lastThis, ...lastArgs);
+            timer = lastThis = lastArgs = undefined;
+        }
+        return result;
+    }
+
     function debounced(this: any, ...args: any[]) {
         lastThis = this;
         lastArgs = args;
@@ -36,14 +44,6 @@ function debounce(
         timer = setTimeout(() => {
             result = invokeFunc();
         }, wait);
-        return result;
-    }
-
-    function invokeFunc() {
-        if (lastArgs !== undefined) {
-            result = func.call(lastThis, ...lastArgs);
-            timer = lastThis = lastArgs = undefined;
-        }
         return result;
     }
 
