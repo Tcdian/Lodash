@@ -72,6 +72,11 @@ function _baseClone(
             case '[object Symbol]':
                 result = Object(Symbol.prototype.valueOf.call(value as Symbol));
                 break;
+            case '[object Function]':
+            case '[object AsyncFunction]':
+            case '[object GeneratorFunction]':
+                result = object ? value : {};
+                break;
             default:
                 result = {};
                 break;
