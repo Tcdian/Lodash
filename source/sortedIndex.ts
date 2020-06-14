@@ -5,9 +5,9 @@ function sortedIndex<T>(array: T[], value: T): number {
     }
 
     let left = 0;
-    let right = array.length - 1;
+    let right = len - 1;
     while (left < right) {
-        const mid = Math.floor((left + right) / 2);
+        const mid = (left + right) >> 1;
         if (array[mid] < value) {
             left = mid + 1;
         } else {
