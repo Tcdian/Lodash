@@ -1,5 +1,7 @@
+import drop from './drop';
+
 function tail<T>(array: T[]): T[] {
-    return array.slice(1);
+    return drop(array, 1);
 }
 
 export default tail;
