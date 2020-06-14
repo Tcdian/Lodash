@@ -5,9 +5,29 @@ import last from './last';
 import initial from './initial';
 import tail from './tail';
 
-type comparator<T> = (a: T, b: T) => boolean;
+type Comparator<T> = (a: T, b: T) => boolean;
 
-function intersectionWith<T>(...arrays: (T[] | comparator<T>)[]): T[] {
+function intersectionWith<T>(array: T[], other: T[], comparator: Comparator<T>): T[];
+function intersectionWith<T>(array: T[], other1: T[], other2: T[], comparator: Comparator<T>): T[];
+function intersectionWith<T>(array: T[], other1: T[], other2: T[], other3: T[], comparator: Comparator<T>): T[];
+function intersectionWith<T>(
+    array: T[],
+    other1: T[],
+    other2: T[],
+    other3: T[],
+    other4: T[],
+    comparator: Comparator<T>
+): T[];
+function intersectionWith<T>(
+    array: T[],
+    other1: T[],
+    other2: T[],
+    other3: T[],
+    other4: T[],
+    other5: T[],
+    comparator: Comparator<T>
+): T[];
+function intersectionWith<T>(...arrays: (T[] | Comparator<T>)[]): T[] {
     const comparator = last(arrays);
     if (isArray(comparator)) {
         return intersection(...(arrays as T[][]));
