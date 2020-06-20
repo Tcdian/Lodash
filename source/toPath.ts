@@ -7,7 +7,7 @@ function toPath(value: any): (string | symbol)[] {
         return [value];
     }
     if (isArray(value)) {
-        return value.map((item) => (isSymbol(item) ? item : toString(item)));
+        return value.map((arrVal) => (isSymbol(arrVal) ? arrVal : toString(arrVal)));
     }
     return toString(value)
         .replace(/\[+\.*/g, '.')

@@ -6,7 +6,7 @@ function unzipWith<T, TResult>(array: T[][], iteratee?: (...value: T[]) => TResu
     if (isUndefined(iteratee)) {
         return unzip(array);
     }
-    return unzip(array).map((item) => iteratee(...item));
+    return unzip(array).map((arrVal) => iteratee(...arrVal));
 }
 
 export default unzipWith;

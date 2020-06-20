@@ -36,7 +36,7 @@ function zipWith<T, TResult>(...args: Array<((...group: T[]) => TResult) | T[]>)
     if (isArray(iteratee)) {
         return zip(...(args as T[][]));
     }
-    return zip(...(initial(args) as T[][])).map((item) => iteratee(...item));
+    return zip(...(initial(args) as T[][])).map((arrVal) => iteratee(...arrVal));
 }
 
 export default zipWith;
