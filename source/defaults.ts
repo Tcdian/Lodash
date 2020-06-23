@@ -1,6 +1,15 @@
-function defaults<T, U>(object: T, source: U): T & U;
-function defaults<T, U, V>(object: T, source1: U, source2: V): T & U & V;
-function defaults<T, U, V, W>(object: T, source1: U, source2: V, source3: W): T & U & V & W;
+function defaults<TObject, TSource>(object: TObject, source: TSource): TObject & TSource;
+function defaults<TObject, TSource1, TSource2>(
+    object: TObject,
+    source1: TSource1,
+    source2: TSource2
+): TObject & TSource1 & TSource2;
+function defaults<TObject, TSource1, TSource2, TSource3>(
+    object: TObject,
+    source1: TSource1,
+    source2: TSource2,
+    source3: TSource3
+): TObject & TSource1 & TSource2 & TSource3;
 function defaults(object: object, ...sources: object[]): object;
 function defaults(object: object, ...sources: object[]): object {
     return Object.assign(object, ...sources.reverse(), { ...object });
