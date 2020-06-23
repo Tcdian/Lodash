@@ -45,6 +45,7 @@ function get<T, TDefault>(
     path: PropertyPath,
     defaultValue: TDefault
 ): Exclude<T, undefined> | TDefault;
+function get(object: any, path: PropertyPath, defaultValue?: any): any;
 function get(object: any, path: PropertyPath, defaultValue?: any): any {
     if (object === undefined) {
         return defaultValue;
