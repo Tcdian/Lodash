@@ -1,7 +1,16 @@
-function assignIn<T, U>(object: T, source: U): T & U;
-function assignIn<T, U, V>(object: T, source1: U, source2: V): T & U & V;
-function assignIn<T, U, V, W>(object: T, source1: U, source2: V, source3: W): T & U & V & W;
-function assignIn<T>(object: any, ...sources: any[]): T;
+function assignIn<TObject, TSource>(object: TObject, source: TSource): TObject & TSource;
+function assignIn<TObject, TSource1, TSource2>(
+    object: TObject,
+    source1: TSource1,
+    source2: TSource2
+): TObject & TSource1 & TSource2;
+function assignIn<TObject, TSource1, TSource2, TSource3>(
+    object: TObject,
+    source1: TSource1,
+    source2: TSource2,
+    source3: TSource3
+): TObject & TSource1 & TSource2 & TSource3;
+function assignIn<TObject>(object: any, ...sources: any[]): TObject;
 function assignIn(object: any, ...sources: any[]): any {
     sources.forEach((source) => {
         for (let key in source) {
