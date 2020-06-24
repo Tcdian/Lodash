@@ -9,7 +9,7 @@ import keysIn from './keysIn';
 import getAllKeys from './getAllKeys';
 import getAllKeysIn from './getAllKeysIn';
 
-type Func = (...args: any) => any;
+type CloneWithCustomizer = (value: any, key?: number | string | undefined, object?: any, cache?: any) => any;
 
 const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_FLAT_FLAG = 1 << 1;
@@ -18,7 +18,7 @@ const CLONE_SYMBOLS_FLAG = 1 << 2;
 function _baseClone(
     value: any,
     bitmask: number,
-    customizer?: Func,
+    customizer?: CloneWithCustomizer,
     key?: any,
     object?: any,
     cache: Map<any, any> = new Map()
