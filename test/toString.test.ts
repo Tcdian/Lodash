@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import toString from '../source/toString';
+import { toString } from '../source/lang';
 
 test(`toString(null) => ${toString(null)}`, () => {
     expect(toString(null)).toBe(_.toString(null));

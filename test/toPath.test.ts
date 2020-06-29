@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import toPath from '../source/toPath';
+import { toPath } from '../source/util';
 
 test(`toPath('a.b.c') => ${toPath('a.b.c')}`, () => {
     expect(toPath('a.b.c')).toEqual(_.toPath('a.b.c'));

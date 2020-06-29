@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import trim from '../source/trim';
+import { trim } from '../source/string';
 
 test(`trim('  abc  ') => ${trim('  abc  ')}`, () => {
     expect(trim('  abc  ')).toBe(_.trim('  abc  '));

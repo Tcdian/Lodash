@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import sortedIndexOf from '../source/sortedIndexOf';
+import { sortedIndexOf } from '../source/array';
 
 test(`sortedIndexOf([4, 5, 5, 5, 8], 5) => ${sortedIndexOf([4, 5, 5, 5, 8], 5)}`, () => {
     expect(sortedIndexOf([4, 5, 5, 5, 8], 5)).toBe(_.sortedIndexOf([4, 5, 5, 5, 8], 5));

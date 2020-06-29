@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import pad from '../source/pad';
+import { pad } from '../source/string';
 
 test(`pad('abc', 8) => ${pad('abc', 8)}`, () => {
     expect(pad('abc', 8)).toBe(_.pad('abc', 8));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import gt from '../source/gt';
+import { gt } from '../source/lang';
 
 test(`gt(3, 1) => ${gt(3, 1)}`, () => {
     expect(gt(3, 1)).toBe(_.gt(3, 1));

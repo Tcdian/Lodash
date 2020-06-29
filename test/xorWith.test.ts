@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import xorWith from '../source/xorWith';
+import { xorWith } from '../source/array';
 
 const objects = [
     { x: 1, y: 2 },

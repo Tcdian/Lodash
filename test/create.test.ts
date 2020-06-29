@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import create from '../source/create';
+import { create } from '../source/object';
 
 test(`create({}) => ${create({})}`, () => {
     expect(create({})).toEqual(_.create({}));

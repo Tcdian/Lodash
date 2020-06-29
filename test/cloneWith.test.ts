@@ -1,5 +1,4 @@
-import cloneWith from '../source/cloneWith';
-import isNumber from '../source/isNumber';
+import { cloneWith, isNumber } from '../source/lang';
 
 function square(value: any) {
     if (isNumber(value)) {

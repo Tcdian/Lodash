@@ -1,4 +1,4 @@
-import after from '../source/after';
+import { after } from '../source/function';
 
 test('after 函数测试', () => {
     const mockFn = jest.fn();

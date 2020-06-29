@@ -1,4 +1,4 @@
-import clone from '../source/clone';
+import { clone } from '../source/lang';
 
 test('clone([{ a: 1 }, { b: 2 }])', () => {
     const objects = [{ a: 1 }, { b: 2 }];

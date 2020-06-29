@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import pullAllWith from '../source/pullAllWith';
+import { pullAllWith } from '../source/array';
 
 const array = [
     { x: 1, y: 2 },

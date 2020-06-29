@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import isString from '../source/isString';
+import { isString } from '../source/lang';
 
 test(`isString('abc') => ${isString('abc')}`, () => {
     expect(isString('abc')).toBe(_.isString('abc'));

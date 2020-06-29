@@ -1,0 +1,11 @@
+export { add } from './add';
+export { ceil } from './ceil';
+export { divide } from './divide';
+export { floor } from './floor';
+export { max } from './max';
+export { mean } from './mean';
+export { min } from './min';
+export { multiply } from './multiply';
+export { round } from './round';
+export { subtract } from './subtract';
+export { sum } from './sum';

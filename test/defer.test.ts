@@ -1,4 +1,4 @@
-import defer from '../source/defer';
+import { defer } from '../source/function';
 
 jest.useFakeTimers();
 

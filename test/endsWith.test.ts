@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import endsWith from '../source/endsWith';
+import { endsWith } from '../source/string';
 
 test(`endsWith('abc', 'c') => ${endsWith('abc', 'c')}`, () => {
     expect(endsWith('abc', 'c')).toBe(_.endsWith('abc', 'c'));

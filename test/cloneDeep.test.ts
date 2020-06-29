@@ -1,4 +1,4 @@
-import cloneDeep from '../source/cloneDeep';
+import { cloneDeep } from '../source/lang';
 
 test("cloneDeep([ { a: 1, [Symbol('a')]: 1 }, { b: 2, [Symbol('b')]: 2 } ])", () => {
     const objects = [

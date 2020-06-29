@@ -1,4 +1,4 @@
-import sampleSize from '../source/sampleSize';
+import { sampleSize } from '../source/collection';
 
 test('sampleSize([1, 2, 3], 2)', () => {
     const randomArr = sampleSize([1, 2, 3], 2);

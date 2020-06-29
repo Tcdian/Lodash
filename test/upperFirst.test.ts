@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import upperFirst from '../source/upperFirst';
+import { upperFirst } from '../source/string';
 
 test(`upperFirst('fred') => ${upperFirst('fred')}`, () => {
     expect(upperFirst('fred')).toBe(_.upperFirst('fred'));

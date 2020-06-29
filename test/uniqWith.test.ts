@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import uniqWith from '../source/uniqWith';
+import { uniqWith } from '../source/array';
 
 const objects = [
     { x: 1, y: 2 },

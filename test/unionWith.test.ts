@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import unionWith from '../source/unionWith';
+import { unionWith } from '../source/array';
 
 const objects = [
     { x: 1, y: 2 },

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import union from '../source/union';
+import { union } from '../source/array';
 
 test(`union([2], [1, 2]) => ${union([2], [1, 2])}`, () => {
     expect(union([2], [1, 2])).toEqual(_.union([2], [1, 2]));

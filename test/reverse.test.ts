@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import reverse from '../source/reverse';
+import { reverse } from '../source/array';
 
 const arr1 = [1, 2, 3];
 const arr2 = [1, 2, 3];

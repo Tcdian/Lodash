@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import fill from '../source/fill';
+import { fill } from '../source/array';
 
 test(`fill([1, 2, 3], 5) => ${fill([1, 2, 3], 5)}`, () => {
     expect(fill([1, 2, 3], 5)).toEqual(_.fill([1, 2, 3], 5));

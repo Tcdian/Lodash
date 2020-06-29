@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import round from '../source/round';
+import { round } from '../source/math';
 
 test(`round(4.006) => ${round(4.006)}`, () => {
     expect(round(4.006)).toBe(_.round(4.006));

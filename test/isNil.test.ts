@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import isNil from '../source/isNil';
+import { isNil } from '../source/lang';
 
 test(`isNil(null) => ${isNil(null)}`, () => {
     expect(isNil(null)).toBe(_.isNil(null));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import take from '../source/take';
+import { take } from '../source/array';
 
 test(`take([1, 2, 3]) => ${take([1, 2, 3])}`, () => {
     expect(take([1, 2, 3])).toEqual(_.take([1, 2, 3]));

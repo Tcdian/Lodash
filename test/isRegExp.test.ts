@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import isRegExp from '../source/isRegExp';
+import { isRegExp } from '../source/lang';
 
 test(`isRegExp(/abc/) => ${isRegExp(/abc/)}`, () => {
     expect(isRegExp(/abc/)).toBe(_.isRegExp(/abc/));

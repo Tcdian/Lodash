@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import split from '../source/split';
+import { split } from '../source/string';
 
 test(`split('a-b-c', '-') => ${split('a-b-c', '-')}`, () => {
     expect(split('a-b-c', '-')).toEqual(_.split('a-b-c', '-'));

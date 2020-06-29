@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import xor from '../source/xor';
+import { xor } from '../source/array';
 
 test(`xor([2, 1], [2, 3]) => ${xor([2, 1], [2, 3])}`, () => {
     expect(xor([2, 1], [2, 3])).toEqual(_.xor([2, 1], [2, 3]));

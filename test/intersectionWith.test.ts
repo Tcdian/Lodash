@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import intersectionWith from '../source/intersectionWith';
+import { intersectionWith } from '../source/array';
 
 const objects = [
     { x: 1, y: 2 },

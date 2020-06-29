@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import ceil from '../source/ceil';
+import { ceil } from '../source/math';
 
 test(`ceil(4.006) => ${ceil(4.006)}`, () => {
     expect(ceil(4.006)).toBe(_.ceil(4.006));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import rest from '../source/rest';
+import { rest } from '../source/function';
 
 test('rest 函数测试', () => {
     const say = rest(function (what, names) {

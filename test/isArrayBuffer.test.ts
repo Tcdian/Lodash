@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import isArrayBuffer from '../source/isArrayBuffer';
+import { isArrayBuffer } from '../source/lang';
 
 test(`isArrayBuffer(new ArrayBuffer(2)) => ${isArrayBuffer(new ArrayBuffer(2))}`, () => {
     expect(isArrayBuffer(new ArrayBuffer(2))).toBe(_.isArrayBuffer(new ArrayBuffer(2)));

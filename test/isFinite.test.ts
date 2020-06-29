@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import isFinite from '../source/isFinite';
+import { isFinite } from '../source/lang';
 
 test(`isFinite(3) => ${isFinite(3)}`, () => {
     expect(isFinite(3)).toBe(_.isFinite(3));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import isNaN from '../source/isNaN';
+import { isNaN } from '../source/lang';
 
 test(`isNaN(NaN) => ${isNaN(NaN)}`, () => {
     expect(isNaN(NaN)).toBe(_.isNaN(NaN));

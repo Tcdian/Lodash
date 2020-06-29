@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import create from '../source/create';
-import assignIn from '../source/assignIn';
+import { create, assignIn } from '../source/object';
 
 let source1: { a: number; b: number };
 let source2: { c: number; d: number };

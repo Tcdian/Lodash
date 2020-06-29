@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import trimEnd from '../source/trimEnd';
+import { trimEnd } from '../source/string';
 
 test(`trimEnd('  abc  ') => ${trimEnd('  abc  ')}`, () => {
     expect(trimEnd('  abc  ')).toBe(_.trimEnd('  abc  '));

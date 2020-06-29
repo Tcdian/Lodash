@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import fromPairs from '../source/fromPairs';
+import { fromPairs } from '../source/array';
 
 const pairs: [string, number][] = [
     ['a', 1],

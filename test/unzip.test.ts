@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import unzip from '../source/unzip';
+import { unzip } from '../source/array';
 
 const zipped = _.zip(['a', 'b'], [1, 2], [true, false]);
 

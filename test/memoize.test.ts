@@ -1,4 +1,4 @@
-import memoize from '../source/memoize';
+import { memoize } from '../source/function';
 
 test('memoize 函数测试', () => {
     const mockFn = jest.fn((value: string) => value);

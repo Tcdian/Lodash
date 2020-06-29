@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import attempt from '../source/attempt';
+import { attempt } from '../source/util';
 
 function throwError(message: string): never {
     throw new Error(message);
