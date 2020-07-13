@@ -15,7 +15,6 @@ export { indexOf } from './indexOf';
 export { initial } from './initial';
 export { intersection } from './intersection';
 export { intersectionWith } from './intersectionWith';
-export { invert } from './invert';
 export { join } from './join';
 export { last } from './last';
 export { lastIndexOf } from './lastIndexOf';

@@ -1,3 +1,5 @@
+import { invert } from 'lodash';
+
 export { assign } from './assign';
 export { assignIn } from './assignIn';
 export { assignInWith } from './assignInWith';
@@ -12,6 +14,7 @@ export { functionsIn } from './functionsIn';
 export { get } from './get';
 export { has } from './has';
 export { hasIn } from './hasIn';
+export { invert } from './invert';
 export { invoke } from './invoke';
 export { keys } from './keys';
 export { keysIn } from './keysIn';
