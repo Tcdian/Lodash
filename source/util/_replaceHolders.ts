@@ -1,11 +1,11 @@
-function _replaceHolders(partial: any[], args: any[], placeholder: any) {
+function _replaceHolders(partials: any[], args: any[], placeholder: any) {
     let separator = 0;
     return [
-        ...partial.map((partialArg) => {
-            if (partialArg === placeholder) {
+        ...partials.map((partial) => {
+            if (partial === placeholder) {
                 return args[separator++];
             }
-            return partialArg;
+            return partial;
         }),
         ...args.slice(separator),
     ];
