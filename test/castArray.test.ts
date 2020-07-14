@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { castArray } from '../source/lang';
+import { castArray } from '../source/lang/castArray';
 
 test(`castArray(1) => ${castArray(1)}`, () => {
     expect(castArray(1)).toEqual(_.castArray(1));

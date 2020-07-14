@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { inRange } from '../source/number';
+import { inRange } from '../source/number/inRange';
 
 test(`inRange(3, 2, 4) => ${inRange(3, 2, 4)}`, () => {
     expect(inRange(3, 2, 4)).toBe(_.inRange(3, 2, 4));

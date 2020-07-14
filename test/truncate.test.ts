@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { truncate } from '../source/string';
+import { truncate } from '../source/string/truncate';
 
 test(`truncate('hi-diddly-ho there, neighborino') => ${truncate('hi-diddly-ho there, neighborino')}`, () => {
     expect(truncate('hi-diddly-ho there, neighborino')).toBe(_.truncate('hi-diddly-ho there, neighborino'));

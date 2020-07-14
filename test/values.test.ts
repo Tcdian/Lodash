@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { create, values } from '../source/object';
+import { values } from '../source/object/values';
+import { create } from '../source/object/create';
 
 const object = create({ a: 1 }, { b: 2, c: 3 });
 

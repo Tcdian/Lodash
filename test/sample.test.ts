@@ -1,4 +1,4 @@
-import { sample } from '../source/collection';
+import { sample } from '../source/collection/sample';
 
 test('sample([1, 2, 3, 4])', () => {
     const randomEl = sample([1, 2, 3, 4]);

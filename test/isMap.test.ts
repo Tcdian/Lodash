@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isMap } from '../source/lang';
+import { isMap } from '../source/lang/isMap';
 
 test(`isMap(new Map) => ${isMap(new Map())}`, () => {
     expect(isMap(new Map())).toBe(_.isMap(new Map()));

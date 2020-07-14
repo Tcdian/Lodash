@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { sortedLastIndexOf } from '../source/array';
+import { sortedLastIndexOf } from '../source/array/sortedLastIndexOf';
 
 test(`sortedLastIndexOf([4, 5, 5, 5, 8], 5) => ${sortedLastIndexOf([4, 5, 5, 5, 8], 5)}`, () => {
     expect(sortedLastIndexOf([4, 5, 5, 5, 8], 5)).toBe(_.sortedLastIndexOf([4, 5, 5, 5, 8], 5));

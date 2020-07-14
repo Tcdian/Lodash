@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { repeat } from '../source/string';
+import { repeat } from '../source/string/repeat';
 
 test(`repeat => ${repeat('*', 3)}`, () => {
     expect(repeat('*', 3)).toBe(_.repeat('*', 3));

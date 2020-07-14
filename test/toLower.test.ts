@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { toLower } from '../source/string';
+import { toLower } from '../source/string/toLower';
 
 test(`toLower('--Foo-Bar--') => ${toLower('--Foo-Bar--')}`, () => {
     expect(toLower('--Foo-Bar--')).toBe(_.toLower('--Foo-Bar--'));

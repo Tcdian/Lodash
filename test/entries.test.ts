@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { create, entries } from '../source/object';
+import { entries } from '../source/object/entries';
+import { create } from '../source/object/create';
 
 let object: { a: number; b: number };
 let set: Set<number>;

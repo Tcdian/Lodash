@@ -1,4 +1,4 @@
-import { rearg } from '../source/function';
+import { rearg } from '../source/function/rearg';
 
 test('rearg 函数测试', () => {
     const rearged = rearg(

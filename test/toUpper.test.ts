@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { toUpper } from '../source/string';
+import { toUpper } from '../source/string/toUpper';
 
 test(`toUpper('--foo-bar--') => ${toUpper('--foo-bar--')}`, () => {
     expect(toUpper('--foo-bar--')).toBe(_.toUpper('--foo-bar--'));

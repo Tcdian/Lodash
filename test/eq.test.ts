@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { eq } from '../source/lang';
+import { eq } from '../source/lang/eq';
 
 test(`eq('a', 'a') => ${eq('a', 'a')}`, () => {
     expect(eq('a', 'a')).toBe(_.eq('a', 'a'));

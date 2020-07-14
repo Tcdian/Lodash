@@ -1,4 +1,4 @@
-import { once } from '../source/function';
+import { once } from '../source/function/once';
 
 test('once 函数测试', () => {
     const mockFn = jest.fn().mockReturnValueOnce('first call').mockReturnValueOnce('second call');

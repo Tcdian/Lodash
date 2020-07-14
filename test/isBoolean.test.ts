@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isBoolean } from '../source/lang';
+import { isBoolean } from '../source/lang/isBoolean';
 
 test(`isBoolean(false) => ${isBoolean(false)}`, () => {
     expect(isBoolean(false)).toBe(_.isBoolean(false));

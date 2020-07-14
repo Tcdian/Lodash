@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isObject } from '../source/lang';
+import { isObject } from '../source/lang/isObject';
 
 test(`isObject({}) => ${isObject({})}`, () => {
     expect(isObject({})).toBe(_.isObject({}));

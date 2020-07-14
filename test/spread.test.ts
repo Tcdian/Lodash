@@ -1,4 +1,4 @@
-import { spread } from '../source/function';
+import { spread } from '../source/function/spread';
 
 test('spread 函数测试1', () => {
     const say = spread(function (who, what) {

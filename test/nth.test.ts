@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { nth } from '../source/array';
+import { nth } from '../source/array/nth';
 
 const array = ['a', 'b', 'c', 'd'];
 

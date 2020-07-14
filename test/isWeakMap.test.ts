@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isWeakMap } from '../source/lang';
+import { isWeakMap } from '../source/lang/isWeakMap';
 
 test(`isWeakMap(new WeakMap) => ${isWeakMap(new WeakMap())}`, () => {
     expect(isWeakMap(new WeakMap())).toBe(_.isWeakMap(new WeakMap()));

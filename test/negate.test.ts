@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { negate } from '../source/function';
+import { negate } from '../source/function/negate';
 
 function isEven(n: number) {
     return n % 2 === 0;

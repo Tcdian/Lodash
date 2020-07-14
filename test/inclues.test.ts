@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { includes } from '../source/collection';
+import { includes } from '../source/collection/includes';
 
 test(`includes([1, 2, 3], 1) => ${includes([1, 2, 3], 1)}`, () => {
     expect(includes([1, 2, 3], 1)).toBe(_.includes([1, 2, 3], 1));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isNative } from '../source/lang';
+import { isNative } from '../source/lang/isNative';
 
 test(`isNative(Array.prototype.push) => ${isNative(Array.prototype.push)}`, () => {
     expect(isNative(Array.prototype.push)).toBe(_.isNative(Array.prototype.push));

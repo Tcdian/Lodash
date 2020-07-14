@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { get } from '../source/object';
+import { get } from '../source/object/get';
 
 const object = { a: [{ b: { c: 3 } }] };
 

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { pullAll } from '../source/array';
+import { pullAll } from '../source/array/pullAll';
 
 let arr1: string[];
 let arr2: string[];

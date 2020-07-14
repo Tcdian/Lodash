@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isDate } from '../source/lang';
+import { isDate } from '../source/lang/isDate';
 
 test(`isDate(new Date) => ${isDate(new Date())}`, () => {
     expect(isDate(new Date())).toBe(_.isDate(new Date()));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isSet } from '../source/lang';
+import { isSet } from '../source/lang/isSet';
 
 test(`isSet(new Set) => ${isSet(new Set())}`, () => {
     expect(isSet(new Set())).toBe(_.isSet(new Set()));

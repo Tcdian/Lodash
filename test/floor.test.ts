@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { floor } from '../source/math';
+import { floor } from '../source/math/floor';
 
 test(`floor(4.006) => ${floor(4.006)}`, () => {
     expect(floor(4.006)).toBe(_.floor(4.006));

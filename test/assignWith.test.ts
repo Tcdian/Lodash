@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { assignWith } from '../source/object';
+import { assignWith } from '../source/object/assignWith';
 
 function customizer(objValue: number | undefined, srcValue: number | undefined) {
     return _.isUndefined(objValue) ? srcValue : objValue;

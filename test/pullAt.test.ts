@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { pullAt } from '../source/array';
+import { pullAt } from '../source/array/pullAt';
 
 const arr1 = ['a', 'b', 'c', 'd'];
 const arr2 = ['a', 'b', 'c', 'd'];

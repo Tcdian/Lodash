@@ -1,4 +1,4 @@
-import { identity } from '../source/util';
+import { identity } from '../source/util/identity';
 
 test('identity', () => {
     const object = { a: 1 };

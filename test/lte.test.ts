@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { lte } from '../source/lang';
+import { lte } from '../source/lang/lte';
 
 test(`lte(1, 3) => ${lte(1, 3)}`, () => {
     expect(lte(1, 3)).toBe(_.lte(1, 3));

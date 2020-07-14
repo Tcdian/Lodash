@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { chunk } from '../source/array';
+import { chunk } from '../source/array/chunk';
 
 test(`chunk(['a', 'b', 'c', 'd'], 2) => ${chunk(['a', 'b', 'c', 'd'], 2)}`, () => {
     expect(chunk(['a', 'b', 'c', 'd'], 2)).toEqual(_.chunk(['a', 'b', 'c', 'd'], 2));

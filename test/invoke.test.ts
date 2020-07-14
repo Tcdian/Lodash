@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { invoke } from '../source/object';
+import { invoke } from '../source/object/invoke';
 
 const object = { a: [{ b: { c: [1, 2, 3, 4] } }] };
 

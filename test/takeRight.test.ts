@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { takeRight } from '../source/array';
+import { takeRight } from '../source/array/takeRight';
 
 test(`takeRight([1, 2, 3]) => ${takeRight([1, 2, 3])}`, () => {
     expect(takeRight([1, 2, 3])).toEqual(_.takeRight([1, 2, 3]));

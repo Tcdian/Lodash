@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isPlainObject } from '../source/lang';
+import { isPlainObject } from '../source/lang/isPlainObject';
 
 class Foo {
     public size: number;

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isWeakSet } from '../source/lang';
+import { isWeakSet } from '../source/lang/isWeakSet';
 
 test(`isWeakSet(new WeakSet) => ${isWeakSet(new WeakSet())}`, () => {
     expect(isWeakSet(new WeakSet())).toBe(_.isWeakSet(new WeakSet()));

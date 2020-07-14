@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { lowerFirst } from '../source/string';
+import { lowerFirst } from '../source/string/lowerFirst';
 
 test(`lowerFirst('Fred') => ${lowerFirst('Fred')}`, () => {
     expect(lowerFirst('Fred')).toBe(_.lowerFirst('Fred'));

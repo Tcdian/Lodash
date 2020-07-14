@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { min } from '../source/math';
+import { min } from '../source/math/min';
 
 test(`min([4, 2, 8, 6]) => ${min([4, 2, 8, 6])}`, () => {
     expect(min([4, 2, 8, 6])).toBe(_.min([4, 2, 8, 6]));

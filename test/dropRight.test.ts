@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { dropRight } from '../source/array';
+import { dropRight } from '../source/array/dropRight';
 
 test(`dropRight([1, 2, 3]) => ${dropRight([1, 2, 3])}`, () => {
     expect(dropRight([1, 2, 3])).toEqual(_.dropRight([1, 2, 3]));

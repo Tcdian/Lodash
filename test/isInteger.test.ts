@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isInteger } from '../source/lang';
+import { isInteger } from '../source/lang/isInteger';
 
 test(`isInteger(3) => ${isInteger(3)}`, () => {
     expect(isInteger(3)).toBe(_.isInteger(3));

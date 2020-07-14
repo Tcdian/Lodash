@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isSafeInteger } from '../source/lang';
+import { isSafeInteger } from '../source/lang/isSafeInteger';
 
 test(`isSafeInteger(3) => ${isSafeInteger(3)}`, () => {
     expect(isSafeInteger(3)).toBe(_.isSafeInteger(3));

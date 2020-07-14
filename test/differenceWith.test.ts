@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { differenceWith } from '../source/array';
+import { differenceWith } from '../source/array/differenceWith';
 
 const objects = [
     { x: 1, y: 2 },

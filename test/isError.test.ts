@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isError } from '../source/lang';
+import { isError } from '../source/lang/isError';
 
 test(`isError(new Error) => ${isError(new Error())}`, () => {
     expect(isError(new Error())).toBe(_.isError(new Error()));

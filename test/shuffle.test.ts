@@ -1,4 +1,4 @@
-import { shuffle } from '../source/collection';
+import { shuffle } from '../source/collection/shuffle';
 
 test('shuffle([1, 2, 3, 4, 5])', () => {
     const randomArr = shuffle([1, 2, 3, 4, 5]);

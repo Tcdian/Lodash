@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { unzipWith, zip } from '../source/array';
+import { unzipWith } from '../source/array/unzipWith';
+import { zip } from '../source/array/zip';
 
 const zipped = zip([1, 2], [10, 20], [100, 200]);
 

@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { cloneDeepWith, isNumber } from '../source/lang';
+import { cloneDeepWith } from '../source/lang/cloneDeepWith';
+import { isNumber } from '../source/lang/isNumber';
 
 function square(value: any) {
     if (isNumber(value)) {

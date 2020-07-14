@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { mergeWith } from '../source/object';
+import { mergeWith } from '../source/object/mergeWith';
 
 function customizer(objValue: any, srcValue: any) {
     if (_.isArray(objValue)) {

@@ -1,4 +1,4 @@
-import { before } from '../source/function';
+import { before } from '../source/function/before';
 
 test('before 函数测试', () => {
     const mockFn = jest

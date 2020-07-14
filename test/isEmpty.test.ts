@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isEmpty } from '../source/lang';
+import { isEmpty } from '../source/lang/isEmpty';
 
 test(`isEmpty(null) => ${isEmpty(null)}`, () => {
     expect(isEmpty(null)).toBe(_.isEmpty(null));
