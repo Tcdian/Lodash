@@ -8,9 +8,13 @@ function greet(this: typeof object, greeting: string, punctuation: string) {
 }
 
 test('bind', () => {
-    expect(bind(greet, object, 'hi')('!')).toBe(_.bind(greet, object, 'hi')('!'));
+    const bound = bind(greet, object, 'hi');
+    const _bound = _.bind(greet, object, 'hi');
+    expect(bound('!')).toBe(_bound('!'));
 });
 
 test('bind with placeholders', () => {
-    expect(bind(greet, object, '_', '!')('hi')).toBe(_.bind(greet, object, _, '!')('hi'));
+    const bound = bind(greet, object, '_', '!');
+    const _bound = _.bind(greet, object, _, '!');
+    expect(bound('hi')).toBe(_bound('hi'));
 });
