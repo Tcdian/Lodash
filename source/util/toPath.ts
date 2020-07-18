@@ -10,10 +10,8 @@ function toPath(value: any): (string | symbol)[] {
         return value.map((arrVal) => (isSymbol(arrVal) ? arrVal : toString(arrVal)));
     }
     return toString(value)
-        .replace(/\[+\.*/g, '.')
-        .replace(/\]+$/, '')
-        .replace(/\]+\.*/g, '.')
-        .split('.');
+        .split(/[\\[\]\\.]/)
+        .filter((key) => key !== '');
 }
 
 export { toPath };
