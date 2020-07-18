@@ -1,0 +1,3 @@
+function bindAll<T>(object: T, ...methodNames: (string | string[])[]): T {
+    // todo ...
+}
