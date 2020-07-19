@@ -1,6 +1,6 @@
 import { memoize } from '../source/function/memoize';
 
-test('memoize 函数测试', () => {
+test('memoize', () => {
     const mockFn = jest.fn((value: string) => value);
     const memoized = memoize(mockFn);
 
@@ -21,7 +21,7 @@ test('memoize 函数测试', () => {
     );
 });
 
-test('memoize 函数测试', () => {
+test('memoize with resolver', () => {
     const mockFn = jest.fn((value: string) => value);
     const memoized = memoize(mockFn, (key: string) => `key_${key}`);
 

@@ -2,7 +2,7 @@ import { defer } from '../source/function/defer';
 
 jest.useFakeTimers();
 
-test('defer 函数测试', () => {
+test('defer', () => {
     const mockFn = jest.fn();
     defer(mockFn, 'first', 'second');
     expect(mockFn).not.toBeCalled();

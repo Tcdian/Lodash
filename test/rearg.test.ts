@@ -1,6 +1,6 @@
 import { rearg } from '../source/function/rearg';
 
-test('rearg 函数测试', () => {
+test('rearg', () => {
     const rearged = rearg(
         function (a, b, c) {
             return [a, b, c];

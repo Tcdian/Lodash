@@ -1,8 +1,7 @@
-import _ from 'lodash';
 import { truncate } from '../source/string/truncate';
 
 test(`truncate('hi-diddly-ho there, neighborino') => ${truncate('hi-diddly-ho there, neighborino')}`, () => {
-    expect(truncate('hi-diddly-ho there, neighborino')).toBe(_.truncate('hi-diddly-ho there, neighborino'));
+    expect(truncate('hi-diddly-ho there, neighborino')).toBe('hi-diddly-ho there, neighbo...');
 });
 
 test(`truncate('hi-diddly-ho there, neighborino', {
@@ -17,12 +16,7 @@ test(`truncate('hi-diddly-ho there, neighborino', {
             length: 24,
             separator: ' ',
         })
-    ).toBe(
-        _.truncate('hi-diddly-ho there, neighborino', {
-            length: 24,
-            separator: ' ',
-        })
-    );
+    ).toBe('hi-diddly-ho there,...');
 });
 
 test(`truncate('hi-diddly-ho there, neighborino', {
@@ -37,12 +31,7 @@ test(`truncate('hi-diddly-ho there, neighborino', {
             length: 24,
             separator: 'k',
         })
-    ).toBe(
-        _.truncate('hi-diddly-ho there, neighborino', {
-            length: 24,
-            separator: 'k',
-        })
-    );
+    ).toBe('hi-diddly-ho there, n...');
 });
 
 test(`truncate('hi-diddly-ho there, neighborino', {
@@ -57,12 +46,7 @@ test(`truncate('hi-diddly-ho there, neighborino', {
             length: 24,
             separator: /,? +/,
         })
-    ).toBe(
-        _.truncate('hi-diddly-ho there, neighborino', {
-            length: 24,
-            separator: /,? +/,
-        })
-    );
+    ).toBe('hi-diddly-ho there...');
 });
 
 test(`truncate('hi-diddly-ho there, neighborino', {
@@ -77,12 +61,7 @@ test(`truncate('hi-diddly-ho there, neighborino', {
             length: 24,
             separator: /,? +/g,
         })
-    ).toBe(
-        _.truncate('hi-diddly-ho there, neighborino', {
-            length: 24,
-            separator: /,? +/g,
-        })
-    );
+    ).toBe('hi-diddly-ho there...');
 });
 
 test(`truncate('hi-diddly-ho there, neighborino', {
@@ -94,9 +73,5 @@ test(`truncate('hi-diddly-ho there, neighborino', {
         truncate('hi-diddly-ho there, neighborino', {
             omission: ' [...]',
         })
-    ).toBe(
-        _.truncate('hi-diddly-ho there, neighborino', {
-            omission: ' [...]',
-        })
-    );
+    ).toBe('hi-diddly-ho there, neig [...]');
 });

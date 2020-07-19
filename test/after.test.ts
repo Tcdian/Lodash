@@ -1,6 +1,6 @@
 import { after } from '../source/function/after';
 
-test('after 函数测试', () => {
+test('after', () => {
     const mockFn = jest.fn();
     const calledFunc = after(2, mockFn);
     calledFunc();

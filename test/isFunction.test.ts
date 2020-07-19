@@ -1,10 +1,9 @@
-import _ from 'lodash';
 import { isFunction } from '../source/lang/isFunction';
 
-test(`isFunction(_) => ${isFunction(_)}`, () => {
-    expect(isFunction(_)).toBe(_.isFunction(_));
+test(`isFunction(() => {}) => ${isFunction(() => {})}`, () => {
+    expect(isFunction(() => {})).toBe(true);
 });
 
 test(`isFunction(/abc/) => ${isFunction(/abc/)}`, () => {
-    expect(isFunction(/abc/)).toBe(_.isFunction(/abc/));
+    expect(isFunction(/abc/)).toBe(false);
 });

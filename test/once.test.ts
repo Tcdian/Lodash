@@ -1,6 +1,6 @@
 import { once } from '../source/function/once';
 
-test('once 函数测试', () => {
+test('once', () => {
     const mockFn = jest.fn().mockReturnValueOnce('first call').mockReturnValueOnce('second call');
     const calledFunc = once(mockFn);
     // first call

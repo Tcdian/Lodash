@@ -1,7 +1,8 @@
 import { trimStart } from './trimStart';
 import { trimEnd } from './trimEnd';
-
-function trim(string: string, chars?: string, guard?: any): string {
+function trim(string: string, chars?: string): string;
+function trim(string: string, chars?: string | number, guard?: object): string;
+function trim(string: string, chars?: any, guard?: any): string {
     if (guard || chars === undefined) {
         return string.trim();
     }

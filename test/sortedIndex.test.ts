@@ -1,14 +1,17 @@
-import _ from 'lodash';
 import { sortedIndex } from '../source/array/sortedIndex';
 
-test(`sortedIndex([30, 50], 40) => ${sortedIndex([30, 50], 40)}`, () => {
-    expect(sortedIndex([30, 50], 40)).toBe(_.sortedIndex([30, 50], 40));
+test(`sortedIndex([4, 5, 5, 5, 8], 5) => ${sortedIndex([4, 5, 5, 5, 8], 5)}`, () => {
+    expect(sortedIndex([4, 5, 5, 5, 8], 5)).toBe(1);
 });
 
-test(`sortedIndex([30, 50], 60) => ${sortedIndex([30, 50], 60)}`, () => {
-    expect(sortedIndex([30, 50], 60)).toBe(_.sortedIndex([30, 50], 60));
+test(`sortedIndex([4, 5, 5, 5, 8], 1) => ${sortedIndex([4, 5, 5, 5, 8], 1)}`, () => {
+    expect(sortedIndex([4, 5, 5, 5, 8], 1)).toBe(0);
 });
 
-test(`sortedIndex([30, 50], 10) => ${sortedIndex([30, 50], 10)}`, () => {
-    expect(sortedIndex([30, 50], 10)).toBe(_.sortedIndex([30, 50], 10));
+test(`sortedIndex([4, 5, 5, 5, 8], 9) => ${sortedIndex([4, 5, 5, 5, 8], 9)}`, () => {
+    expect(sortedIndex([4, 5, 5, 5, 8], 9)).toBe(5);
+});
+
+test(`sortedIndex([4, 5, 5, 5, 8], 6) => ${sortedIndex([4, 5, 5, 5, 8], 6)}`, () => {
+    expect(sortedIndex([4, 5, 5, 5, 8], 6)).toBe(4);
 });

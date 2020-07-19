@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { entries } from '../source/object/entries';
 import { create } from '../source/object/create';
 
@@ -13,13 +12,16 @@ beforeAll(() => {
 });
 
 test('entries(create({ a: 1 }, { b: 2 })', () => {
-    expect(entries(object)).toEqual(_.entries(object));
+    expect(entries(object)).toEqual([['b', 2]]);
 });
 
 test('entries(new Set([1, 2]))', () => {
-    expect(entries(set)).toEqual(_.entries(set));
+    expect(entries(set)).toEqual([
+        [1, 1],
+        [2, 2],
+    ]);
 });
 
 test("entries(new Map([['a', 1]]))", () => {
-    expect(entries(map)).toEqual(_.entries(map));
+    expect(entries(map)).toEqual([['a', 1]]);
 });

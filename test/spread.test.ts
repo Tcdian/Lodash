@@ -1,6 +1,6 @@
 import { spread } from '../source/function/spread';
 
-test('spread 函数测试1', () => {
+test('spread', () => {
     const say = spread(function (who, what) {
         return who + ' says ' + what;
     });
@@ -8,7 +8,7 @@ test('spread 函数测试1', () => {
     expect(say(['fred', 'hello'])).toBe('fred says hello');
 });
 
-test('spread 函数测试2', async () => {
+test('spread', async () => {
     const numbers = Promise.all([Promise.resolve(40), Promise.resolve(18)]);
     const sum = await numbers.then(
         spread<number>(function (x, y) {

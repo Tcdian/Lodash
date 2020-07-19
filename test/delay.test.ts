@@ -2,7 +2,7 @@ import { delay } from '../source/function/delay';
 
 jest.useFakeTimers();
 
-test('delay 函数测试', () => {
+test('delay', () => {
     const mockFn = jest.fn();
     delay(mockFn, 1000, 'first', 'second');
     expect(mockFn).not.toBeCalled();

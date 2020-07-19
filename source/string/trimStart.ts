@@ -1,4 +1,6 @@
-function trimStart(string: string, chars?: string, guard?: any): string {
+function trimStart(string: string, chars?: string): string;
+function trimStart(string: string, chars?: string | number, guard?: object): string;
+function trimStart(string: string, chars?: any, guard?: any): string {
     if (guard || chars === undefined) {
         return string.trimStart();
     }

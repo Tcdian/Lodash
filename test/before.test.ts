@@ -1,6 +1,6 @@
 import { before } from '../source/function/before';
 
-test('before 函数测试', () => {
+test('before', () => {
     const mockFn = jest
         .fn()
         .mockReturnValueOnce('first call')

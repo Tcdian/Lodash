@@ -1,10 +1,9 @@
-import _ from 'lodash';
 import { isRegExp } from '../source/lang/isRegExp';
 
 test(`isRegExp(/abc/) => ${isRegExp(/abc/)}`, () => {
-    expect(isRegExp(/abc/)).toBe(_.isRegExp(/abc/));
+    expect(isRegExp(/abc/)).toBe(true);
 });
 
 test(`isRegExp('/abc/') => ${isRegExp('/abc/')}`, () => {
-    expect(isRegExp('/abc/')).toBe(_.isRegExp('/abc/'));
+    expect(isRegExp('/abc/')).toBe(false);
 });

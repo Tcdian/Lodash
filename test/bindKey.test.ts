@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { bindKey } from '../source/function/bindKey';
 
 const object = {
@@ -10,17 +9,15 @@ const object = {
 
 test('bindKey', () => {
     const bound = bindKey(object, 'greet', 'hi');
-    const _bound = _.bindKey(object, 'greet', 'hi');
-    expect(bound('!')).toBe(_bound('!'));
+    expect(bound('!')).toBe('hi fred!');
 
     object.greet = function (greeting, punctuation) {
         return greeting + 'ya ' + this.user + punctuation;
     };
-    expect(bound('!')).toBe(_bound('!'));
+    expect(bound('!')).toBe('hiya fred!');
 });
 
 test('bindKey with placeholders', () => {
     const bound = bindKey(object, 'greet', '_', '!');
-    const _bound = _.bindKey(object, 'greet', _, '!');
-    expect(bound('hi')).toBe(_bound('hi'));
+    expect(bound('hi')).toBe('hiya fred!');
 });

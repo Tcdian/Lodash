@@ -1,10 +1,8 @@
-import _ from 'lodash';
 import { reverse } from '../source/array/reverse';
 
-const arr1 = [1, 2, 3];
-const arr2 = [1, 2, 3];
+const arr = [1, 2, 3];
 
 test(`reverse([1, 2, 3]) => ${reverse([1, 2, 3])}`, () => {
-    expect(reverse(arr1)).toEqual(_.reverse(arr2));
-    expect(arr1).toEqual(arr2);
+    expect(reverse(arr)).toEqual([3, 2, 1]);
+    expect(arr).toEqual([3, 2, 1]);
 });

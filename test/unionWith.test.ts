@@ -1,3 +1,4 @@
+// todo ...
 import _ from 'lodash';
 import { unionWith } from '../source/array/unionWith';
 
@@ -11,5 +12,9 @@ const others = [
 ];
 
 test("unionWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }], [{ 'x': 1, 'y': 1 }, { 'x': 1, 'y': 2 }], _.isEqual)", () => {
-    expect(unionWith(objects, others, _.isEqual)).toEqual(_.unionWith(objects, others, _.isEqual));
+    expect(unionWith(objects, others, _.isEqual)).toEqual([
+        { x: 1, y: 2 },
+        { x: 2, y: 1 },
+        { x: 1, y: 1 },
+    ]);
 });

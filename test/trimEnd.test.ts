@@ -1,14 +1,13 @@
-import _ from 'lodash';
 import { trimEnd } from '../source/string/trimEnd';
 
 test(`trimEnd('  abc  ') => ${trimEnd('  abc  ')}`, () => {
-    expect(trimEnd('  abc  ')).toBe(_.trimEnd('  abc  '));
+    expect(trimEnd('  abc  ')).toBe('  abc');
 });
 
 test(`trimEnd('-_-abc-_-', '_-') => ${trimEnd('-_-abc-_-', '_-')}`, () => {
-    expect(trimEnd('-_-abc-_-', '_-')).toBe(_.trimEnd('-_-abc-_-', '_-'));
+    expect(trimEnd('-_-abc-_-', '_-')).toBe('-_-abc');
 });
 
-test(`_.map(['  foo  ', '  bar  '], _.trimEnd) => ${_.map(['  foo  ', '  bar  '], trimEnd)}`, () => {
-    expect(_.map(['  foo  ', '  bar  '], trimEnd)).toEqual(_.map(['  foo  ', '  bar  '], _.trimEnd));
+test(`['  foo  ', '  bar  '].map(trimEnd) => ${['  foo  ', '  bar  '].map(trimEnd)}`, () => {
+    expect(['  foo  ', '  bar  '].map(trimEnd)).toEqual(['  foo', '  bar']);
 });

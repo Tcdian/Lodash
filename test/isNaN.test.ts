@@ -1,14 +1,13 @@
-import _ from 'lodash';
 import { isNaN } from '../source/lang/isNaN';
 
 test(`isNaN(NaN) => ${isNaN(NaN)}`, () => {
-    expect(isNaN(NaN)).toBe(_.isNaN(NaN));
+    expect(isNaN(NaN)).toBe(true);
 });
 
 test(`isNaN(new Number(NaN)) => ${isNaN(new Number(NaN))}`, () => {
-    expect(isNaN(new Number(NaN))).toBe(_.isNaN(new Number(NaN)));
+    expect(isNaN(new Number(NaN))).toBe(true);
 });
 
 test(`isNaN(undefined) => ${isNaN(undefined)}`, () => {
-    expect(isNaN(undefined)).toBe(_.isNaN(undefined));
+    expect(isNaN(undefined)).toBe(false);
 });

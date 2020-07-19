@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { partialRight } from '../source/function/partialRight';
 
 function greet(greeting: string, name: string) {
@@ -7,12 +6,10 @@ function greet(greeting: string, name: string) {
 
 test('partialRight', () => {
     const greetFred = partialRight(greet, 'fred');
-    const _greetFred = _.partialRight(greet, 'fred');
-    expect(greetFred('hi')).toBe(_greetFred('hi'));
+    expect(greetFred('hi')).toBe('hi fred');
 });
 
 test('partialRight with placeholders', () => {
     const sayHelloTo = partialRight(greet, 'hello', '_');
-    const _sayHelloTo = _.partialRight(greet, 'hello', _);
-    expect(sayHelloTo('fred')).toBe(_sayHelloTo('fred'));
+    expect(sayHelloTo('fred')).toBe('hello fred');
 });

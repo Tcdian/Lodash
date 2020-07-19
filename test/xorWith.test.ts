@@ -1,3 +1,4 @@
+// todo ...
 import _ from 'lodash';
 import { xorWith } from '../source/array/xorWith';
 
@@ -11,5 +12,8 @@ const others = [
 ];
 
 test("xorWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }], [{ 'x': 1, 'y': 1 }, { 'x': 1, 'y': 2 }], _.isEqual)", () => {
-    expect(xorWith(objects, others, _.isEqual)).toEqual(_.xorWith(objects, others, _.isEqual));
+    expect(xorWith(objects, others, _.isEqual)).toEqual([
+        { x: 2, y: 1 },
+        { x: 1, y: 1 },
+    ]);
 });

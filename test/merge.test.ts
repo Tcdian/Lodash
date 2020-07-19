@@ -9,7 +9,14 @@ interface Recursive {
 }
 
 test('merge({ a: { b: 2, d: 4 } }, { a: { c: 3, e: 5 } })', () => {
-    expect(merge({}, object, other)).toEqual(_.merge({}, object, other));
+    expect(merge({}, object, other)).toEqual({
+        a: {
+            b: 2,
+            d: 4,
+            c: 3,
+            e: 5,
+        },
+    });
 });
 
 test('merge recursive', () => {

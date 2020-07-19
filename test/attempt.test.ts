@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { attempt } from '../source/util/attempt';
 
 function throwError(message: string): never {
@@ -6,7 +5,7 @@ function throwError(message: string): never {
 }
 
 test('throwError', () => {
-    expect(attempt(throwError, 'error')).toEqual(_.attempt(throwError, 'error'));
+    expect(attempt(throwError, 'error')).toEqual(new Error('error'));
 });
 
 function add(a: number, b: number): number {
@@ -14,5 +13,5 @@ function add(a: number, b: number): number {
 }
 
 test('add', () => {
-    expect(attempt(add, 1, 2)).toBe(_.attempt(add, 1, 2));
+    expect(attempt(add, 1, 2)).toBe(3);
 });
