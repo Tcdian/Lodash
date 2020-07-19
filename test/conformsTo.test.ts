@@ -1,4 +1,4 @@
-import { conformsTo } from '../source/util/conformsTo';
+import { conformsTo } from '../source/lang/conformsTo';
 
 const object = { a: 1, b: 2 };
 

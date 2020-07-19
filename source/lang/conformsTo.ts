@@ -1,5 +1,5 @@
 import { keys } from '../object/keys';
-import { isFunction } from '../lang/isFunction';
+import { isFunction } from './isFunction';
 
 const ø = Object.create(null);
 
