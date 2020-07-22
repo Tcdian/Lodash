@@ -3,11 +3,11 @@ import { get } from '../object/get';
 type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
 
-function method(path: PropertyPath, ...args: any[]) {
-    return function (this: any, object: any) {
+function methodOf(object: any, ...args: any[]) {
+    return function (this: any, path: PropertyPath) {
         const func: (...args: any) => any = get(object, path);
         return func.call(this, ...args);
     };
 }
 
-export { method };
+export { methodOf };
