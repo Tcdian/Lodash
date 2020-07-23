@@ -6,7 +6,7 @@ interface NumericDictionary<T> {
     [index: number]: T;
 }
 
-function values<T>(object: T[] | Dictionary<T> | NumericDictionary<T>): T[] {
+function values<T = any>(object: T[] | Dictionary<T> | NumericDictionary<T>): T[] {
     return Object.values(object);
 }
 

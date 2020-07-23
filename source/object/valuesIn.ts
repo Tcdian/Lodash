@@ -7,7 +7,7 @@ interface NumericDictionary<T> {
 }
 
 function valuesIn<T extends object>(object: T): T[keyof T][];
-function valuesIn<T>(object: T[] | Dictionary<T> | NumericDictionary<T>): T[];
+function valuesIn<T = any>(object: T[] | Dictionary<T> | NumericDictionary<T>): T[];
 function valuesIn<T extends object>(object: T): T[keyof T][] {
     let result: T[keyof T][] = [];
     for (let key in object) {
