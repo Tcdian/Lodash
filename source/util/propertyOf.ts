@@ -3,10 +3,10 @@ import { get } from '../object/get';
 type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
 
-function property<T extends object, TResult>(path: PropertyPath): (object: T) => TResult {
-    return function (this: any, object: T): TResult {
+function propertyOf<T extends object, TResult>(object: T): (path: PropertyPath) => TResult {
+    return function (this: any, path: PropertyPath): TResult {
         return get(object, path);
     };
 }
 
-export { property };
+export { propertyOf };
