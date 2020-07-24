@@ -1,4 +1,4 @@
-function keysIn(object: any): string[] {
+function keysIn(object: object): string[] {
     const result: string[] = [];
     for (let key in object) {
         result.push(key);
