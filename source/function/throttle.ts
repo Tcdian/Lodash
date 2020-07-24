@@ -1,3 +1,5 @@
+import { now } from '../date/now';
+
 type Func = (...args: any[]) => any;
 
 interface Cancelable<T> {
@@ -39,7 +41,7 @@ function throttle(
     }
 
     function throttled(this: any, ...args: any) {
-        const time = Date.now();
+        const time = now();
         lastThis = this;
         lastArgs = args;
         if (!leading && lastInvokeTime === 0) {
@@ -55,7 +57,7 @@ function throttle(
             result = invokeFunc(time);
         } else if (trailing && timer === undefined) {
             timer = setTimeout(() => {
-                result = invokeFunc(leading ? Date.now() : 0);
+                result = invokeFunc(leading ? now() : 0);
             }, remaining);
         }
         return result;
@@ -70,7 +72,7 @@ function throttle(
     };
 
     throttled.flush = function () {
-        return timer === undefined ? result : invokeFunc(leading ? Date.now() : 0);
+        return timer === undefined ? result : invokeFunc(leading ? now() : 0);
     };
 
     return throttled;
