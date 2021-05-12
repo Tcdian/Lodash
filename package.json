@@ -35,6 +35,6 @@
         "prettier": "^2.0.4",
         "ts-jest": "^25.4.0",
         "typescript": "^3.8.3",
-        "underscore": "^1.10.2"
+        "underscore": "^1.12.1"
     }
 }
