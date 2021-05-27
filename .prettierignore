@@ -1,3 +1,6 @@
-node_modules/
+# Ignore artifacts:
+node_modules
+
+# config file
+
 tsconfig.json
-lodash_js/
