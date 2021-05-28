@@ -1,4 +1,4 @@
-function spread<TR>(func: (...args: any[]) => TR, start: number = 0): (...args: any[]) => TR {
+function spread<TResult>(func: (...args: any[]) => TResult, start = 0): (...args: any[]) => TResult {
     return function (this: any, args: any[]) {
         return func.call(this, ...args.slice(start));
     };

@@ -1,4 +1,4 @@
-function now() {
+function now(): number {
     return Date.now();
 }
 

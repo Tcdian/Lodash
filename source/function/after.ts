@@ -1,12 +1,11 @@
 type Func = (...args: any[]) => any;
 
-function after<T extends Func>(n: number, func: T): T;
-function after(n: number, func: Func): Func {
+function after<TFunc extends Func>(n: number, func: TFunc): TFunc {
     return function (this: any, ...args: any[]): any {
         if (--n <= 0) {
             return func.call(this, ...args);
         }
-    };
+    } as any as TFunc;
 }
 
 export { after };

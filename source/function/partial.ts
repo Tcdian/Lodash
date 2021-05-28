@@ -1,7 +1,7 @@
 import { _executeBound } from '../util/_executeBound';
 import { _replaceHolders } from '../util/_replaceHolders';
 
-function partial<T>(func: (...args: any[]) => T, ...partials: any[]): (...args: any) => T {
+function partial<TResult>(func: (...args: any[]) => TResult, ...partials: any[]): (...args: any) => TResult {
     const placeholder = partial.placeholder;
     return function boundFunc(this: any, ...args: any[]): any {
         const finalArgs = _replaceHolders(partials, args, placeholder);

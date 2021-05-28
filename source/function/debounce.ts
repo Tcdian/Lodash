@@ -38,10 +38,10 @@ function debounce(
             result = invokeFunc();
         }
         if (timer) {
-            clearTimeout(timer);
+            window.clearTimeout(timer);
             timer = undefined;
         }
-        timer = setTimeout(() => {
+        timer = window.setTimeout(() => {
             result = invokeFunc();
         }, wait);
         return result;
@@ -49,7 +49,7 @@ function debounce(
 
     debounced.cancel = function () {
         if (timer !== undefined) {
-            clearTimeout(timer);
+            window.clearTimeout(timer);
         }
         timer = lastThis = lastArgs = undefined;
     };

@@ -4,8 +4,7 @@ interface MemoizedFunction {
     cache: Map<any, any>;
 }
 
-function memoize<T extends Func>(func: T, resolver?: Func): T & MemoizedFunction;
-function memoize(func: Func, resolver?: Func): Func & MemoizedFunction {
+function memoize<T extends Func>(func: T, resolver?: Func): T & MemoizedFunction {
     function memoized(this: any, ...args: any[]): any {
         const key = resolver ? resolver.call(this, ...args) : args[0];
         const cache = memoized.cache;
@@ -17,7 +16,7 @@ function memoize(func: Func, resolver?: Func): Func & MemoizedFunction {
         return result;
     }
     memoized.cache = new (memoize.Cache || Map)();
-    return memoized;
+    return memoized as any as T & MemoizedFunction;
 }
 
 memoize.Cache = Map;

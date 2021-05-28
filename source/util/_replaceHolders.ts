@@ -1,4 +1,4 @@
-function _replaceHolders(partials: any[], args: any[], placeholder: any) {
+function _replaceHolders(partials: any[], args: any[], placeholder: any): any[] {
     let separator = 0;
     return [
         ...partials.map((partial) => {

@@ -1,6 +1,8 @@
 import { delay } from './delay';
 
-function defer(func: (...args: any[]) => any, ...args: any[]): number {
+type Func = (...args: any[]) => any;
+
+function defer(func: Func, ...args: any[]): number {
     return delay(func, 0, ...args);
 }
 

@@ -1,12 +1,12 @@
 import { isObject } from '../lang/isObject';
 
-function _executeBound<T>(
-    func: (...args: any[]) => T,
-    boundFunc: (...args: any[]) => T,
+function _executeBound(
+    func: (...args: any[]) => any,
+    boundFunc: (...args: any[]) => any,
     thisArg: any,
     context: any,
     args: any[]
-): T {
+): any {
     if (!(context instanceof boundFunc)) {
         return func.call(thisArg, ...args);
     }

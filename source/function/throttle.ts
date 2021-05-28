@@ -51,12 +51,12 @@ function throttle(
         const remaining = wait - (time - lastInvokeTime);
         if (remaining <= 0 || remaining > wait) {
             if (timer) {
-                clearTimeout(timer);
+                window.clearTimeout(timer);
                 timer = undefined;
             }
             result = invokeFunc(time);
         } else if (trailing && timer === undefined) {
-            timer = setTimeout(() => {
+            timer = window.setTimeout(() => {
                 result = invokeFunc(leading ? now() : 0);
             }, remaining);
         }
@@ -65,7 +65,7 @@ function throttle(
 
     throttled.cancel = function () {
         if (timer !== undefined) {
-            clearTimeout(timer);
+            window.clearTimeout(timer);
         }
         timer = lastThis = lastArgs = undefined;
         lastInvokeTime = 0;
