@@ -18,7 +18,7 @@ function toString(value: any): string {
     if (isSymbol(value)) {
         return symbolProto.toString.call(value);
     }
-    let result = value + '';
+    const result = value + '';
     return result === '0' && 1 / value == -Infinity ? '-0' : result;
 }
 

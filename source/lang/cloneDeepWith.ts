@@ -5,9 +5,9 @@ const CLONE_SYMBOLS_FLAG = 1 << 2;
 
 type CloneWithCustomizer<TValue, TResult> = (
     value: TValue,
-    key: number | string | undefined,
-    object: any,
-    cach: any
+    key?: number | string | undefined,
+    object?: any,
+    cache?: any
 ) => TResult;
 
 function cloneDeepWith<TSource, TTarget = TSource>(

@@ -1,4 +1,4 @@
-function keys(object: object | string): string[] {
+function keys(object: any): string[] {
     return Object.keys(object);
 }
 

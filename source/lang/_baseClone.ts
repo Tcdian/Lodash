@@ -22,7 +22,7 @@ function _baseClone(
     key?: any,
     object?: any,
     cache: Map<any, any> = new Map()
-) {
+): any {
     let result: any;
     const isDeep = bitmask & CLONE_DEEP_FLAG;
     const isFlat = bitmask & CLONE_FLAT_FLAG;
@@ -61,15 +61,19 @@ function _baseClone(
                 result = new Date((value as Date).valueOf());
                 break;
             case '[object String]':
+                // eslint-disable-next-line @typescript-eslint/ban-types
                 result = new String((value as String).valueOf());
                 break;
             case '[object Boolean]':
+                // eslint-disable-next-line @typescript-eslint/ban-types
                 result = new Boolean((value as Boolean).valueOf());
                 break;
             case '[object Number]':
+                // eslint-disable-next-line @typescript-eslint/ban-types
                 result = new Number((value as Number).valueOf());
                 break;
             case '[object Symbol]':
+                // eslint-disable-next-line @typescript-eslint/ban-types
                 result = Object(Symbol.prototype.valueOf.call(value as Symbol));
                 break;
             case '[object Function]':
