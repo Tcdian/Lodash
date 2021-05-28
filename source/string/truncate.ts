@@ -7,7 +7,7 @@ interface Options {
     separator?: RegExp | string;
 }
 
-function truncate(string: string, { length = 30, omission = '...', separator }: Options = {}) {
+function truncate(string: string, { length = 30, omission = '...', separator }: Options = {}): string {
     const len = length > omission.length ? length - omission.length : 0;
     if (separator === undefined) {
         return string.slice(0, len) + omission;

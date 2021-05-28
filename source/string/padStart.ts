@@ -1,4 +1,4 @@
-function padStart(string: string, length: number, chars: string = ' '): string {
+function padStart(string: string, length: number, chars = ' '): string {
     return string.padStart(length, chars);
 }
 

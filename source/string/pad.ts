@@ -1,4 +1,4 @@
-function pad(string: string, length: number, chars: string = ' '): string {
+function pad(string: string, length: number, chars = ' '): string {
     const strLen = string.length;
     const addition = length > strLen ? length - strLen : 0;
     const backAddition = Math.ceil(addition / 2);

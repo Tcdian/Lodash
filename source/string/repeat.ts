@@ -1,4 +1,4 @@
-function repeat(string: string = '', n: number = 1): string {
+function repeat(string = '', n = 1): string {
     return string.repeat(n);
 }
 
