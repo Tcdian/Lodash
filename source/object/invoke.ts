@@ -8,9 +8,9 @@ type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
 
 function invoke(object: any, path: PropertyPath, ...args: any[]): any {
     const pathArr = toPath(path);
-    const funcName = last(pathArr);
     const data = get(object, initial(pathArr));
-    return data[funcName].call(object, ...args);
+    const func = data[last(pathArr)];
+    return func.call(data, ...args);
 }
 
 export { invoke };
