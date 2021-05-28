@@ -1,22 +1,15 @@
 import { isArray } from '../lang/isArray';
 import { isString } from '../lang/isString';
 
-interface Dictionary<T> {
-    [index: string]: T;
-}
+type PropertyName = string | number | symbol;
 
-interface NumericDictionary<T> {
-    [index: number]: T;
-}
-
-function includes<T>(collection: T[] | Dictionary<T> | NumericDictionary<T>, value: T, fromIndex?: number): boolean;
-function includes(
-    collection: any[] | Dictionary<any> | NumericDictionary<any>,
-    value: any,
-    fromIndex: number = 0
-): boolean {
-    if (isArray(collection) || isString(collection)) {
+function includes(collection: string, value: string, fromIndex?: number): boolean;
+function includes<T>(collection: T[] | Record<PropertyName, T>, value: T, fromIndex?: number): boolean;
+function includes<T>(collection: T[] | Record<PropertyName, T> | string, value: T, fromIndex = 0): boolean {
+    if (isArray(collection)) {
         return collection.includes(value, fromIndex);
+    } else if (isString(collection)) {
+        return collection.includes(value as any as string, fromIndex);
     }
     return Object.values(collection).includes(value, fromIndex);
 }

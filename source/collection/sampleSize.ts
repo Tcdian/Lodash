@@ -1,20 +1,14 @@
 import { values } from '../object/values';
 
-interface Dictionary<T> {
-    [index: string]: T;
-}
+type PropertyName = string | number | symbol;
 
-interface NumericDictionary<T> {
-    [index: number]: T;
-}
-
-function swap(array: any[], a: number, b: number) {
+function swap(array: unknown[], a: number, b: number) {
     const temp = array[a];
     array[a] = array[b];
     array[b] = temp;
 }
 
-function sampleSize<T>(collection: T[] | Dictionary<T> | NumericDictionary<T>, n: number = 1): T[] {
+function sampleSize<T>(collection: T[] | Record<PropertyName, T>, n = 1): T[] {
     const valueArr = values(collection);
     const len = valueArr.length;
     n = Math.min(len, n);

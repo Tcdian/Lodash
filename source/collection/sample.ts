@@ -1,14 +1,8 @@
 import { values } from '../object/values';
 
-interface Dictionary<T> {
-    [index: string]: T;
-}
+type PropertyName = string | number | symbol;
 
-interface NumericDictionary<T> {
-    [index: number]: T;
-}
-
-function sample<T>(collection: T[] | Dictionary<T> | NumericDictionary<T>): T {
+function sample<T>(collection: T[] | Record<PropertyName, T>): T {
     const valueArr = values(collection);
     const random = Math.floor(Math.random() * valueArr.length);
     return valueArr[random];
