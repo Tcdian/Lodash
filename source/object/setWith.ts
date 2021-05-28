@@ -10,7 +10,7 @@ import { _isIndex } from '../lang/_isIndex';
 type PropertyName = string | number | symbol;
 type Func = (...args: any[]) => any;
 
-function setWith<T = any>(object: any, path: PropertyName | PropertyName[], value: any, customizer?: Func): T {
+function setWith(object: any, path: PropertyName | PropertyName[], value: any, customizer?: Func): any {
     if (isUndefined(customizer)) {
         return set(object, path, value);
     }

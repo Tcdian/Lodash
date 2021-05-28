@@ -1,12 +1,6 @@
-interface Dictionary<T> {
-    [index: string]: T;
-}
+type PropertyName = string | number | symbol;
 
-interface NumericDictionary<T> {
-    [index: number]: T;
-}
-
-function values<T = any>(object: T[] | Dictionary<T> | NumericDictionary<T>): T[] {
+function values<T>(object: T[] | Record<PropertyName, T>): T[] {
     return Object.values(object);
 }
 

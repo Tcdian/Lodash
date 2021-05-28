@@ -1,18 +1,12 @@
 import { isSet } from '../lang/isSet';
 import { isMap } from '../lang/isMap';
 
-interface Dictionary<T> {
-    [index: string]: T;
-}
+type PropertyName = string | number | symbol;
 
-interface NumericDictionary<T> {
-    [index: number]: T;
-}
-
-function entries<T>(object: T[] | Dictionary<T> | NumericDictionary<T>): [string, T][];
+function entries<T>(object: T[] | Record<PropertyName, T>): [string, T][];
 function entries<T>(set: Set<T>): [T, T][];
 function entries<T, U>(map: Map<T, U>): [T, U][];
-function entries(object: object): [any, any][] {
+function entries<T>(object: T[] | Record<PropertyName, T>): [string, T][] {
     if (isSet(object) || isMap(object)) {
         return [...object.entries()];
     }

@@ -1,15 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { toPath } from '../util/toPath';
 
 type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
-
-interface Dictionary<T> {
-    [index: string]: T;
-}
-
-interface NumericDictionary<T> {
-    [index: number]: T;
-}
 
 function get<TObject extends object, TKey extends keyof TObject>(object: TObject, path: TKey | [TKey]): TObject[TKey];
 function get<TObject extends object, TKey extends keyof TObject, TDefault>(
@@ -39,9 +32,9 @@ function get<
     TKey3 extends keyof TObject[TKey1][TKey2],
     TDefault
 >(object: TObject, path: [TKey1, TKey2, TKey3]): Exclude<TObject[TKey1][TKey2][TKey3], undefined> | TDefault;
-function get<T>(object: T[] | Dictionary<T> | NumericDictionary<T>, path: PropertyPath): T;
+function get<T>(object: T[] | Record<PropertyName, T>, path: PropertyPath): T;
 function get<T, TDefault>(
-    object: T[] | Dictionary<T> | NumericDictionary<T>,
+    object: T[] | Record<PropertyName, T>,
     path: PropertyPath,
     defaultValue: TDefault
 ): Exclude<T, undefined> | TDefault;

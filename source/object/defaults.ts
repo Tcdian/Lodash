@@ -10,8 +10,7 @@ function defaults<TObject, TSource1, TSource2, TSource3>(
     source2: TSource2,
     source3: TSource3
 ): TObject & TSource1 & TSource2 & TSource3;
-function defaults(object: object, ...sources: object[]): object;
-function defaults(object: object, ...sources: object[]): object {
+function defaults(object: any, ...sources: any[]): any {
     return Object.assign(object, ...sources.reverse(), { ...object });
 }
 

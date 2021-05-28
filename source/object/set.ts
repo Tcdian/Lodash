@@ -7,7 +7,7 @@ import { _isIndex } from '../lang/_isIndex';
 
 type PropertyName = string | number | symbol;
 
-function set<T = any>(object: any, path: PropertyName | PropertyName[], value: any): T {
+function set(object: any, path: PropertyName | PropertyName[], value: any): any {
     const pathArr = toPath(path);
     const key = first(pathArr);
     const resPathArr = tail(pathArr);

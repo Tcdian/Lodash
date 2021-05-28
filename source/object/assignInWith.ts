@@ -37,7 +37,7 @@ function assignInWith(object: any, ...otherArgs: any[]): any {
     }
     const sources = initial(otherArgs);
     sources.forEach((source) => {
-        for (let key in source) {
+        for (const key in source) {
             const customized = customizer(object[key], source[key], key, object, source);
             object[key] = isUndefined(customized) ? source[key] : customized;
         }

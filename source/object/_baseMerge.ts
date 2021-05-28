@@ -7,7 +7,7 @@ type MergeWithCustomizer = (
     key: string | symbol,
     object: any,
     source: any,
-    cache: any
+    cache?: any
 ) => any;
 
 function _baseMerge(object: any, sources: any[], customizer?: MergeWithCustomizer, cache: Set<any> = new Set()): any {
