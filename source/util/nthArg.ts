@@ -1,7 +1,9 @@
 import { nth } from '../array/nth';
 
-function nthArg(n = 0) {
-    return function (this: any, ...args: any[]) {
+type Func = (...args: any[]) => any;
+
+function nthArg(n = 0): Func {
+    return function (...args: any[]): any {
         return nth(args, n);
     };
 }

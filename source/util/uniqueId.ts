@@ -1,6 +1,6 @@
 let id = 0;
 
-function uniqueId(prefix = '') {
+function uniqueId(prefix = ''): string {
     return `${prefix}${id++}`;
 }
 

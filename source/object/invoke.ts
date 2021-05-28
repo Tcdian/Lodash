@@ -10,7 +10,7 @@ function invoke(object: any, path: PropertyPath, ...args: any[]): any {
     const pathArr = toPath(path);
     const funcName = last(pathArr);
     const data = get(object, initial(pathArr));
-    return data[funcName].call(data, ...args);
+    return data[funcName].call(object, ...args);
 }
 
 export { invoke };
