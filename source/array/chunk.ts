@@ -4,7 +4,7 @@ function chunk<T>(array: T[], size = 1): T[][] {
     }
     let result: T[][] = [];
     let i = 0;
-    let len = array.length;
+    const len = array.length;
     while (i < len) {
         result = [...result, array.slice(i, (i += size))];
     }

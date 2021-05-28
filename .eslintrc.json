@@ -12,6 +12,6 @@
     },
     "plugins": ["@typescript-eslint"],
     "rules": {
-        "prefer-const": "off"
+        "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }]
     }
 }

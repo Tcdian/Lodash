@@ -1,10 +1,10 @@
 import { uniq } from './uniq';
-import { isUndefined } from '../lang/isUndefined';
+import { isFunction } from '../lang/isFunction';
 
 type Comparator<T> = (a: T, b: T) => boolean;
 
 function uniqWith<T>(array: T[], comparator?: Comparator<T>): T[] {
-    if (isUndefined(comparator)) {
+    if (!isFunction(comparator)) {
         return uniq(array);
     }
     return array.filter((arrVal, index) => {

@@ -1,4 +1,4 @@
-function join(array: any[], separator: string = ','): string {
+function join(array: any[], separator = ','): string {
     return array.join(separator);
 }
 

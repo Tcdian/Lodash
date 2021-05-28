@@ -1,5 +1,5 @@
 import { intersection } from './intersection';
-import { isArray } from '../lang/isArray';
+import { isFunction } from '../lang/isFunction';
 import { first } from './first';
 import { last } from './last';
 import { initial } from './initial';
@@ -29,7 +29,7 @@ function intersectionWith<T>(
 ): T[];
 function intersectionWith<T>(...arrays: (T[] | Comparator<T>)[]): T[] {
     const comparator = last(arrays);
-    if (isArray(comparator)) {
+    if (!isFunction(comparator)) {
         return intersection(...(arrays as T[][]));
     }
     const allArrays = initial(arrays) as T[][];

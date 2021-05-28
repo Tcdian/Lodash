@@ -2,7 +2,7 @@ import { uniqWith } from './uniqWith';
 import { union } from './union';
 import { last } from './last';
 import { initial } from './initial';
-import { isArray } from '../lang/isArray';
+import { isFunction } from '../lang/isFunction';
 import { flatten } from './flatten';
 
 type Comparator<T> = (a: T, b: T) => boolean;
@@ -22,7 +22,7 @@ function unionWith<T>(
 ): T[];
 function unionWith<T>(...args: (T[] | Comparator<T>)[]): T[] {
     const comparator = last(args);
-    if (isArray(comparator)) {
+    if (!isFunction(comparator)) {
         return union(...(args as T[][]));
     }
     const arrays = initial(args) as T[][];

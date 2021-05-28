@@ -1,6 +1,6 @@
 import { last } from './last';
 import { initial } from './initial';
-import { isArray } from '../lang/isArray';
+import { isFunction } from '../lang/isFunction';
 import { zip } from './zip';
 
 function zipWith<T, TResult>(arrays: T[], iteratee: (value: T) => TResult): TResult[];
@@ -33,7 +33,7 @@ function zipWith<T1, T2, T3, T4, T5, TResult>(
 function zipWith<T, TResult>(...args: Array<((...group: T[]) => TResult) | T[]>): TResult[];
 function zipWith<T, TResult>(...args: Array<((...group: T[]) => TResult) | T[]>): TResult[] | T[][] {
     const iteratee = last(args);
-    if (isArray(iteratee)) {
+    if (!isFunction(iteratee)) {
         return zip(...(args as T[][]));
     }
     return zip(...(initial(args) as T[][])).map((arrVal) => iteratee(...arrVal));

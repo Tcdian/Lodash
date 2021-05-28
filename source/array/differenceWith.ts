@@ -1,6 +1,6 @@
 import { flatten } from './flatten';
 import { difference } from './difference';
-import { isArray } from '../lang/isArray';
+import { isFunction } from '../lang/isFunction';
 import { last } from './last';
 import { initial } from './initial';
 
@@ -28,7 +28,7 @@ function differenceWith<T>(
 ): T[];
 function differenceWith<T>(array: T[], ...others: (T[] | Comparator<T>)[]): T[] {
     const comparator = last(others);
-    if (isArray(comparator)) {
+    if (!isFunction(comparator)) {
         return difference(array, ...(others as T[][]));
     }
     const flattenedValues = flatten<T>(initial(others) as T[][]);
