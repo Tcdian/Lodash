@@ -9,7 +9,8 @@ import { isMap } from './isMap';
 import { keys } from '../object/keys';
 import { keysIn } from '../object/keysIn';
 
-type CloneWithCustomizer = (value: any, key?: number | string | undefined, object?: any, cache?: any) => any;
+type PropertyName = string | number | symbol;
+type CloneWithCustomizer = (value: any, key?: PropertyName, object?: any, cache?: Map<any, any>) => any;
 
 const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_FLAT_FLAG = 1 << 1;
@@ -21,7 +22,7 @@ function _baseClone(
     customizer?: CloneWithCustomizer,
     key?: any,
     object?: any,
-    cache: Map<any, any> = new Map()
+    cache = new Map()
 ): any {
     let result: any;
     const isDeep = bitmask & CLONE_DEEP_FLAG;
