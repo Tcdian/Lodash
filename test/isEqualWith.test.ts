@@ -10,5 +10,7 @@ test('isEqualWith', () => {
             return true;
         }
     }
+
+    expect(isEqualWith('hello', 'hi', isGreeting)).toBe(true);
     expect(isEqualWith(['hello', 'goodbye'], ['hi', 'goodbye'], customizer)).toBe(true);
 });
