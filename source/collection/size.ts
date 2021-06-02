@@ -4,7 +4,9 @@ import { isMap } from '../lang/isMap';
 
 type PropertyName = string | number | symbol;
 
-function size(collection: Record<PropertyName, unknown> | string): number {
+function size(
+    collection: unknown[] | Record<PropertyName, unknown> | string | Map<unknown, unknown> | Set<unknown>
+): number {
     if (isSet(collection) || isMap(collection)) {
         return collection.size;
     }

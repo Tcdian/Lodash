@@ -1,14 +1,12 @@
 import { values } from '../object/values';
 
-type PropertyName = string | number | symbol;
-
 function swap(array: unknown[], a: number, b: number) {
     const temp = array[a];
     array[a] = array[b];
     array[b] = temp;
 }
 
-function shuffle<T>(collection: T[] | Record<PropertyName, T>): T[] {
+function shuffle<T>(collection: T[]): T[] {
     const valueArr = values(collection);
     const len = valueArr.length;
     for (let i = 0; i < len - 1; i++) {

@@ -2,17 +2,13 @@ import { _baseClone } from './_baseClone';
 
 const CLONE_SYMBOLS_FLAG = 1 << 2;
 
-type CloneWithCustomizer<TValue, TResult> = (
-    value: TValue,
-    key: number | string | undefined,
-    object: any,
-    cach: any
-) => TResult;
+type PropertyName = string | number | symbol;
+type CloneWithCustomizer<TValue, TResult> = (value: TValue, key?: PropertyName, object?: any, stack?: any) => TResult;
 
-function cloneWith<TSource, TTarget = TSource>(
+function cloneWith<TSource, TResult>(
     value: TSource,
-    customizer?: CloneWithCustomizer<TSource, TTarget | undefined>
-): TSource | TTarget {
+    customizer?: CloneWithCustomizer<TSource, TResult | undefined>
+): TSource | TResult {
     return _baseClone(value, CLONE_SYMBOLS_FLAG, customizer);
 }
 
