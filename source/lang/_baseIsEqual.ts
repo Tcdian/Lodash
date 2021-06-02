@@ -10,9 +10,11 @@ type IsEqualCustomizer = (
     object?: any,
     other?: any,
     cache?: Map<any, any>
-) => any;
+) => boolean | undefined;
 
-function _baseIsEqual(value: any, other: any, customizer?: IsEqualCustomizer, cache = new Map()): boolean {
+const COMPARE_PARTIAL_FLAG = 1 << 0;
+
+function _baseIsEqual(value: any, other: any, bitmask = 0, customizer?: IsEqualCustomizer, cache = new Map()): boolean {
     if (Object.is(value, other)) {
         return true;
     }
@@ -22,10 +24,10 @@ function _baseIsEqual(value: any, other: any, customizer?: IsEqualCustomizer, ca
     if (typeof value !== 'object' && typeof other !== 'object') {
         return false;
     }
-    return _baseIsEqualDeep(value, other, customizer, cache);
+    return _baseIsEqualDeep(value, other, bitmask, customizer, cache);
 }
 
-function _baseIsEqualDeep(value: any, other: any, customizer?: IsEqualCustomizer, cache = new Map()) {
+function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: IsEqualCustomizer, cache = new Map()) {
     const valTag = _baseGetTag(value);
     const othTag = _baseGetTag(other);
     if (valTag !== othTag) {
@@ -48,20 +50,21 @@ function _baseIsEqualDeep(value: any, other: any, customizer?: IsEqualCustomizer
     cache.set(value, other);
     cache.set(other, value);
     let result: boolean;
+    const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
     if (isArray(value) && isArray(other)) {
-        if (value.length !== other.length) {
+        if (!isPartial && value.length !== other.length) {
             return false;
         }
-        result = value.every((v, index) => {
+        result = other.every((v, index) => {
             const compared = customizer && customizer(value[index], other[index], index, value, other, cache);
             if (!isUndefined(compared)) {
                 return !!compared;
             }
-            return _baseIsEqual(value[index], other[index], customizer, cache);
+            return _baseIsEqual(value[index], other[index], bitmask, customizer, cache);
         });
     } else {
-        const keys = Object.keys(value);
-        if (keys.length !== Object.keys(other).length) {
+        const keys = Object.keys(other);
+        if (!isPartial && keys.length !== Object.keys(value).length) {
             return false;
         }
         result = keys.every((key) => {
@@ -69,7 +72,7 @@ function _baseIsEqualDeep(value: any, other: any, customizer?: IsEqualCustomizer
             if (!isUndefined(compared)) {
                 return !!compared;
             }
-            return _baseIsEqual(value[key], other[key], customizer, cache);
+            return _baseIsEqual(value[key], other[key], bitmask, customizer, cache);
         });
     }
     cache.delete(value);

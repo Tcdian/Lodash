@@ -1,7 +1,13 @@
-type PropertyName = string | number | symbol;
+import { get } from '../object/get';
+import { isEqual } from '../lang/isEqual';
 
-function matchesProperty(path, srcValue) {
-    return function (object: Record<PropertyName, unknown>) {
-        
+type PropertyName = string | number | symbol;
+type PropertyPath<T> = T | ReadonlyArray<T>;
+
+function matchesProperty<T, V>(path: PropertyPath<PropertyName>, srcValue: T) {
+    return function (object: V): boolean {
+        return isEqual(get(object, path), srcValue);
     };
 }
+
+export { matchesProperty };
