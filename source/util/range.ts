@@ -3,6 +3,7 @@ import { isUndefined } from '../lang/isUndefined';
 function range(end: number): number[];
 function range(start: number, end: number): number[];
 function range(start: number, end: number, step: number): number[];
+function range(start: number, end?: number, step?: number): number[];
 function range(start: number, end?: number, step?: number): number[] {
     const endBoundary = isUndefined(end) ? start : end;
     const startBoundary = isUndefined(end) ? 0 : start;
