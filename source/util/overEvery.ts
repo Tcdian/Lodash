@@ -1,6 +1,8 @@
-function overEvery<TArgs extends any[]>(iteratees: ((...args: TArgs) => boolean)[]) {
+import { identity } from './identity';
+
+function overEvery<TArgs extends any[]>(predicates: ((...args: TArgs) => boolean)[] = [identity as any]) {
     return function (this: any, ...args: TArgs) {
-        return iteratees.every((iteratee) => iteratee.call(this, ...args));
+        return predicates.every((predicate) => predicate.call(this, ...args));
     };
 }
 
