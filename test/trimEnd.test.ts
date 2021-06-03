@@ -1,13 +1,15 @@
 import { trimEnd } from '../source/string/trimEnd';
 
-test(`trimEnd('  abc  ') => ${trimEnd('  abc  ')}`, () => {
-    expect(trimEnd('  abc  ')).toBe('  abc');
-});
+describe('trimEnd', () => {
+    test('trimEnd("  abc  ") => "  abc"', () => {
+        expect(trimEnd('  abc  ')).toBe('  abc');
+    });
 
-test(`trimEnd('-_-abc-_-', '_-') => ${trimEnd('-_-abc-_-', '_-')}`, () => {
-    expect(trimEnd('-_-abc-_-', '_-')).toBe('-_-abc');
-});
+    test('trimEnd("-_-abc-_-", "_-") => "-_-abc"', () => {
+        expect(trimEnd('-_-abc-_-', '_-')).toBe('-_-abc');
+    });
 
-test(`['  foo  ', '  bar  '].map(trimEnd) => ${['  foo  ', '  bar  '].map(trimEnd)}`, () => {
-    expect(['  foo  ', '  bar  '].map(trimEnd)).toEqual(['  foo', '  bar']);
+    test('["  foo  ", "  bar  "].map(trimEnd) => ["  foo", "  bar"]', () => {
+        expect(['  foo  ', '  bar  '].map(trimEnd)).toEqual(['  foo', '  bar']);
+    });
 });

@@ -1,9 +1,11 @@
 import { capitalize } from '../source/string/capitalize';
 
-test(`capitalize('FRED') => ${capitalize('FRED')}`, () => {
-    expect(capitalize('FRED')).toBe('Fred');
-});
+describe('capitalize', () => {
+    test('capitalize("FRED") => "Fred"', () => {
+        expect(capitalize('FRED')).toBe('Fred');
+    });
 
-test(`capitalize('Fred') => ${capitalize('Fred')}`, () => {
-    expect(capitalize('Fred')).toBe('Fred');
+    test('capitalize("Fred") => "Fred"', () => {
+        expect(capitalize('Fred')).toBe('Fred');
+    });
 });

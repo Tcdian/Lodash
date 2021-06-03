@@ -1,13 +1,14 @@
 import { rest } from '../source/function/rest';
 import { initial } from '../source/array/initial';
 import { last } from '../source/array/last';
-// todo ...
-import _ from 'lodash';
+import { size } from '../source/collection/size';
 
-test('rest', () => {
-    const say = rest(function (what, names) {
-        return what + ' ' + initial(names).join(', ') + (_.size(names) > 1 ? ', & ' : '') + last(names);
+describe('rest', () => {
+    test('rest', () => {
+        const say = rest((what: string, names: string[]) => {
+            return what + ' ' + initial(names).join(', ') + (size(names) > 1 ? ', & ' : '') + last(names);
+        });
+
+        expect(say('hello', 'fred', 'barney', 'pebbles')).toBe('hello fred, barney, & pebbles');
     });
-
-    expect(say('hello', 'fred', 'barney', 'pebbles')).toBe('hello fred, barney, & pebbles');
 });

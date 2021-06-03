@@ -1,13 +1,15 @@
 import { trim } from '../source/string/trim';
 
-test(`trim('  abc  ') => ${trim('  abc  ')}`, () => {
-    expect(trim('  abc  ')).toBe('abc');
-});
+describe('trim', () => {
+    test('trim("  abc  ") => "abc"', () => {
+        expect(trim('  abc  ')).toBe('abc');
+    });
 
-test(`trim('-_-abc-_-', '_-') => ${trim('-_-abc-_-', '_-')}`, () => {
-    expect(trim('-_-abc-_-', '_-')).toBe('abc');
-});
+    test('trim("-_-abc-_-", "_-") => "abc"', () => {
+        expect(trim('-_-abc-_-', '_-')).toBe('abc');
+    });
 
-test(`['  foo  ', '  bar  '].map(trim) => ${['  foo  ', '  bar  '].map(trim)}`, () => {
-    expect(['  foo  ', '  bar  '].map(trim)).toEqual(['foo', 'bar']);
+    test('["  foo  ", "  bar  "].map(trim) => ["foo", "bar"]', () => {
+        expect(['  foo  ', '  bar  '].map(trim)).toEqual(['foo', 'bar']);
+    });
 });

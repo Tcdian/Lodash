@@ -1,9 +1,11 @@
 import { isSymbol } from '../source/lang/isSymbol';
 
-test(`isSymbol(Symbol.iterator) => ${isSymbol(Symbol.iterator)}`, () => {
-    expect(isSymbol(Symbol.iterator)).toBe(true);
-});
+describe('isSymbol', () => {
+    test('isSymbol(Symbol.iterator) => true', () => {
+        expect(isSymbol(Symbol.iterator)).toBe(true);
+    });
 
-test(`isSymbol('abc') => ${isSymbol('abc')}`, () => {
-    expect(isSymbol('abc')).toBe(false);
+    test('isSymbol("abc") => false', () => {
+        expect(isSymbol('abc')).toBe(false);
+    });
 });

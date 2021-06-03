@@ -1,9 +1,11 @@
 import { isRegExp } from '../source/lang/isRegExp';
 
-test(`isRegExp(/abc/) => ${isRegExp(/abc/)}`, () => {
-    expect(isRegExp(/abc/)).toBe(true);
-});
+describe('isRegExp', () => {
+    test('isRegExp(/abc/) => true', () => {
+        expect(isRegExp(/abc/)).toBe(true);
+    });
 
-test(`isRegExp('/abc/') => ${isRegExp('/abc/')}`, () => {
-    expect(isRegExp('/abc/')).toBe(false);
+    test('isRegExp("/ abc /") => false', () => {
+        expect(isRegExp('/abc/')).toBe(false);
+    });
 });

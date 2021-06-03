@@ -1,20 +1,15 @@
 import { pullAll } from '../source/array/pullAll';
 
-let arr: string[];
+describe('pullAll', () => {
+    test('pullAll(["a", "b", "c", "a", "b", "c"], ["a"]) => ["b", "c", "b", "c"]', () => {
+        const arr = ['a', 'b', 'c', 'b', 'c'];
+        expect(pullAll(arr, ['a'])).toEqual(['b', 'c', 'b', 'c']);
+        expect(arr).toEqual(['b', 'c', 'b', 'c']);
+    });
 
-beforeEach(() => {
-    arr = ['a', 'b', 'c', 'b', 'c'];
-});
-
-test(`pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a']) => ${pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a'])}`, () => {
-    pullAll(arr, ['a']);
-    expect(arr).toEqual(['b', 'c', 'b', 'c']);
-});
-
-test(`pullAll(['a', 'b', 'c', 'a', 'b', 'c'], ['a', 'c']) => ${pullAll(
-    ['a', 'b', 'c', 'a', 'b', 'c'],
-    ['a', 'c']
-)}`, () => {
-    pullAll(arr, ['a', 'c']);
-    expect(arr).toEqual(['b', 'b']);
+    test('pullAll(["a", "b", "c", "a", "b", "c"], ["a", "c"]) => ["b", "b"]', () => {
+        const arr = ['a', 'b', 'c', 'b', 'c'];
+        expect(pullAll(arr, ['a', 'c'])).toEqual(['b', 'b']);
+        expect(arr).toEqual(['b', 'b']);
+    });
 });

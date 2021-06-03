@@ -1,16 +1,7 @@
 import { zipWith } from '../source/array/zipWith';
 
-test(`zipWith([1, 2], [10, 20], [100, 200], function(a, b, c) { return a + b + c; }) => ${zipWith(
-    [1, 2],
-    [10, 20],
-    [100, 200],
-    function (a, b, c) {
-        return a + b + c;
-    }
-)}`, () => {
-    expect(
-        zipWith([1, 2], [10, 20], [100, 200], function (a, b, c) {
-            return a + b + c;
-        })
-    ).toEqual([111, 222]);
+describe('zipWith', () => {
+    test('zipWith([1, 2], [10, 20], [100, 200], function(a, b, c) { return a + b + c; }) => [111, 222]', () => {
+        expect(zipWith([1, 2], [10, 20], [100, 200], (a, b, c) => a + b + c)).toEqual([111, 222]);
+    });
 });

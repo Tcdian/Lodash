@@ -1,17 +1,19 @@
 import { isLength } from '../source/lang/isLength';
 
-test(`isLength(3) => ${isLength(3)}`, () => {
-    expect(isLength(3)).toBe(true);
-});
+describe('isLength', () => {
+    test('isLength(3) => true', () => {
+        expect(isLength(3)).toBe(true);
+    });
 
-test(`isLength(Number.MIN_VALUE) => ${isLength(Number.MIN_VALUE)}`, () => {
-    expect(isLength(Number.MIN_VALUE)).toBe(false);
-});
+    test('isLength(Number.MIN_VALUE) => false', () => {
+        expect(isLength(Number.MIN_VALUE)).toBe(false);
+    });
 
-test(`isLength(Infinity) => ${isLength(Infinity)}`, () => {
-    expect(isLength(Infinity)).toBe(false);
-});
+    test('isLength(Infinity) => false', () => {
+        expect(isLength(Infinity)).toBe(false);
+    });
 
-test(`isLength('3') => ${isLength('3')}`, () => {
-    expect(isLength('3')).toBe(false);
+    test('isLength("3") => false', () => {
+        expect(isLength('3')).toBe(false);
+    });
 });

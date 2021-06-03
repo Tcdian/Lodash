@@ -1,9 +1,11 @@
 import { isSet } from '../source/lang/isSet';
 
-test(`isSet(new Set) => ${isSet(new Set())}`, () => {
-    expect(isSet(new Set())).toBe(true);
-});
+describe('isSet', () => {
+    test('isSet(new Set) => true', () => {
+        expect(isSet(new Set())).toBe(true);
+    });
 
-test(`isSet(new WeakSet) => ${isSet(new WeakSet())}`, () => {
-    expect(isSet(new WeakSet())).toBe(false);
+    test('isSet(new WeakSet) => false', () => {
+        expect(isSet(new WeakSet())).toBe(false);
+    });
 });

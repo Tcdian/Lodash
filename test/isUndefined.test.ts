@@ -1,9 +1,11 @@
 import { isUndefined } from '../source/lang/isUndefined';
 
-test(`isUndefined(void 0) => ${isUndefined(void 0)}`, () => {
-    expect(isUndefined(void 0)).toBe(true);
-});
+describe('isUndefined', () => {
+    test('isUndefined(void 0) => true', () => {
+        expect(isUndefined(void 0)).toBe(true);
+    });
 
-test(`isUndefined(null) => ${isUndefined(null)}`, () => {
-    expect(isUndefined(null)).toBe(false);
+    test('isUndefined(null) => false', () => {
+        expect(isUndefined(null)).toBe(false);
+    });
 });

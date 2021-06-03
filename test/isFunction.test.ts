@@ -1,9 +1,12 @@
 import { isFunction } from '../source/lang/isFunction';
 
-test(`isFunction(() => {}) => ${isFunction(() => {})}`, () => {
-    expect(isFunction(() => {})).toBe(true);
-});
+describe('isFunction', () => {
+    test('isFunction(() => {}) => true', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        expect(isFunction(() => {})).toBe(true);
+    });
 
-test(`isFunction(/abc/) => ${isFunction(/abc/)}`, () => {
-    expect(isFunction(/abc/)).toBe(false);
+    test('isFunction(/abc/) => true', () => {
+        expect(isFunction(/abc/)).toBe(false);
+    });
 });

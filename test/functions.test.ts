@@ -1,8 +1,13 @@
 import { functions } from '../source/object/functions';
 import { create } from '../source/object/create';
 
-const object = create({ a: () => {} }, { b: () => {}, c: 'c' });
-
-test(`functions(create({ a: () => {} }, { b: () => {}, c: 'c' })) => ${functions(object)}`, () => {
-    expect(functions(object)).toEqual(['b']);
+describe('functions', () => {
+    test('functions({ b: () => {}, c: "c" }) => ["b"]', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        expect(functions({ b: () => {}, c: 'c' })).toEqual(['b']);
+    });
+    test('functions(create({ a: () => {} }, { b: () => {}, c: "c" })) => ["b"]', () => {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        expect(functions(create({ a: () => {} }, { b: () => {}, c: 'c' }))).toEqual(['b']);
+    });
 });

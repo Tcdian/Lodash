@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { pullAll } from './pullAll';
 import { isUndefined } from '../lang/isUndefined';
 
@@ -10,8 +9,7 @@ function pullAllWith<T>(array: T[], values: T[], comparator?: Comparator<T>): T[
     }
     values.forEach((othVal) => {
         let fromIndex = 0;
-        // todo ... 更换 findIndex
-        while ((fromIndex = _.findIndex(array, (arrVal) => comparator(arrVal, othVal), fromIndex)) > -1) {
+        while ((fromIndex = array.findIndex((arrVal) => comparator(arrVal, othVal), fromIndex)) > -1) {
             array.splice(fromIndex, 1);
         }
     });

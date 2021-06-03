@@ -1,8 +1,9 @@
 import { values } from '../source/object/values';
 import { create } from '../source/object/create';
 
-const object = create({ a: 1 }, { b: 2, c: 3 });
-
-test(`values(create({ a: 1 }, { b: 2, c: 3 })) => ${values(object)}`, () => {
-    expect(values(object)).toEqual([2, 3]);
+describe('values', () => {
+    test('values(create({ a: 1 }, { b: 2, c: 3 })) => [2, 3]', () => {
+        const object = create({ a: 1 }, { b: 2, c: 3 });
+        expect(values(object)).toEqual([2, 3]);
+    });
 });

@@ -1,13 +1,10 @@
-import { get } from '../object/get';
-import { isEqual } from '../lang/isEqual';
+import { isMatch } from '../lang/isMatch';
 
-type PropertyName = string | number | symbol;
-type PropertyPath<T> = T | ReadonlyArray<T>;
-
-function matchesProperty<T, V>(path: PropertyPath<PropertyName>, srcValue: T) {
-    return function (object: V): boolean {
-        return isEqual(get(object, path), srcValue);
+function matches<T, V>(source: T): (value: V) => boolean;
+function matches(source: any): (value: any) => boolean {
+    return function (object: any): boolean {
+        return isMatch(object, source);
     };
 }
 
-export { matchesProperty };
+export { matches };

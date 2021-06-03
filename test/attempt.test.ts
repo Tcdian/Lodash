@@ -1,17 +1,19 @@
 import { attempt } from '../source/util/attempt';
 
-function throwError(message: string): never {
-    throw new Error(message);
-}
+describe('attempt', () => {
+    function throwError(message: string): never {
+        throw new Error(message);
+    }
 
-test('throwError', () => {
-    expect(attempt(throwError, 'error')).toEqual(new Error('error'));
-});
+    test('throwError', () => {
+        expect(attempt(throwError, 'error')).toEqual(new Error('error'));
+    });
 
-function add(a: number, b: number): number {
-    return a + b;
-}
+    function add(a: number, b: number): number {
+        return a + b;
+    }
 
-test('add', () => {
-    expect(attempt(add, 1, 2)).toBe(3);
+    test('add', () => {
+        expect(attempt(add, 1, 2)).toBe(3);
+    });
 });

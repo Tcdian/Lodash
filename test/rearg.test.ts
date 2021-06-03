@@ -1,12 +1,9 @@
 import { rearg } from '../source/function/rearg';
 
-test('rearg', () => {
-    const rearged = rearg(
-        function (a, b, c) {
-            return [a, b, c];
-        },
-        [2, 0, 1]
-    );
+describe('rearg', () => {
+    test('rearg with [2, 0, 1]', () => {
+        const rearged = rearg((a, b, c) => [a, b, c], [2, 0, 1]);
 
-    expect(rearged('b', 'c', 'a')).toEqual(['a', 'b', 'c']);
+        expect(rearged('b', 'c', 'a')).toEqual(['a', 'b', 'c']);
+    });
 });

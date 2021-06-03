@@ -1,13 +1,15 @@
 import { toUpper } from '../source/string/toUpper';
 
-test(`toUpper('--foo-bar--') => ${toUpper('--foo-bar--')}`, () => {
-    expect(toUpper('--foo-bar--')).toBe('--FOO-BAR--');
-});
+describe('toUpper', () => {
+    test('toUpper("--foo-bar--") => "--FOO-BAR--', () => {
+        expect(toUpper('--foo-bar--')).toBe('--FOO-BAR--');
+    });
 
-test(`toUpper('fooBar') => ${toUpper('fooBar')}`, () => {
-    expect(toUpper('fooBar')).toBe('FOOBAR');
-});
+    test('toUpper("fooBar") => "FOOBAR"', () => {
+        expect(toUpper('fooBar')).toBe('FOOBAR');
+    });
 
-test(`toUpper('__foo_bar__') => ${toUpper('__foo_bar__')}`, () => {
-    expect(toUpper('__foo_bar__')).toBe('__FOO_BAR__');
+    test('toUpper("__foo_bar__") => "__FOO_BAR__"', () => {
+        expect(toUpper('__foo_bar__')).toBe('__FOO_BAR__');
+    });
 });
