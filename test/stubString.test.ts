@@ -1,9 +1,8 @@
 import { stubString } from '../source/util/stubString';
-//todo ...
-import _ from 'lodash';
+import { times } from '../source/util/times';
 
 describe('stubString', () => {
     test('times(2, stubString) => ["", ""]', () => {
-        expect(_.times(2, stubString)).toEqual(['', '']);
+        expect(times(2, stubString)).toEqual(['', '']);
     });
 });

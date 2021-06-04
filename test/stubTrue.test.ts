@@ -1,9 +1,8 @@
 import { stubTrue } from '../source/util/stubTrue';
-//todo ...
-import _ from 'lodash';
+import { times } from '../source/util/times';
 
 describe('stubTrue', () => {
     test('times(2, stubTrue) => [true, true]', () => {
-        expect(_.times(2, stubTrue)).toEqual([true, true]);
+        expect(times(2, stubTrue)).toEqual([true, true]);
     });
 });
