@@ -1,7 +1,7 @@
 type PropertyName = string | number | symbol;
 
-function zipObject<T>(props: PropertyName[] = [], values: T[] = []): Record<PropertyName, T> {
-    const result: Record<PropertyName, T> = {};
+function zipObject<K extends PropertyName, V>(props: K[] = [], values: V[] = []): Record<K, V> {
+    const result = {} as Record<K, V>;
     props.forEach((prop, index) => {
         Object.assign(result, { [prop]: values[index] });
     });

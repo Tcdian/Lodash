@@ -1,7 +1,7 @@
 type PropertyName = string | number | symbol;
 
-function fromPairs<T>(pairs: [PropertyName, T][]): Record<PropertyName, T> {
-    const result: Record<PropertyName, T> = {};
+function fromPairs<K extends PropertyName, V>(pairs: [K, V][]): Record<K, V> {
+    const result = {} as Record<K, V>;
     for (let i = 0; i < pairs.length; i++) {
         const [key, value] = pairs[i];
         Object.assign(result, { [key]: value });

@@ -5,7 +5,7 @@ type PropertyName = string | number | symbol;
 
 function entriesIn<T>(object: T[] | Record<PropertyName, T>): [string, T][];
 function entriesIn<T>(set: Set<T>): [T, T][];
-function entriesIn<T, U>(map: Map<T, U>): [T, U][];
+function entriesIn<K, V>(map: Map<K, V>): [K, V][];
 function entriesIn<T>(object: Record<PropertyName, T>): [string, T][] {
     if (isSet(object) || isMap(object)) {
         return [...object.entries()];
