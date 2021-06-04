@@ -1,4 +1,4 @@
-function first<T>(array: T[]): T {
+function first<T>(array: T[]): T | undefined {
     return array[0];
 }
 

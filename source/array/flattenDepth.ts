@@ -1,6 +1,6 @@
 import { isArray } from '../lang/isArray';
 
-interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}
+type RecursiveArray<T> = (T | RecursiveArray<T>)[];
 
 function flattenDepth<T>(array: RecursiveArray<T>, depth = 1): T[] {
     let result: T[] = [];

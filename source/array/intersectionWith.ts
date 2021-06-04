@@ -5,39 +5,27 @@ import { last } from './last';
 import { initial } from './initial';
 import { tail } from './tail';
 
-type Comparator<T> = (a: T, b: T) => boolean;
+type Comparator<T, V> = (a: T, b: V) => boolean;
 
-function intersectionWith<T>(array: T[], other: T[], comparator: Comparator<T>): T[];
-function intersectionWith<T>(array: T[], other1: T[], other2: T[], comparator: Comparator<T>): T[];
-function intersectionWith<T>(array: T[], other1: T[], other2: T[], other3: T[], comparator: Comparator<T>): T[];
-function intersectionWith<T>(
-    array: T[],
-    other1: T[],
-    other2: T[],
-    other3: T[],
-    other4: T[],
-    comparator: Comparator<T>
-): T[];
-function intersectionWith<T>(
-    array: T[],
-    other1: T[],
-    other2: T[],
-    other3: T[],
-    other4: T[],
-    other5: T[],
-    comparator: Comparator<T>
-): T[];
-function intersectionWith<T>(...arrays: (T[] | Comparator<T>)[]): T[] {
-    const comparator = last(arrays);
+function intersectionWith<T0, T1>(array: T0[], other: T1[], comparator: Comparator<T0, T1>): T0[];
+function intersectionWith<T0, T1, T2>(
+    array: T0[],
+    other1: T1[],
+    other2: T2[],
+    comparator: Comparator<T0, T1 | T2>
+): T0[];
+function intersectionWith<T>(...args: [...arrays: T[][], comparator: Comparator<T, T>]): T[];
+function intersectionWith<T>(...args: [...arrays: T[][], comparator: Comparator<T, T>]): T[] {
+    const comparator = last(args);
     if (!isFunction(comparator)) {
-        return intersection(...(arrays as T[][]));
+        return intersection(...(args as T[][]));
     }
-    const allArrays = initial(arrays) as T[][];
-    const firstArray = first(allArrays);
-    const otherArrays = tail(allArrays);
-    return firstArray.filter((arrVal, index) => {
+    const arrays = initial(args) as T[][];
+    const firstArray = first(arrays);
+    const otherArrays = tail(arrays);
+    return (firstArray || []).filter((arrVal, index) => {
         return (
-            firstArray.indexOf(arrVal) === index &&
+            (firstArray || []).indexOf(arrVal) === index &&
             otherArrays.every((otherArray) => otherArray.some((othVal) => comparator(arrVal, othVal)))
         );
     });

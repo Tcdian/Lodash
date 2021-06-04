@@ -1,11 +1,11 @@
 import { pullAll } from './pullAll';
-import { isUndefined } from '../lang/isUndefined';
+import { isFunction } from '../lang/isFunction';
 
-type Comparator<T> = (a: T, b: T) => boolean;
+type Comparator<T, V> = (a: T, b: V) => boolean;
 
-function pullAllWith<T>(array: T[], values: T[], comparator?: Comparator<T>): T[] {
-    if (isUndefined(comparator)) {
-        return pullAll(array, values);
+function pullAllWith<T, V>(array: T[], values: V[], comparator?: Comparator<T, V>): T[] {
+    if (!isFunction(comparator)) {
+        return pullAll(array, values as any as T[]);
     }
     values.forEach((othVal) => {
         let fromIndex = 0;
