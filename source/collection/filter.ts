@@ -13,21 +13,27 @@ type StringIterateeCustom<TResult> = StringIterator<TResult> | IterateeShorthand
 type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, collection: Record<K, V>) => TResult;
 type RecordIterateeCustom<K extends PropertyName, V, TResult> = RecordIterator<K, V, TResult> | IterateeShorthand<V>;
 
-function every<T>(collection: T[], predicate?: ArrayIterateeCustom<T, boolean>): boolean;
-function every(collection: string, predicate?: StringIterateeCustom<boolean>): boolean;
-function every<K extends PropertyName, V>(
+function filter<T>(collection: T[], predicate?: ArrayIterateeCustom<T, boolean>): T[];
+function filter(collection: string, predicate?: StringIterateeCustom<boolean>): string[];
+function filter<K extends PropertyName, V>(
     collection: Record<K, V>,
     predicate?: RecordIterateeCustom<K, V, boolean>
-): boolean;
-function every(collection: any, predicate: any = identity): any {
+): V[];
+function filter(collection: any, predicate: any = identity): any {
     predicate = iteratee(predicate);
     if (isArray(collection)) {
-        return entries(collection).every(([key, value]) => predicate(value, Number(key), collection));
+        return entries(collection)
+            .filter(([key, value]) => predicate(value, Number(key), collection))
+            .map(([, value]) => value);
     } else if (isString(collection)) {
-        return entries(collection).every(([key, value]) => predicate(value, Number(key), collection));
+        return entries(collection)
+            .filter((key, value) => predicate(value, Number(key), collection))
+            .map(([, value]) => value);
     } else {
-        return entries(collection).every(([key, value]) => predicate(value, key, collection));
+        return entries(collection)
+            .filter((key, value) => predicate(value, key, collection))
+            .map(([, value]) => value);
     }
 }
 
-export { every };
+export { filter };

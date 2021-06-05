@@ -1,7 +1,7 @@
 import { identity } from '../util/identity';
 import { isArray } from '../lang/isArray';
 import { isString } from '../lang/isString';
-import { keys } from '../object/keys';
+import { entries } from '../object/entries';
 
 type PropertyName = string | number | symbol;
 type ArrayIterator<T, TResult> = (value: T, index: number, collection: T[]) => TResult;
@@ -15,10 +15,12 @@ function forEach<K extends PropertyName, V>(
     iteratee?: RecordIterator<K, V, any>
 ): Record<K, V>;
 function forEach(collection: any, iteratee: (...args: any[]) => any = identity): any {
-    if (isArray(collection) || isString(collection)) {
-        keys(collection).forEach((key) => iteratee(collection[Number(key)], Number(key), collection));
+    if (isArray(collection)) {
+        entries(collection).forEach(([key, value]) => iteratee(value, Number(key), collection));
+    } else if (isString(collection)) {
+        entries(collection).forEach(([key, value]) => iteratee(value, Number(key), collection));
     } else {
-        keys(collection).forEach((key) => iteratee(collection[key], key, collection));
+        entries(collection).forEach(([key, value]) => iteratee(value, key, collection));
     }
     return collection;
 }

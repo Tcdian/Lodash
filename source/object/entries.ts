@@ -3,10 +3,12 @@ import { isMap } from '../lang/isMap';
 
 type PropertyName = string | number | symbol;
 
-function entries<T>(object: T[] | Record<PropertyName, T>): [string, T][];
+function entries<T>(array: T[]): [string, T][];
+function entries(string: string): [string, string][];
+function entries<K extends PropertyName, V>(object: Record<K, V>): [K, V][];
 function entries<T>(set: Set<T>): [T, T][];
 function entries<K, V>(map: Map<K, V>): [K, V][];
-function entries<T>(object: T[] | Record<PropertyName, T>): [string, T][] {
+function entries<T>(object: any): [string, T][] {
     if (isSet(object) || isMap(object)) {
         return [...object.entries()];
     }
