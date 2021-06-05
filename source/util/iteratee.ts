@@ -11,7 +11,7 @@ type Func = (...args: any[]) => any;
 type PropertyName = string | number | symbol;
 
 function iteratee<T extends Func>(func?: T): T;
-function iteratee<T>(value: PropertyName | T[] | Record<PropertyName, T>): Func;
+function iteratee<K extends PropertyName, V>(value: K | [K, any] | Record<K, V>): Func;
 function iteratee(value?: any): Func {
     if (isNil(value)) {
         return identity;

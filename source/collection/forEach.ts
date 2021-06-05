@@ -10,10 +10,10 @@ type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, col
 
 function forEach<T>(collection: T[], iteratee?: ArrayIterator<T, any>): T[];
 function forEach(collection: string, iteratee?: StringIterator<any>): string;
-function forEach<T, K extends PropertyName>(
-    collection: Record<K, T>,
-    iteratee?: RecordIterator<K, T, any>
-): Record<K, T>;
+function forEach<K extends PropertyName, V>(
+    collection: Record<K, V>,
+    iteratee?: RecordIterator<K, V, any>
+): Record<K, V>;
 function forEach(collection: any, iteratee: (...args: any[]) => any = identity): any {
     if (isArray(collection) || isString(collection)) {
         keys(collection).forEach((key) => iteratee(collection[Number(key)], Number(key), collection));

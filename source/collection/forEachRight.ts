@@ -10,11 +10,11 @@ type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, col
 
 function forEachRight<T>(collection: T[], iteratee?: ArrayIterator<T, any>): T[];
 function forEachRight(collection: string, iteratee?: StringIterator<any>): string;
-function forEachRight<T, K extends PropertyName>(
-    collection: Record<K, T>,
-    iteratee?: RecordIterator<K, T, any>
-): Record<K, T>;
-function forEachRight(collection: any, iteratee: (...args: any[]) => any = identity): any {
+function forEachRight<K extends PropertyName, V>(
+    collection: Record<K, V>,
+    iteratee?: RecordIterator<K, V, any>
+): Record<K, V>;
+function forEachRight(collection: any, iteratee: (value: any, key: any, collection: any) => any = identity): any {
     if (isArray(collection) || isString(collection)) {
         keys(collection)
             .reverse()
