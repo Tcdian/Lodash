@@ -12,6 +12,13 @@
     },
     "plugins": ["@typescript-eslint"],
     "rules": {
-        "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }]
+        "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }],
+        "prefer-const": [
+            "error",
+            {
+                "destructuring": "all",
+                "ignoreReadBeforeAssign": false
+            }
+        ]
     }
 }
