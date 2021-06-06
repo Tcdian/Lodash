@@ -5,7 +5,7 @@ describe('flatMap', () => {
         return [n, n];
     }
 
-    test('flatMap duplicate', () => {
+    test('flatMap', () => {
         expect(flatMap([1, 2], duplicate)).toEqual([1, 1, 2, 2]);
     });
 });
