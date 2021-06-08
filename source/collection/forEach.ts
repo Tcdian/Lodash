@@ -10,11 +10,11 @@ type ArrayIterator<T, TResult> = (value: T, index: number, collection: T[]) => T
 type StringIterator<TResult> = (char: string, index: number, string: string) => TResult;
 type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, collection: Record<K, V>) => TResult;
 
-function forEach<T>(collection: T[], predicate?: ArrayIterator<T, any>): T[];
-function forEach(collection: string, predicate?: StringIterator<any>): string;
+function forEach<T>(collection: T[], predicate?: ArrayIterator<T, unknown>): T[];
+function forEach(collection: string, predicate?: StringIterator<unknown>): string;
 function forEach<K extends PropertyName, V>(
     collection: Record<K, V>,
-    predicate?: RecordIterator<K, V, any>
+    predicate?: RecordIterator<K, V, unknown>
 ): Record<K, V>;
 function forEach(collection: any, predicate: Func = identity): any {
     const iterateeFunc = iteratee(predicate);

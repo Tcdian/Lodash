@@ -6,19 +6,19 @@ type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
 type ValueIterateeCustom<T, TResult> = ((value: T) => TResult) | IterateeShorthand<T>;
 
-function groupBy<T, TResult extends PropertyName>(
+function keyBy<T, TResult extends PropertyName>(
     collection: T[],
-    predicate?: ValueIterateeCustom<T, TResult>
-): Record<TResult, T[]>;
-function groupBy<TResult extends PropertyName>(
+    predicate: ValueIterateeCustom<T, TResult>
+): Record<TResult, T>;
+function keyBy<TResult extends PropertyName>(
     collection: string,
-    predicate?: ValueIterateeCustom<string, TResult>
-): Record<TResult, string[]>;
-function groupBy<K extends PropertyName, V, TResult extends PropertyName>(
+    predicate: ValueIterateeCustom<string, TResult>
+): Record<TResult, string>;
+function keyBy<K extends PropertyName, V, TResult extends PropertyName>(
     collection: Record<K, V>,
-    predicate?: ValueIterateeCustom<V, TResult>
+    predicate: ValueIterateeCustom<V, TResult>
 ): Record<TResult, V>;
-function groupBy<TResult extends PropertyName>(
+function keyBy<TResult extends PropertyName>(
     collection: any,
     predicate: ValueIterateeCustom<any, TResult> = identity
 ): Record<TResult, any> {
@@ -26,13 +26,9 @@ function groupBy<TResult extends PropertyName>(
     const iterateeFunc = iteratee(predicate);
     values(collection).forEach((value) => {
         const generated = iterateeFunc(value);
-        if (Object.prototype.hasOwnProperty.call(result, generated)) {
-            result[generated].push(value);
-        } else {
-            Object.assign(result, { [generated]: [value] });
-        }
+        Object.assign(result, { [generated]: value });
     });
     return result;
 }
 
-export { groupBy };
+export { keyBy };
