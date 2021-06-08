@@ -8,15 +8,15 @@ type ValueIterateeCustom<T, TResult> = ((value: T) => TResult) | IterateeShortha
 
 function keyBy<T, TResult extends PropertyName>(
     collection: T[],
-    predicate: ValueIterateeCustom<T, TResult>
+    predicate?: ValueIterateeCustom<T, TResult>
 ): Record<TResult, T>;
 function keyBy<TResult extends PropertyName>(
     collection: string,
-    predicate: ValueIterateeCustom<string, TResult>
+    predicate?: ValueIterateeCustom<string, TResult>
 ): Record<TResult, string>;
 function keyBy<K extends PropertyName, V, TResult extends PropertyName>(
     collection: Record<K, V>,
-    predicate: ValueIterateeCustom<V, TResult>
+    predicate?: ValueIterateeCustom<V, TResult>
 ): Record<TResult, V>;
 function keyBy<TResult extends PropertyName>(
     collection: any,

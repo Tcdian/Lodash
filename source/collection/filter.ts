@@ -21,19 +21,12 @@ function filter<K extends PropertyName, V>(
 ): V[];
 function filter(collection: any, predicate: any = identity): any {
     const iterateeFunc = iteratee(predicate);
-    if (isArray(collection)) {
-        return entries(collection)
-            .filter(([key, value]) => iterateeFunc(value, Number(key), collection))
-            .map(([, value]) => value);
-    } else if (isString(collection)) {
-        return entries(collection)
-            .filter((key, value) => iterateeFunc(value, Number(key), collection))
-            .map(([, value]) => value);
-    } else {
-        return entries(collection)
-            .filter((key, value) => iterateeFunc(value, key, collection))
-            .map(([, value]) => value);
-    }
+    return entries(collection)
+        .filter(([key, value]: [PropertyName, unknown]) => {
+            key = isArray(collection) || isString(collection) ? Number(key) : key;
+            return iterateeFunc(value, key, collection);
+        })
+        .map(([, value]) => value);
 }
 
 export { filter };

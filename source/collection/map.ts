@@ -17,13 +17,10 @@ function map<K extends PropertyName, V, TResult>(
 ): TResult[];
 function map(collection: any, predicate: any = identity): any {
     const iterateeFunc = iteratee(predicate);
-    if (isArray(collection)) {
-        return entries(collection).map(([key, value]) => iterateeFunc(value, Number(key), collection));
-    } else if (isString(collection)) {
-        return entries(collection).map(([key, value]) => iterateeFunc(value, Number(key), collection));
-    } else {
-        return entries(collection).map(([key, value]) => iterateeFunc(value, key, collection));
-    }
+    return entries(collection).map(([key, value]: [PropertyName, unknown]) => {
+        key = isArray(collection) || isString(collection) ? Number(key) : key;
+        return iterateeFunc(value, key, collection);
+    });
 }
 
 export { map };
