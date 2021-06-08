@@ -23,13 +23,13 @@ function groupBy<TResult extends PropertyName>(
     predicate: ValueIteratee<any, TResult> = identity
 ): Record<TResult, any> {
     const result: Record<PropertyName, any> = {};
-    const predicateFunc = iteratee(predicate);
+    const iterateeFunc = iteratee(predicate);
     entries(collection).forEach(([, value]) => {
-        const generatedKey = predicateFunc(value);
-        if (Object.prototype.hasOwnProperty.call(result, generatedKey)) {
-            result[generatedKey].push(value);
+        const generated = iterateeFunc(value);
+        if (Object.prototype.hasOwnProperty.call(result, generated)) {
+            result[generated].push(value);
         } else {
-            Object.assign(result, { [generatedKey]: [value] });
+            Object.assign(result, { [generated]: [value] });
         }
     });
     return result;

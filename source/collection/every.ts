@@ -19,14 +19,14 @@ function every<K extends PropertyName, V>(
     collection: Record<K, V>,
     predicate?: RecordIterateeCustom<K, V, boolean>
 ): boolean;
-function every(collection: any, predicate: any = identity): any {
-    predicate = iteratee(predicate);
+function every(collection: any, predicate: any = identity): boolean {
+    const iterateeFunc = iteratee(predicate);
     if (isArray(collection)) {
-        return entries(collection).every(([key, value]) => predicate(value, Number(key), collection));
+        return entries(collection).every(([key, value]) => iterateeFunc(value, Number(key), collection));
     } else if (isString(collection)) {
-        return entries(collection).every(([key, value]) => predicate(value, Number(key), collection));
+        return entries(collection).every(([key, value]) => iterateeFunc(value, Number(key), collection));
     } else {
-        return entries(collection).every(([key, value]) => predicate(value, key, collection));
+        return entries(collection).every(([key, value]) => iterateeFunc(value, key, collection));
     }
 }
 

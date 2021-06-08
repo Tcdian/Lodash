@@ -16,13 +16,13 @@ function map<K extends PropertyName, V, TResult>(
     predicate?: RecordIterator<K, V, TResult> | PropertyName
 ): TResult[];
 function map(collection: any, predicate: any = identity): any {
-    predicate = iteratee(predicate);
+    const iterateeFunc = iteratee(predicate);
     if (isArray(collection)) {
-        return entries(collection).map(([key, value]) => predicate(value, Number(key), collection));
+        return entries(collection).map(([key, value]) => iterateeFunc(value, Number(key), collection));
     } else if (isString(collection)) {
-        return entries(collection).map(([key, value]) => predicate(value, Number(key), collection));
+        return entries(collection).map(([key, value]) => iterateeFunc(value, Number(key), collection));
     } else {
-        return entries(collection).map(([key, value]) => predicate(value, key, collection));
+        return entries(collection).map(([key, value]) => iterateeFunc(value, key, collection));
     }
 }
 

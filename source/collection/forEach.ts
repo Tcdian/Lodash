@@ -17,13 +17,13 @@ function forEach<K extends PropertyName, V>(
     predicate?: RecordIterator<K, V, any>
 ): Record<K, V>;
 function forEach(collection: any, predicate: Func = identity): any {
-    predicate = iteratee(predicate);
+    const iterateeFunc = iteratee(predicate);
     if (isArray(collection)) {
-        entries(collection).forEach(([key, value]) => predicate(value, Number(key), collection));
+        entries(collection).forEach(([key, value]) => iterateeFunc(value, Number(key), collection));
     } else if (isString(collection)) {
-        entries(collection).forEach(([key, value]) => predicate(value, Number(key), collection));
+        entries(collection).forEach(([key, value]) => iterateeFunc(value, Number(key), collection));
     } else {
-        entries(collection).forEach(([key, value]) => predicate(value, key, collection));
+        entries(collection).forEach(([key, value]) => iterateeFunc(value, key, collection));
     }
     return collection;
 }

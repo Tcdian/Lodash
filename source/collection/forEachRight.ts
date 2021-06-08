@@ -4,6 +4,7 @@ import { isArray } from '../lang/isArray';
 import { isString } from '../lang/isString';
 import { entries } from '../object/entries';
 
+type Func = (...args: any[]) => any;
 type PropertyName = string | number | symbol;
 type ArrayIterator<T, TResult> = (value: T, index: number, collection: T[]) => TResult;
 type StringIterator<TResult> = (char: string, index: number, string: string) => TResult;
@@ -15,20 +16,17 @@ function forEachRight<K extends PropertyName, V>(
     collection: Record<K, V>,
     predicate?: RecordIterator<K, V, any>
 ): Record<K, V>;
-function forEachRight(collection: any, predicate: (value: any, key: any, collection: any) => any = identity): any {
-    predicate = iteratee(predicate);
-    if (isArray(collection)) {
-        entries(collection)
-            .reverse()
-            .forEach(([key, value]) => predicate(value, Number(key), collection));
-    } else if (isString(collection)) {
-        entries(collection)
-            .reverse()
-            .forEach(([key, value]) => predicate(value, Number(key), collection));
-    } else {
-        entries(collection)
-            .reverse()
-            .forEach(([key, value]) => predicate(value, key, collection));
+function forEachRight(collection: any, predicate: Func = identity): any {
+    const iterateeFunc = iteratee(predicate);
+    const pairs = entries(collection);
+    const len = pairs.length;
+    for (let i = len - 1; i >= 0; i--) {
+        const pair = pairs[i];
+        let [key, value]: [PropertyName, any] = pair;
+        if (isArray(collection) || isString(collection)) {
+            key = Number(key);
+        }
+        iterateeFunc(value, key, pair);
     }
     return collection;
 }

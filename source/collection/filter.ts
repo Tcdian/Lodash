@@ -20,18 +20,18 @@ function filter<K extends PropertyName, V>(
     predicate?: RecordIterateeCustom<K, V, boolean>
 ): V[];
 function filter(collection: any, predicate: any = identity): any {
-    predicate = iteratee(predicate);
+    const iterateeFunc = iteratee(predicate);
     if (isArray(collection)) {
         return entries(collection)
-            .filter(([key, value]) => predicate(value, Number(key), collection))
+            .filter(([key, value]) => iterateeFunc(value, Number(key), collection))
             .map(([, value]) => value);
     } else if (isString(collection)) {
         return entries(collection)
-            .filter((key, value) => predicate(value, Number(key), collection))
+            .filter((key, value) => iterateeFunc(value, Number(key), collection))
             .map(([, value]) => value);
     } else {
         return entries(collection)
-            .filter((key, value) => predicate(value, key, collection))
+            .filter((key, value) => iterateeFunc(value, key, collection))
             .map(([, value]) => value);
     }
 }

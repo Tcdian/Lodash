@@ -21,7 +21,7 @@ function find<K extends PropertyName, V>(
     fromIndex?: number
 ): V;
 function find(collection: any, predicate: any = identity, fromIndex = 0): any {
-    predicate = iteratee(predicate);
+    const iterateeFunc = iteratee(predicate);
     const pairs = entries(collection);
     const len = pairs.length;
     if (fromIndex < 0) {
@@ -33,7 +33,7 @@ function find(collection: any, predicate: any = identity, fromIndex = 0): any {
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
-        if (predicate(value, key, pair)) {
+        if (iterateeFunc(value, key, pair)) {
             return value;
         }
     }

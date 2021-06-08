@@ -1,6 +1,5 @@
 import { matches } from '../source/util/matches';
-// todo ...
-import _ from 'lodash';
+import { filter } from '../source/collection/filter';
 
 describe('matches', () => {
     test('matches', () => {
@@ -9,6 +8,6 @@ describe('matches', () => {
             { a: 4, b: 5, c: 6 },
         ];
 
-        expect(_.filter(objects, matches({ a: 4, c: 6 }))).toEqual([{ a: 4, b: 5, c: 6 }]);
+        expect(filter(objects, matches({ a: 4, c: 6 }))).toEqual([{ a: 4, b: 5, c: 6 }]);
     });
 });

@@ -1,6 +1,5 @@
 import { matchesProperty } from '../source/util/matchesProperty';
-// todo ...
-import _ from 'lodash';
+import { find } from '../source/collection/find';
 
 describe('matchesProperty', () => {
     test('matchesProperty', () => {
@@ -9,6 +8,6 @@ describe('matchesProperty', () => {
             { a: 4, b: 5, c: 6 },
         ];
 
-        expect(_.find(objects, matchesProperty('a', 4))).toEqual({ a: 4, b: 5, c: 6 });
+        expect(find(objects, matchesProperty('a', 4))).toEqual({ a: 4, b: 5, c: 6 });
     });
 });
