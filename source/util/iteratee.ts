@@ -9,9 +9,10 @@ import { property } from './property';
 
 type Func = (...args: any[]) => any;
 type PropertyName = string | number | symbol;
+type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
 
 function iteratee<T extends Func>(func?: T): T;
-function iteratee<K extends PropertyName, V>(value: K | [K, any] | Record<K, V>): Func;
+function iteratee<K extends PropertyName, V>(value: IterateeShorthand<Record<K, V>>): Func;
 function iteratee(value?: any): Func {
     if (isNil(value)) {
         return identity;
