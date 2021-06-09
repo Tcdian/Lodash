@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { isFunction } from '../lang/isFunction';
 import { isObject } from '../lang/isObject';
 import { isArray } from '../lang/isArray';
@@ -8,12 +9,10 @@ import { matches } from './matches';
 import { property } from './property';
 
 type Func = (...args: any[]) => any;
-type PropertyName = string | number | symbol;
-type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
 
-function iteratee<T extends Func>(func?: T): T;
-function iteratee<K extends PropertyName, V>(value: IterateeShorthand<Record<K, V>>): Func;
-function iteratee(value?: any): Func {
+function iteratee<T extends Func>(func: T): T;
+function iteratee(value: any): Func;
+function iteratee(value: any): Func {
     if (isNil(value)) {
         return identity;
     }

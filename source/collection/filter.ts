@@ -13,11 +13,11 @@ type StringIterateeCustom<TResult> = StringIterator<TResult> | IterateeShorthand
 type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, collection: Record<K, V>) => TResult;
 type RecordIterateeCustom<K extends PropertyName, V, TResult> = RecordIterator<K, V, TResult> | IterateeShorthand<V>;
 
-function filter<T>(collection: T[], predicate?: ArrayIterateeCustom<T, boolean>): T[];
-function filter(collection: string, predicate?: StringIterateeCustom<boolean>): string[];
+function filter<T>(collection: T[], predicate?: ArrayIterateeCustom<T, unknown>): T[];
+function filter(collection: string, predicate?: StringIterateeCustom<unknown>): string[];
 function filter<K extends PropertyName, V>(
     collection: Record<K, V>,
-    predicate?: RecordIterateeCustom<K, V, boolean>
+    predicate?: RecordIterateeCustom<K, V, unknown>
 ): V[];
 function filter(collection: any, predicate: any = identity): any {
     const iterateeFunc = iteratee(predicate);
