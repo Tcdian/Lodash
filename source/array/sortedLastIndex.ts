@@ -2,7 +2,6 @@ function sortedLastIndex<T>(array: T[], value: T): number {
     if (value < array[0]) {
         return 0;
     }
-
     let left = 0;
     let right = array.length - 1;
     while (left < right) {
