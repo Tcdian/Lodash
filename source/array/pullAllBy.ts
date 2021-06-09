@@ -16,7 +16,11 @@ function pullAllBy<T0, T1>(
     values.forEach((othVal) => {
         let fromIndex = 0;
         while (
-            (fromIndex = findIndex(array, (arrVal) => iterateeFunc(arrVal) === iterateeFunc(othVal), fromIndex)) > -1
+            (fromIndex = findIndex(
+                array,
+                (arrVal) => Object.is(iterateeFunc(arrVal), iterateeFunc(othVal)),
+                fromIndex
+            )) > -1
         ) {
             array.splice(fromIndex, 1);
         }

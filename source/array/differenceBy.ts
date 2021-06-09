@@ -30,7 +30,7 @@ function differenceBy<T>(array: T[], ...others: [...values: T[][], predicate: Va
     }
     const iterateeFunc = iteratee(predicate);
     const values = flatten(initial(others) as T[][]);
-    return array.filter((arrVal) => !values.some((othVal) => iterateeFunc(arrVal) === iterateeFunc(othVal)));
+    return array.filter((arrVal) => !values.some((othVal) => Object.is(iterateeFunc(arrVal), iterateeFunc(othVal))));
 }
 
 export { differenceBy };
