@@ -7,7 +7,7 @@ describe('takeWhile', () => {
         { user: 'pebbles', active: true },
     ];
 
-    test('dropWhile iterator', () => {
+    test('takeWhile iterator', () => {
         expect(takeWhile(users, (user) => !user.active)).toEqual([
             { user: 'barney', active: false },
             { user: 'fred', active: false },
