@@ -1,14 +1,15 @@
 import { uniq } from './uniq';
 import { isFunction } from '../lang/isFunction';
+import { findIndex } from './findIndex';
 
-type Comparator<T> = (a: T, b: T) => boolean;
+type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
 
-function uniqWith<T>(array: T[], comparator?: Comparator<T>): T[] {
+function uniqWith<T>(array: T[], comparator?: Comparator<T, T>): T[] {
     if (!isFunction(comparator)) {
         return uniq(array);
     }
     return array.filter((arrVal, index) => {
-        return array.findIndex((othVal) => comparator(arrVal, othVal)) === index;
+        return findIndex(array, (othVal) => comparator(arrVal, othVal)) === index;
     });
 }
 

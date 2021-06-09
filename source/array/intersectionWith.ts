@@ -5,7 +5,7 @@ import { last } from './last';
 import { initial } from './initial';
 import { tail } from './tail';
 
-type Comparator<T, V> = (a: T, b: V) => boolean;
+type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
 
 function intersectionWith<T0, T1>(array: T0[], other: T1[], comparator: Comparator<T0, T1>): T0[];
 function intersectionWith<T0, T1, T2>(

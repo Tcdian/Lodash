@@ -4,7 +4,8 @@ import { values } from '../object/values';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterateeCustom<T, TResult> = ((value: T) => TResult) | IterateeShorthand<T>;
+type ValueIterator<T, TResult> = (value: T) => TResult;
+type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
 
 function groupBy<T, TResult extends PropertyName>(
     collection: T[],

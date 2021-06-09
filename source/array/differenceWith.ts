@@ -4,7 +4,7 @@ import { isFunction } from '../lang/isFunction';
 import { last } from './last';
 import { initial } from './initial';
 
-type Comparator<T, V> = (a: T, b: V) => boolean;
+type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
 
 function differenceWith<T0, T1>(array: T0[], other: T1[], comparator: Comparator<T0, T1>): T0[];
 function differenceWith<T0, T1, T2>(array: T0[], other1: T1[], other2: T2[], comparator: Comparator<T0, T1 | T2>): T0[];

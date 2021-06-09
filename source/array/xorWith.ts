@@ -5,12 +5,12 @@ import { isFunction } from '../lang/isFunction';
 import { uniqWith } from './uniqWith';
 import { flatten } from './flatten';
 
-type Comparator<T> = (a: T, b: T) => boolean;
+type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
 
-function xorWith<T>(array: T[], comparator: Comparator<T>): T[];
-function xorWith<T>(array1: T[], array2: T[], comparator: Comparator<T>): T[];
-function xorWith<T>(...args: [...arrays: T[][], comparator: Comparator<T>]): T[];
-function xorWith<T>(...args: [...arrays: T[][], comparator: Comparator<T>]): T[] {
+function xorWith<T>(array: T[], comparator: Comparator<T, T>): T[];
+function xorWith<T>(array1: T[], array2: T[], comparator: Comparator<T, T>): T[];
+function xorWith<T>(...args: [...arrays: T[][], comparator: Comparator<T, T>]): T[];
+function xorWith<T>(...args: [...arrays: T[][], comparator: Comparator<T, T>]): T[] {
     const comparator = last(args);
     if (!isFunction(comparator)) {
         return xor(...(args as T[][]));

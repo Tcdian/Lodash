@@ -1,15 +1,16 @@
 import { pullAll } from './pullAll';
 import { isFunction } from '../lang/isFunction';
+import { findIndex } from './findIndex';
 
-type Comparator<T, V> = (a: T, b: V) => boolean;
+type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
 
-function pullAllWith<T, V>(array: T[], values: V[], comparator?: Comparator<T, V>): T[] {
+function pullAllWith<T0, T1>(array: T0[], values: T1[], comparator?: Comparator<T0, T1>): T0[] {
     if (!isFunction(comparator)) {
-        return pullAll(array, values as any as T[]);
+        return pullAll(array, values as any as T0[]);
     }
     values.forEach((othVal) => {
         let fromIndex = 0;
-        while ((fromIndex = array.findIndex((arrVal) => comparator(arrVal, othVal), fromIndex)) > -1) {
+        while ((fromIndex = findIndex(array, (arrVal) => comparator(arrVal, othVal), fromIndex)) > -1) {
             array.splice(fromIndex, 1);
         }
     });
