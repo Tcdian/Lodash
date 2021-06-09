@@ -1,5 +1,6 @@
 import { intersection } from './intersection';
 import { isFunction } from '../lang/isFunction';
+import { isUndefined } from '../lang/isUndefined';
 import { first } from './first';
 import { last } from './last';
 import { initial } from './initial';
@@ -23,9 +24,12 @@ function intersectionWith<T>(...args: [...arrays: T[][], comparator: Comparator<
     const arrays = initial(args) as T[][];
     const firstArray = first(arrays);
     const otherArrays = tail(arrays);
-    return (firstArray || []).filter((arrVal, index) => {
+    if (isUndefined(firstArray)) {
+        return [];
+    }
+    return firstArray.filter((arrVal, index) => {
         return (
-            (firstArray || []).indexOf(arrVal) === index &&
+            firstArray.indexOf(arrVal) === index &&
             otherArrays.every((otherArray) => otherArray.some((othVal) => comparator(arrVal, othVal)))
         );
     });
