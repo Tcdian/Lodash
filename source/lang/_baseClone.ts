@@ -8,6 +8,7 @@ import { isSet } from './isSet';
 import { isMap } from './isMap';
 import { keys } from '../object/keys';
 import { keysIn } from '../object/keysIn';
+import { assign } from '../object/assign';
 
 type PropertyName = string | number | symbol;
 type CloneWithCustomizer = (value: any, key?: PropertyName, object?: any, cache?: Map<any, any>) => any;
@@ -111,7 +112,7 @@ function _baseClone(
 
     const keysFunc = isFlat ? (isFull ? _getAllKeysIn : keysIn) : isFull ? _getAllKeys : keys;
     keysFunc(value).forEach((key) => {
-        Object.assign(result, {
+        assign(result, {
             [key]: _baseClone((value as any)[key], bitmask, customizer, key, value, cache),
         });
     });

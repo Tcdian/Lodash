@@ -1,6 +1,7 @@
 import { identity } from '../util/identity';
 import { iteratee } from '../util/iteratee';
 import { values } from '../object/values';
+import { assign } from '../object/assign';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
@@ -30,7 +31,7 @@ function groupBy<TResult extends PropertyName>(
         if (Object.prototype.hasOwnProperty.call(result, generated)) {
             result[generated].push(value);
         } else {
-            Object.assign(result, { [generated]: [value] });
+            assign(result, { [generated]: [value] });
         }
     });
     return result;

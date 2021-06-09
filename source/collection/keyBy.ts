@@ -1,6 +1,7 @@
 import { identity } from '../util/identity';
 import { iteratee } from '../util/iteratee';
 import { values } from '../object/values';
+import { assign } from '../object/assign';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
@@ -27,7 +28,7 @@ function keyBy<TResult extends PropertyName>(
     const iterateeFunc = iteratee(predicate);
     values(collection).forEach((value) => {
         const generated = iterateeFunc(value);
-        Object.assign(result, { [generated]: value });
+        assign(result, { [generated]: value });
     });
     return result;
 }

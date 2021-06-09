@@ -1,3 +1,5 @@
+import { assign } from './assign';
+
 function defaults<TObject, TSource>(object: TObject, source: TSource): TObject & TSource;
 function defaults<TObject, TSource1, TSource2>(
     object: TObject,
@@ -11,7 +13,7 @@ function defaults<TObject, TSource1, TSource2, TSource3>(
     source3: TSource3
 ): TObject & TSource1 & TSource2 & TSource3;
 function defaults(object: any, ...sources: any[]): any {
-    return Object.assign(object, ...sources.reverse(), { ...object });
+    return assign(object, ...sources.reverse(), { ...object });
 }
 
 export { defaults };
