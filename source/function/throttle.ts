@@ -1,12 +1,6 @@
 import { now } from '../date/now';
 
 type Func = (...args: any[]) => any;
-
-interface Cancelable<T> {
-    cancel(): void;
-    flush(): T;
-}
-
 interface ThrottleSettings {
     /**
      * If you'd like to disable the leading-edge call, pass this as false.
@@ -18,13 +12,17 @@ interface ThrottleSettings {
      */
     trailing?: boolean;
 }
+interface ThrottledFunc<TFunc extends Func> {
+    (...args: Parameters<TFunc>): ReturnType<TFunc>;
+    cancel(): void;
+    flush(): ReturnType<TFunc>;
+}
 
-function throttle<T extends Func>(func: T, wait: number, options?: ThrottleSettings): T & Cancelable<ReturnType<T>>;
-function throttle(
-    func: Func,
+function throttle<TFunc extends Func>(
+    func: TFunc,
     wait: number,
     { leading = true, trailing = true }: ThrottleSettings = {}
-): Func & Cancelable<ReturnType<Func>> {
+): ThrottledFunc<TFunc> {
     let result: any;
     let timer: number | undefined;
     let lastInvokeTime = 0;

@@ -5,7 +5,7 @@ type Func = (...args: any[]) => any;
 
 function bind(func: Func, thisArg: any, ...partials: any[]): Func {
     const placeholder = bind.placeholder;
-    return function boundFunc(this: any, ...args: any[]): any {
+    return function boundFunc(this: any, ...args: any[]) {
         const finalArgs = _replaceHolders(partials, args, placeholder);
         return _executeBound(func, boundFunc, thisArg, this, finalArgs);
     };

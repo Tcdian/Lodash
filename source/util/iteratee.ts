@@ -10,7 +10,7 @@ import { property } from './property';
 
 type Func = (...args: any[]) => any;
 
-function iteratee<T extends Func>(func: T): T;
+function iteratee<TFunc extends Func>(func: TFunc): TFunc;
 function iteratee(value: any): Func;
 function iteratee(value: any): Func {
     if (isNil(value)) {

@@ -4,8 +4,11 @@ interface MemoizedFunction {
     cache: Map<any, any>;
 }
 
-function memoize<T extends Func>(func: T, resolver?: Func): T & MemoizedFunction {
-    function memoized(this: any, ...args: any[]): any {
+function memoize<TFunc extends Func>(
+    func: TFunc,
+    resolver?: (...args: Parameters<TFunc>) => any
+): TFunc & MemoizedFunction {
+    function memoized(this: any, ...args: Parameters<TFunc>): ReturnType<TFunc> {
         const key = resolver ? resolver.call(this, ...args) : args[0];
         const cache = memoized.cache;
         if (cache.has(key)) {
@@ -15,10 +18,9 @@ function memoize<T extends Func>(func: T, resolver?: Func): T & MemoizedFunction
         memoized.cache = cache.set(key, result);
         return result;
     }
-    memoized.cache = new (memoize.Cache || Map)();
-    return memoized as any as T & MemoizedFunction;
-}
 
-memoize.Cache = Map;
+    memoized.cache = new Map();
+    return memoized as TFunc & MemoizedFunction;
+}
 
 export { memoize };

@@ -1,23 +1,21 @@
 type Func = (...args: any[]) => any;
-
-interface Cancelable<T> {
-    cancel(): void;
-    flush(): T;
-}
-
 interface DebounceSettings {
     /**
      * Specify invoking on the leading edge of the timeout.
      */
     leading?: boolean;
 }
+interface DebouncedFunc<TFunc extends Func> {
+    (...args: Parameters<TFunc>): ReturnType<TFunc>;
+    cancel(): void;
+    flush(): ReturnType<TFunc>;
+}
 
-function debounce<T extends Func>(func: T, wait: number, options?: DebounceSettings): T & Cancelable<ReturnType<T>>;
-function debounce(
-    func: Func,
+function debounce<TFunc extends Func>(
+    func: TFunc,
     wait: number,
     { leading = false }: DebounceSettings = {}
-): Func & Cancelable<ReturnType<Func>> {
+): DebouncedFunc<TFunc> {
     let result: any;
     let timer: number | undefined;
     let lastThis: any;

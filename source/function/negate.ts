@@ -1,7 +1,7 @@
-function negate<T extends (...args: any[]) => boolean>(predicate: T): T {
-    return function (this: any, ...args: any[]): boolean {
+function negate<TArgs extends any[]>(predicate: (...args: TArgs) => boolean): (...args: TArgs) => boolean {
+    return function (this: any, ...args: TArgs): boolean {
         return !predicate.call(this, ...args);
-    } as any as T;
+    };
 }
 
 export { negate };
