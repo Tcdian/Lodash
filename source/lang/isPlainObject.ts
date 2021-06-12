@@ -1,8 +1,5 @@
 import { _baseGetTag } from './_baseGetTag';
 
-const objectProto = Object.prototype;
-const funcProto = Function.prototype;
-
 function isPlainObject(value: any): boolean {
     if (_baseGetTag(value) !== '[object Object]') {
         return false;
@@ -11,11 +8,11 @@ function isPlainObject(value: any): boolean {
     if (proto === null) {
         return true;
     }
-    const constructor = objectProto.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+    const constructor = Object.prototype.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
     return (
         typeof constructor === 'function' &&
         constructor instanceof constructor &&
-        funcProto.toString.call(Object) === funcProto.toString.call(constructor)
+        Function.prototype.toString.call(Object) === Function.prototype.toString.call(constructor)
     );
 }
 

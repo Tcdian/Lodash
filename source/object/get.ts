@@ -4,40 +4,24 @@ import { toPath } from '../util/toPath';
 type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
 
-function get<TObject extends object, TKey extends keyof TObject>(object: TObject, path: TKey | [TKey]): TObject[TKey];
-function get<TObject extends object, TKey extends keyof TObject, TDefault>(
-    object: TObject,
-    path: TKey | [TKey],
-    defaultValue: TDefault
-): Exclude<TObject[TKey], undefined> | TDefault;
-function get<TObject extends object, TKey1 extends keyof TObject, TKey2 extends keyof TObject[TKey1]>(
-    object: TObject,
-    path: [TKey1, TKey2]
-): TObject[TKey1][TKey2];
-function get<TObject extends object, TKey1 extends keyof TObject, TKey2 extends keyof TObject[TKey1], TDefault>(
-    object: TObject,
-    path: [TKey1, TKey2],
-    defaultValue: TDefault
-): Exclude<TObject[TKey1][TKey2], undefined> | TDefault;
-function get<
-    TObject extends object,
-    TKey1 extends keyof TObject,
-    TKey2 extends keyof TObject[TKey1],
-    TKey3 extends keyof TObject[TKey1][TKey2]
->(object: TObject, path: [TKey1, TKey2, TKey3]): TObject[TKey1][TKey2][TKey3];
-function get<
-    TObject extends object,
-    TKey1 extends keyof TObject,
-    TKey2 extends keyof TObject[TKey1],
-    TKey3 extends keyof TObject[TKey1][TKey2],
-    TDefault
->(object: TObject, path: [TKey1, TKey2, TKey3]): Exclude<TObject[TKey1][TKey2][TKey3], undefined> | TDefault;
-function get<T>(object: T[] | Record<PropertyName, T>, path: PropertyPath): T;
-function get<T, TDefault>(
-    object: T[] | Record<PropertyName, T>,
+function get<T extends object, K extends keyof T>(object: T, path: K | [K]): T[K];
+function get<T extends object, K extends keyof T, Default>(
+    object: T,
+    path: K | [K],
+    defaultValue: Default
+): Exclude<T[K], undefined> | Default;
+function get<T extends object, K1 extends keyof T, K2 extends keyof T[K1]>(object: T, path: [K1, K2]): T[K1][K2];
+function get<T extends object, K1 extends keyof T, K2 extends keyof T[K1], Default>(
+    object: T,
+    path: [K1, K2],
+    defaultValue: Default
+): Exclude<T[K1][K2], undefined> | Default;
+function get<K extends PropertyName, V>(object: Record<K, V>, path: PropertyPath): V;
+function get<K extends PropertyName, V, Default>(
+    object: Record<K, V>,
     path: PropertyPath,
-    defaultValue: TDefault
-): Exclude<T, undefined> | TDefault;
+    defaultValue: Default
+): Exclude<V, undefined> | Default;
 function get(object: any, path: PropertyPath, defaultValue?: any): any;
 function get(object: any, path: PropertyPath, defaultValue?: any): any {
     if (object === undefined) {

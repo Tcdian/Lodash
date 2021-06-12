@@ -4,32 +4,21 @@ import { isFunction } from '../lang/isFunction';
 import { isUndefined } from '../lang/isUndefined';
 import { assign } from '../object/assign';
 
-type AssignCustomizer<TObject, TSource> = (
-    objValue: TObject[keyof TObject],
-    srcValue: TSource[keyof TSource],
-    key?: keyof TObject,
-    object?: TObject,
-    source?: TSource
+type AssignCustomizer<T, Source> = (
+    objValue: T[keyof T],
+    srcValue: Source[keyof Source],
+    key?: keyof T,
+    object?: T,
+    source?: Source
 ) => any;
 
-function assignWith<TObject, TSource>(
-    object: TObject,
-    source: TSource,
-    customizer: AssignCustomizer<TObject, TSource>
-): TObject & TSource;
-function assignWith<TObject, TSource1, TSource2>(
-    object: TObject,
-    source1: TSource1,
-    source2: TSource2,
-    customizer: AssignCustomizer<TObject, TSource1 & TSource2>
-): TObject & TSource1 & TSource2;
-function assignWith<TObject, TSource1, TSource2, TSource3>(
-    object: TObject,
-    source1: TSource1,
-    source2: TSource2,
-    source3: TSource3,
-    customizer: AssignCustomizer<TObject, TSource1 & TSource2 & TSource3>
-): TObject & TSource1 & TSource2 & TSource3;
+function assignWith<T, Source>(object: T, source: Source, customizer: AssignCustomizer<T, Source>): T & Source;
+function assignWith<T, Source1, Source2>(
+    object: T,
+    source1: Source1,
+    source2: Source2,
+    customizer: AssignCustomizer<T, Source1 & Source2>
+): T & Source1 & Source2;
 function assignWith(object: any, ...otherArgs: any[]): any;
 function assignWith(object: any, ...otherArgs: any[]): any {
     const customizer: AssignCustomizer<any, any> = last(otherArgs);

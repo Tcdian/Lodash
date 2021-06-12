@@ -5,24 +5,13 @@ import { isFunction } from '../lang/isFunction';
 
 type MergeWithCustomizer = (objValue: any, srcValue: any, key: string | symbol, object: any, source: any) => any;
 
-function mergeWith<TObject, TSource>(
-    object: TObject,
-    source: TSource,
+function mergeWith<T, Source>(object: T, source: Source, customizer: MergeWithCustomizer): T & Source;
+function mergeWith<T, Source1, Source2>(
+    object: T,
+    source1: Source1,
+    source2: Source2,
     customizer: MergeWithCustomizer
-): TObject & TSource;
-function mergeWith<TObject, TSource1, TSource2>(
-    object: TObject,
-    source1: TSource1,
-    source2: TSource2,
-    customizer: MergeWithCustomizer
-): TObject & TSource1 & TSource2;
-function mergeWith<TObject, TSource1, TSource2, TSource3>(
-    object: TObject,
-    source1: TSource1,
-    source2: TSource2,
-    source3: TSource3,
-    customizer: MergeWithCustomizer
-): TObject & TSource1 & TSource2 & TSource3;
+): T & Source1 & Source2;
 function mergeWith(object: any, ...resArgs: any[]): any;
 function mergeWith(object: any, ...resArgs: any[]): any {
     const customizer: MergeWithCustomizer = last(resArgs);

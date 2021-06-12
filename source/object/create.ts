@@ -1,7 +1,10 @@
 import { assign } from './assign';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-function create<T extends object, U extends object>(prototype: T, properties?: U): T & U {
+function create<Prototype extends object, Properties extends object>(
+    prototype: Prototype,
+    properties?: Properties
+): Prototype & Properties {
     return assign(Object.create(prototype), properties);
 }
 

@@ -19,10 +19,8 @@ type TypeTag =
     | '[object WeakMap]'
     | '[object WeakSet]';
 
-const objectProto = Object.prototype;
-
 function _baseGetTag(value: any): TypeTag {
-    return objectProto.toString.call(value) as TypeTag;
+    return Object.prototype.toString.call(value) as TypeTag;
 }
 
 export { _baseGetTag };
