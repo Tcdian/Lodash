@@ -3,12 +3,9 @@ import { _baseClone } from './_baseClone';
 const CLONE_SYMBOLS_FLAG = 1 << 2;
 
 type PropertyName = string | number | symbol;
-type CloneWithCustomizer<TValue, TResult> = (value: TValue, key?: PropertyName, object?: any, stack?: any) => TResult;
+type CloneWithCustomizer<T, R> = (value: T, key?: PropertyName, object?: any, cache?: Map<any, any>) => R;
 
-function cloneWith<TSource, TResult>(
-    value: TSource,
-    customizer?: CloneWithCustomizer<TSource, TResult | undefined>
-): TSource | TResult {
+function cloneWith<T, R>(value: T, customizer?: CloneWithCustomizer<T, R | undefined>): T | R {
     return _baseClone(value, CLONE_SYMBOLS_FLAG, customizer);
 }
 

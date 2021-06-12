@@ -1,5 +1,5 @@
 function eq(value: any, other: any): boolean {
-    return value === other || (Number.isNaN(value) && Number.isNaN(other));
+    return Object.is(value, other);
 }
 
 export { eq };

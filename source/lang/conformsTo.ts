@@ -1,13 +1,16 @@
-import { keys } from '../object/keys';
+import { entries } from '../object/entries';
 import { isFunction } from './isFunction';
 
-const ø = Object.create(null);
+type PropertyName = string | number | symbol;
 
-function conformsTo<T>(object: T, source: { [K in keyof T]?: (value: T[K]) => boolean }): boolean {
-    return keys(source).every((key) => {
-        const func = source[key as keyof T];
+function conformsTo<K extends PropertyName, V>(
+    object: Record<K, V>,
+    source: Record<K, (value: V) => boolean>
+): boolean {
+    return entries(source).every(([key, func]) => {
+        const ø = Object.create(null);
         if (isFunction(func)) {
-            return func.call(ø, object[key as keyof T]);
+            return func.call(ø, object[key]);
         }
         return false;
     });
