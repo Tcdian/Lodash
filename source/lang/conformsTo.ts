@@ -5,12 +5,12 @@ type PropertyName = string | number | symbol;
 
 function conformsTo<K extends PropertyName, V>(
     object: Record<K, V>,
-    source: Record<K, (value: V) => boolean>
+    source: Partial<Record<K, (value: V) => boolean>>
 ): boolean {
     return entries(source).every(([key, func]) => {
         const ø = Object.create(null);
         if (isFunction(func)) {
-            return func.call(ø, object[key]);
+            return func.call(ø, object[key as K]);
         }
         return false;
     });

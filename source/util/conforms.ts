@@ -1,7 +1,11 @@
 import { conformsTo } from '../lang/conformsTo';
 import { partialRight } from '../function/partialRight';
 
-function conforms<T>(source: { [K in keyof T]?: (value: T[K]) => boolean }): (object: T) => boolean {
+type PropertyName = string | number | symbol;
+
+function conforms<K extends PropertyName, V>(
+    source: Partial<Record<K, (value: V) => boolean>>
+): (object: Record<K, V>) => boolean {
     return partialRight(conformsTo, source);
 }
 
