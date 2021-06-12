@@ -1,10 +1,7 @@
-import { isEmpty } from '../lang/isEmpty';
+import { maxBy } from './maxBy';
 
 function max<T>(array: T[]): T | undefined {
-    if (isEmpty(array)) {
-        return undefined;
-    }
-    return array.reduce((previous, current) => (previous > current ? previous : current));
+    return maxBy(array);
 }
 
 export { max };
