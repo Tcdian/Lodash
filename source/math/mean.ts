@@ -1,5 +1,7 @@
+import { meanBy } from './meanBy';
+
 function mean(array: number[]): number {
-    return array.reduce((previous, current) => previous + current, 0) / array.length;
+    return meanBy(array);
 }
 
 export { mean };
