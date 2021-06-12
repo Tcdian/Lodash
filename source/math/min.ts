@@ -1,10 +1,7 @@
-import { isEmpty } from '../lang/isEmpty';
+import { minBy } from './minBy';
 
 function min<T>(array: T[]): T | undefined {
-    if (isEmpty(array)) {
-        return undefined;
-    }
-    return array.reduce((previous, current) => (previous < current ? previous : current));
+    return minBy(array);
 }
 
 export { min };
