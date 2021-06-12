@@ -1,8 +1,8 @@
 import { flatten } from '../array/flatten';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function rearg(func: Func, ...indexes: number[][]): Func {
+function rearg(func: Func<any[], any>, ...indexes: number[][]): Func<any[], any> {
     const reIndexes = flatten(indexes);
     return function (this: any, ...args: any[]) {
         const finalArgs = new Array(args.length);

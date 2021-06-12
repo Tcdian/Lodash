@@ -1,9 +1,9 @@
 import { _executeBound } from '../util/_executeBound';
 import { _replaceHolders } from '../util/_replaceHolders';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function bind(func: Func, thisArg: any, ...partials: any[]): Func {
+function bind(func: Func<any[], any>, thisArg: any, ...partials: any[]): Func<any[], any> {
     const placeholder = bind.placeholder;
     return function boundFunc(this: any, ...args: any[]) {
         const finalArgs = _replaceHolders(partials, args, placeholder);

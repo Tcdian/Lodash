@@ -1,8 +1,8 @@
 import { ary } from './ary';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function unary(func: Func): Func {
+function unary(func: Func<any[], any>): Func<any[], any> {
     return ary(func, 1);
 }
 

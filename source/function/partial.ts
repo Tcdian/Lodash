@@ -1,7 +1,7 @@
 import { _executeBound } from '../util/_executeBound';
 import { _replaceHolders } from '../util/_replaceHolders';
 
-type Func<R> = (...args: any[]) => R;
+type Func<TS extends any[], R> = (...args: TS) => R;
 type Func0<R> = () => R;
 type Func1<A, R> = (arg: A) => R;
 type Func2<A1, A2, R> = (arg1: A1, arg2: A2) => R;
@@ -19,11 +19,11 @@ interface Partial {
     <A1, A2, A3, R>(func: Func3<A1, A2, A3, R>, arg1: A1, placeholder2: '_', arg3: A3): Func1<A2, R>;
     <A1, A2, A3, R>(func: Func3<A1, A2, A3, R>, placeholder1: '_', arg2: A2, arg3: A3): Func1<A1, R>;
     <A1, A2, A3, R>(func: Func3<A1, A2, A3, R>, arg1: A1, arg2: A2, arg3: A3): Func0<R>;
-    <R>(func: Func<R>, ...partials: any[]): R;
+    <R>(func: Func<any[], R>, ...partials: any[]): R;
     placeholder: '_';
 }
 
-const partial: Partial = function <R>(func: Func<R>, ...partials: any[]): Func<R> {
+const partial: Partial = function <R>(func: Func<any[], R>, ...partials: any[]): Func<any[], R> {
     const placeholder = partial.placeholder;
     return function boundFunc(this: any, ...args: any[]) {
         const finalArgs = _replaceHolders(partials, args, placeholder);

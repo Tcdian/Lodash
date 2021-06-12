@@ -1,14 +1,13 @@
-type Func = (...args: any[]) => any;
-
+type Func<TS extends any[], R> = (...args: TS) => R;
 interface MemoizedFunction {
     cache: Map<any, any>;
 }
 
-function memoize<TFunc extends Func>(
-    func: TFunc,
-    resolver?: (...args: Parameters<TFunc>) => any
-): TFunc & MemoizedFunction {
-    function memoized(this: any, ...args: Parameters<TFunc>): ReturnType<TFunc> {
+function memoize<T extends Func<any[], any>>(
+    func: T,
+    resolver?: (...args: Parameters<T>) => any
+): T & MemoizedFunction {
+    function memoized(this: any, ...args: Parameters<T>): ReturnType<T> {
         const key = resolver ? resolver.call(this, ...args) : args[0];
         const cache = memoized.cache;
         if (cache.has(key)) {
@@ -20,7 +19,7 @@ function memoize<TFunc extends Func>(
     }
 
     memoized.cache = new Map();
-    return memoized as TFunc & MemoizedFunction;
+    return memoized as T & MemoizedFunction;
 }
 
 export { memoize };

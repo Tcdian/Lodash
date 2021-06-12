@@ -1,5 +1,5 @@
-function over<As extends any[], TResult>(iteratees: ((...args: As) => TResult)[]) {
-    return function (this: any, ...args: As): TResult[] {
+function over<TS extends any[], R>(iteratees: ((...args: TS) => R)[]) {
+    return function (this: any, ...args: TS): R[] {
         return iteratees.map((iteratee) => iteratee.call(this, ...args));
     };
 }

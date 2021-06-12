@@ -1,21 +1,21 @@
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 interface DebounceSettings {
     /**
      * Specify invoking on the leading edge of the timeout.
      */
     leading?: boolean;
 }
-interface DebouncedFunc<TFunc extends Func> {
-    (...args: Parameters<TFunc>): ReturnType<TFunc>;
+interface DebouncedFunc<T extends Func<any[], any>> {
+    (...args: Parameters<T>): ReturnType<T>;
     cancel(): void;
-    flush(): ReturnType<TFunc>;
+    flush(): ReturnType<T>;
 }
 
-function debounce<TFunc extends Func>(
-    func: TFunc,
+function debounce<T extends Func<any[], any>>(
+    func: T,
     wait: number,
     { leading = false }: DebounceSettings = {}
-): DebouncedFunc<TFunc> {
+): DebouncedFunc<T> {
     let result: any;
     let timer: number | undefined;
     let lastThis: any;

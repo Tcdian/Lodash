@@ -1,11 +1,11 @@
 import { _executeBound } from '../util/_executeBound';
 import { _replaceHolders } from '../util/_replaceHolders';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 interface CurryRight {
     <A, R>(func: (arg: A) => R, arity?: number): RightCurriedFunction1<A, R>;
     <A1, A2, R>(func: (arg1: A1, arg2: A2) => R, arity?: number): RightCurriedFunction2<A1, A2, R>;
-    (func: Func, arity?: number): Func;
+    (func: Func<any[], any>, arity?: number): Func<any[], any>;
     placeholder: '_';
 }
 interface RightCurriedFunction1<A, R> {
@@ -19,12 +19,12 @@ interface RightCurriedFunction2<A1, A2, R> {
     (arg1: A1, arg2: A2): R;
 }
 
-const curryRight: CurryRight = function (func: Func, arity = func.length): Func {
+const curryRight: CurryRight = function (func: Func<any[], any>, arity = func.length): Func<any[], any> {
     const placeholder = curryRight.placeholder;
     return _curryRight(func, arity, [], placeholder);
 };
 
-function _curryRight(func: Func, arity: number, partials: any[], placeholder: '_'): Func {
+function _curryRight(func: Func<any[], any>, arity: number, partials: any[], placeholder: '_'): Func<any[], any> {
     return function curried(this: any, ...args: any[]) {
         const argsLen = args.filter((arg) => arg !== placeholder).length;
         const finalArgs = _replaceHolders(

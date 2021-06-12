@@ -1,8 +1,8 @@
 import { nth } from '../array/nth';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function nthArg(n = 0): Func {
+function nthArg(n = 0): Func<any[], any> {
     return function (...args: any[]): any {
         return nth(args, n);
     };

@@ -1,8 +1,8 @@
 import { before } from './before';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function once<TFunc extends Func>(func: TFunc): TFunc {
+function once<T extends Func<any[], any>>(func: T): T {
     return before(2, func);
 }
 

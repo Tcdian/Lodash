@@ -1,6 +1,6 @@
 import { now } from '../date/now';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 interface ThrottleSettings {
     /**
      * If you'd like to disable the leading-edge call, pass this as false.
@@ -12,17 +12,17 @@ interface ThrottleSettings {
      */
     trailing?: boolean;
 }
-interface ThrottledFunc<TFunc extends Func> {
-    (...args: Parameters<TFunc>): ReturnType<TFunc>;
+interface ThrottledFunc<T extends Func<any[], any>> {
+    (...args: Parameters<T>): ReturnType<T>;
     cancel(): void;
-    flush(): ReturnType<TFunc>;
+    flush(): ReturnType<T>;
 }
 
-function throttle<TFunc extends Func>(
-    func: TFunc,
+function throttle<T extends Func<any[], any>>(
+    func: T,
     wait: number,
     { leading = true, trailing = true }: ThrottleSettings = {}
-): ThrottledFunc<TFunc> {
+): ThrottledFunc<T> {
     let result: any;
     let timer: number | undefined;
     let lastInvokeTime = 0;

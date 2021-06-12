@@ -1,6 +1,6 @@
 import { _baseGetTag } from './_baseGetTag';
 
-type Func<A extends any[], R> = (...args: A) => R;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
 function isFunction(value: any): value is Func<any[], any> {
     const tag = _baseGetTag(value);

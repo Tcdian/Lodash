@@ -4,7 +4,7 @@ import { isArray } from '../lang/isArray';
 import { isString } from '../lang/isString';
 import { entries } from '../object/entries';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 type PropertyName = string | number | symbol;
 type MemoArrayIterator<T, R> = (prev: R, curr: T, index: number, collection: T[]) => R;
 type MemoStringIterator<R> = (prev: R, curr: string, index: number, collection: string) => R;
@@ -17,7 +17,7 @@ function reduceRight<K extends PropertyName, V, R>(
     predicate?: MemoRecordIterator<K, V, R>,
     accumulator?: R
 ): R;
-function reduceRight(collection: any, predicate: Func = identity, accumulator?: any): any {
+function reduceRight(collection: any, predicate: Func<any[], any> = identity, accumulator?: any): any {
     const iterateeFunc = iteratee(predicate);
     return entries(collection).reduceRight((prev, [key, value]: [PropertyName, unknown]) => {
         key = isArray(collection) || isString(collection) ? Number(key) : key;

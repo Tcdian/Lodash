@@ -1,9 +1,9 @@
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function flip<TFunc extends Func>(func: TFunc): TFunc {
-    return function (this: any, ...args: Parameters<TFunc>): ReturnType<TFunc> {
+function flip<T extends Func<any[], any>>(func: T): T {
+    return function (this: any, ...args: Parameters<T>): ReturnType<T> {
         return func.call(this, ...args.reverse());
-    } as TFunc;
+    } as T;
 }
 
 export { flip };

@@ -8,11 +8,11 @@ import { matchesProperty } from './matchesProperty';
 import { matches } from './matches';
 import { property } from './property';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function iteratee<TFunc extends Func>(func: TFunc): TFunc;
-function iteratee(value: any): Func;
-function iteratee(value: any): Func {
+function iteratee<T extends Func<any[], any>>(func: T): T;
+function iteratee(value: any): Func<any[], any>;
+function iteratee(value: any): Func<any[], any> {
     if (isNil(value)) {
         return identity;
     }

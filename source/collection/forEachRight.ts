@@ -4,7 +4,7 @@ import { isArray } from '../lang/isArray';
 import { isString } from '../lang/isString';
 import { entries } from '../object/entries';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 type PropertyName = string | number | symbol;
 type ArrayIterator<T, R> = (value: T, index: number, collection: T[]) => R;
 type StringIterator<R> = (char: string, index: number, string: string) => R;
@@ -16,7 +16,7 @@ function forEachRight<K extends PropertyName, V>(
     collection: Record<K, V>,
     predicate?: RecordIterator<K, V, unknown>
 ): Record<K, V>;
-function forEachRight(collection: any, predicate: Func = identity): any {
+function forEachRight(collection: any, predicate: Func<any[], any> = identity): any {
     const iterateeFunc = iteratee(predicate);
     const pairs = entries(collection);
     const len = pairs.length;

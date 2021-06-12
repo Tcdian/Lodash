@@ -1,8 +1,8 @@
 import { delay } from './delay';
 
-type Func = (...args: any[]) => any;
+type Func<TS extends any[], R> = (...args: TS) => R;
 
-function defer(func: Func, ...args: any[]): number {
+function defer(func: Func<any[], any>, ...args: any[]): number {
     return delay(func, 0, ...args);
 }
 
