@@ -3,6 +3,10 @@ import { isObject } from './isObject';
 import { isArray } from './isArray';
 import { isTypedArray } from './isTypedArray';
 import { isArrayBuffer } from './isArrayBuffer';
+import { isArrayLike } from './isArrayLike';
+import { isSet } from './isSet';
+import { isMap } from './isMap';
+import { values } from '../object/values';
 
 function toArray(value: any): any[] {
     if (isString(value)) {
@@ -12,9 +16,15 @@ function toArray(value: any): any[] {
         return [];
     }
     if (isArray(value) || isTypedArray(value) || isArrayBuffer(value)) {
-        return value.slice();
+        return (value as any).slice();
     }
-    if (isArrayLike(val)) return _arrayProto.slice.call(val);
-    if (isSet(val) || isMap(val)) return Array.from(val.values());
-    return values(val);
+    if (isArrayLike(value)) {
+        return Array.prototype.slice.call(value);
+    }
+    if (isSet(value) || isMap(value)) {
+        return Array.from(value.values());
+    }
+    return values(value);
 }
+
+export { toArray };
