@@ -1,25 +1,20 @@
 import _ from 'lodash';
-import { merge } from '../source/object/merge';
+import { defaultsDeep } from '../source/object/defaultsDeep';
 
-describe('merge', () => {
+describe('defaultsDeep', () => {
     interface Recursive {
         a?: Recursive;
         id: string;
     }
 
-    const object = { a: [{ b: 2 }, { d: 4 }] };
-    const other = { a: [{ c: 3 }, { e: 5 }] };
+    const object = { a: { b: 2 } };
+    const other = { a: { b: 1, c: 3 } };
 
-    test('merge objects', () => {
-        expect(merge(object, other)).toEqual({
-            a: [
-                { b: 2, c: 3 },
-                { d: 4, e: 5 },
-            ],
-        });
+    test('defaultsDeep objects', () => {
+        expect(defaultsDeep(object, other)).toEqual({ a: { b: 2, c: 3 } });
     });
 
-    test('merge recursive', () => {
+    test('defaultsDeep recursive', () => {
         const recursiveA: Recursive = { id: 'a' };
         recursiveA.a = recursiveA;
         const recursiveB: Recursive = { id: 'b' };
@@ -29,6 +24,6 @@ describe('merge', () => {
         recursiveAR.a = recursiveAR;
         const recursiveBR: Recursive = { id: 'b' };
         recursiveBR.a = recursiveBR;
-        expect(merge(recursiveA, recursiveB)).toEqual(_.merge(recursiveAR, recursiveBR));
+        expect(defaultsDeep(recursiveA, recursiveB)).toEqual(_.defaultsDeep(recursiveAR, recursiveBR));
     });
 });

@@ -11,7 +11,12 @@ import { keysIn } from '../object/keysIn';
 import { assign } from '../object/assign';
 
 type PropertyName = string | number | symbol;
-type CloneWithCustomizer = (value: any, key?: PropertyName, object?: any, cache?: Map<any, any>) => any;
+type CloneWithCustomizer = (
+    value: any,
+    key: PropertyName | undefined,
+    object: any,
+    stack: Map<any, any> | undefined
+) => any;
 
 const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_FLAT_FLAG = 1 << 1;
@@ -23,14 +28,14 @@ function _baseClone(
     customizer?: CloneWithCustomizer,
     key?: any,
     object?: any,
-    cache = new Map()
+    stack = new Map()
 ): any {
     let result: any;
     const isDeep = bitmask & CLONE_DEEP_FLAG;
     const isFlat = bitmask & CLONE_FLAT_FLAG;
     const isFull = bitmask & CLONE_SYMBOLS_FLAG;
     if (customizer) {
-        result = object ? customizer(value, key, object, cache) : customizer(value);
+        result = object ? customizer(value, key, object, stack) : customizer(value, undefined, undefined, stack);
     }
     if (!isUndefined(result)) {
         return result;
@@ -89,31 +94,31 @@ function _baseClone(
         }
     }
 
-    if (cache.has(value)) {
-        return cache.get(value);
+    if (stack.has(value)) {
+        return stack.get(value);
     }
-    cache.set(value, result);
+    stack.set(value, result);
 
     if (isArray(value)) {
         value.forEach((subValue, index) => {
-            result[index] = _baseClone(subValue, bitmask, customizer, index, value, cache);
+            result[index] = _baseClone(subValue, bitmask, customizer, index, value, stack);
         });
     }
     if (isSet(value)) {
         value.forEach((subValue) => {
-            result.add(_baseClone(subValue, bitmask, customizer, subValue, value, cache));
+            result.add(_baseClone(subValue, bitmask, customizer, subValue, value, stack));
         });
     }
     if (isMap(value)) {
         value.forEach((subValue, key) => {
-            result.set(key, _baseClone(subValue, bitmask, customizer, key, value, cache));
+            result.set(key, _baseClone(subValue, bitmask, customizer, key, value, stack));
         });
     }
 
     const keysFunc = isFlat ? (isFull ? _getAllKeysIn : keysIn) : isFull ? _getAllKeys : keys;
     keysFunc(value).forEach((key) => {
         assign(result, {
-            [key]: _baseClone((value as any)[key], bitmask, customizer, key, value, cache),
+            [key]: _baseClone((value as any)[key], bitmask, customizer, key, value, stack),
         });
     });
     return result;

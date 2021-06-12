@@ -1,33 +1,32 @@
 import { isObject } from '../lang/isObject';
 import { isUndefined } from '../lang/isUndefined';
 
+type PropertyName = string | number | symbol;
 type MergeWithCustomizer = (
     objValue: any,
     srcValue: any,
-    key: string | symbol,
+    key: PropertyName | undefined,
     object: any,
     source: any,
-    cache?: any
+    stack: Set<any> | undefined
 ) => any;
 
-function _baseMerge(object: any, sources: any[], customizer?: MergeWithCustomizer, cache: Set<any> = new Set()): any {
+function _baseMerge(object: any, sources: any[], customizer?: MergeWithCustomizer, stack: Set<any> = new Set()): any {
     sources.forEach((source) => {
         Object.keys(source).forEach((key) => {
             let finalVal = source[key];
-
-            const customized = isUndefined(customizer)
-                ? undefined
-                : customizer(object[key], source[key], key, object, source, cache);
-            finalVal = isUndefined(customized) ? finalVal : customized;
-
-            if (customized === undefined && isObject(object[key]) && isObject(source[key]) && !cache.has(object[key])) {
-                const cacheKey = object[key];
-                cache.add(cacheKey);
-                finalVal = _baseMerge(object[key], [source[key]], customizer, cache);
-                cache.delete(cacheKey);
+            if (!stack.has(finalVal)) {
+                stack.add(finalVal);
+                const customized = isUndefined(customizer)
+                    ? undefined
+                    : customizer(object[key], source[key], key, object, source, stack);
+                finalVal = isUndefined(customized) ? finalVal : customized;
+                if (customized === undefined && isObject(object[key]) && isObject(source[key])) {
+                    finalVal = _baseMerge(object[key], [source[key]], customizer, stack);
+                }
+                object[key] = finalVal;
+                stack.delete(finalVal);
             }
-
-            object[key] = finalVal;
         });
     });
     return object;

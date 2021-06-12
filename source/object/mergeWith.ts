@@ -3,7 +3,7 @@ import { last } from '../array/last';
 import { initial } from '../array/initial';
 import { isFunction } from '../lang/isFunction';
 
-type MergeWithCustomizer = (objValue: any, srcValue: any, key: string | symbol, object: any, source: any) => any;
+type MergeWithCustomizer = (objValue: any, srcValue: any, key: string | symbol, object: any, source: Set<any>) => any;
 
 function mergeWith<T, Source>(object: T, source: Source, customizer: MergeWithCustomizer): T & Source;
 function mergeWith<T, Source1, Source2>(

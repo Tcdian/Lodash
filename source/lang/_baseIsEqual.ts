@@ -6,15 +6,15 @@ type PropertyName = string | number | symbol;
 type IsEqualCustomizer = (
     objValue: any,
     othValue: any,
-    key?: PropertyName,
-    object?: any,
-    other?: any,
-    cache?: Map<any, any>
+    key: PropertyName | undefined,
+    object: any,
+    other: any,
+    stack: Map<any, any> | undefined
 ) => boolean | undefined;
 
 const COMPARE_PARTIAL_FLAG = 1 << 0;
 
-function _baseIsEqual(value: any, other: any, bitmask = 0, customizer?: IsEqualCustomizer, cache = new Map()): boolean {
+function _baseIsEqual(value: any, other: any, bitmask = 0, customizer?: IsEqualCustomizer, stack = new Map()): boolean {
     if (Object.is(value, other)) {
         return true;
     }
@@ -24,10 +24,10 @@ function _baseIsEqual(value: any, other: any, bitmask = 0, customizer?: IsEqualC
     if (typeof value !== 'object' && typeof other !== 'object') {
         return false;
     }
-    return _baseIsEqualDeep(value, other, bitmask, customizer, cache);
+    return _baseIsEqualDeep(value, other, bitmask, customizer, stack);
 }
 
-function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: IsEqualCustomizer, cache = new Map()) {
+function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: IsEqualCustomizer, stack = new Map()) {
     const valTag = _baseGetTag(value);
     const othTag = _baseGetTag(other);
     if (valTag !== othTag) {
@@ -44,11 +44,11 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
         case '[object Symbol]':
             return Symbol.prototype.valueOf.call(value) === Symbol.prototype.valueOf.call(other);
     }
-    if (cache.has(value)) {
-        return cache.get(value) === other && cache.get(other) === value;
+    if (stack.has(value)) {
+        return stack.get(value) === other && stack.get(other) === value;
     }
-    cache.set(value, other);
-    cache.set(other, value);
+    stack.set(value, other);
+    stack.set(other, value);
     let result: boolean;
     const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
     if (isArray(value) && isArray(other)) {
@@ -56,11 +56,11 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
             return false;
         }
         result = other.every((v, index) => {
-            const compared = customizer && customizer(value[index], other[index], index, value, other, cache);
+            const compared = customizer && customizer(value[index], other[index], index, value, other, stack);
             if (!isUndefined(compared)) {
                 return !!compared;
             }
-            return _baseIsEqual(value[index], other[index], bitmask, customizer, cache);
+            return _baseIsEqual(value[index], other[index], bitmask, customizer, stack);
         });
     } else {
         const keys = Object.keys(other);
@@ -68,15 +68,15 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
             return false;
         }
         result = keys.every((key) => {
-            const compared = customizer && customizer(value[key], other[key], key, value, other, cache);
+            const compared = customizer && customizer(value[key], other[key], key, value, other, stack);
             if (!isUndefined(compared)) {
                 return !!compared;
             }
-            return _baseIsEqual(value[key], other[key], bitmask, customizer, cache);
+            return _baseIsEqual(value[key], other[key], bitmask, customizer, stack);
         });
     }
-    cache.delete(value);
-    cache.delete(other);
+    stack.delete(value);
+    stack.delete(other);
     return result;
 }
 
