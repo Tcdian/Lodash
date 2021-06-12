@@ -3,24 +3,20 @@ import { _replaceHolders } from '../util/_replaceHolders';
 
 type Func = (...args: any[]) => any;
 interface CurryRight {
-    <TArg, TResult>(func: (arg: TArg) => TResult, arity?: number): RightCurriedFunction1<TArg, TResult>;
-    <TArg1, TArg2, TResult>(func: (arg1: TArg1, arg2: TArg2) => TResult, arity?: number): RightCurriedFunction2<
-        TArg1,
-        TArg2,
-        TResult
-    >;
+    <A, R>(func: (arg: A) => R, arity?: number): RightCurriedFunction1<A, R>;
+    <A1, A2, R>(func: (arg1: A1, arg2: A2) => R, arity?: number): RightCurriedFunction2<A1, A2, R>;
     (func: Func, arity?: number): Func;
     placeholder: '_';
 }
-interface RightCurriedFunction1<TArg, TResult> {
-    (): RightCurriedFunction1<TArg, TResult>;
-    (arg: TArg): TResult;
+interface RightCurriedFunction1<A, R> {
+    (): RightCurriedFunction1<A, R>;
+    (arg: A): R;
 }
-interface RightCurriedFunction2<TArg1, TArg2, TResult> {
-    (): RightCurriedFunction2<TArg1, TArg2, TResult>;
-    (arg2: TArg2): RightCurriedFunction1<TArg1, TResult>;
-    (arg1: TArg1, arg2: '_'): RightCurriedFunction1<TArg2, TResult>;
-    (arg1: TArg1, arg2: TArg2): TResult;
+interface RightCurriedFunction2<A1, A2, R> {
+    (): RightCurriedFunction2<A1, A2, R>;
+    (arg2: A2): RightCurriedFunction1<A1, R>;
+    (arg1: A1, arg2: '_'): RightCurriedFunction1<A2, R>;
+    (arg1: A1, arg2: A2): R;
 }
 
 const curryRight: CurryRight = function (func: Func, arity = func.length): Func {

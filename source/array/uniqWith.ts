@@ -2,7 +2,7 @@ import { uniq } from './uniq';
 import { isFunction } from '../lang/isFunction';
 import { findIndex } from './findIndex';
 
-type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
+type Comparator<T1, T2> = (a: T1, b: T2) => boolean;
 
 function uniqWith<T>(array: T[], comparator?: Comparator<T, T>): T[] {
     if (!isFunction(comparator)) {

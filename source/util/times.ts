@@ -1,6 +1,6 @@
 import { identity } from './identity';
 
-function times<TResult>(n: number, iteratee: (index: number) => TResult = identity as any): TResult[] {
+function times<R>(n: number, iteratee: (index: number) => R = identity as any): R[] {
     return Array.from(new Array(n), (v, i) => iteratee(i));
 }
 

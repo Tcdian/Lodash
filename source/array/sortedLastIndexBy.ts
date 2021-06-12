@@ -3,8 +3,8 @@ import { iteratee } from '../util/iteratee';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterator<T, TResult> = (value: T) => TResult;
-type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
+type ValueIterator<T, R> = (value: T) => R;
+type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function sortedLastIndexBy<T>(array: T[], value: T, predicate: ValueIterateeCustom<T, unknown> = identity): number {
     const iterateeFunc = iteratee(predicate);

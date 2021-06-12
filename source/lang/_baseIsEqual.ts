@@ -1,6 +1,7 @@
 import { _baseGetTag } from './_baseGetTag';
 import { isArray } from './isArray';
 import { isUndefined } from './isUndefined';
+import { keys } from '../object/keys';
 
 type IsEqualCustomizer = (
     objValue: any,
@@ -62,11 +63,11 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
             return _baseIsEqual(value[index], other[index], bitmask, customizer, stack);
         });
     } else {
-        const keys = Object.keys(other);
-        if (!isPartial && keys.length !== Object.keys(value).length) {
+        const otherKeys = keys(other);
+        if (!isPartial && otherKeys.length !== keys(value).length) {
             return false;
         }
-        result = keys.every((key) => {
+        result = otherKeys.every((key) => {
             const compared = customizer && customizer(value[key], other[key], key, value, other, stack);
             if (!isUndefined(compared)) {
                 return !!compared;

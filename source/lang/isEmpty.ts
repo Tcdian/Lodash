@@ -4,6 +4,7 @@ import { isString } from './isString';
 import { isSet } from './isSet';
 import { isMap } from './isMap';
 import { isObject } from './isObject';
+import { keys } from '../object/keys';
 
 function isEmpty(value: any): boolean {
     if (isNil(value)) {
@@ -16,7 +17,7 @@ function isEmpty(value: any): boolean {
         return !value.size;
     }
     if (isObject(value)) {
-        return !Object.keys(value).length;
+        return !keys(value).length;
     }
     return true;
 }

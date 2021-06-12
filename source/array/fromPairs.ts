@@ -1,4 +1,5 @@
 import { assign } from '../object/assign';
+
 type PropertyName = string | number | symbol;
 
 function fromPairs<K extends PropertyName, V>(pairs: [K, V][]): Record<K, V> {

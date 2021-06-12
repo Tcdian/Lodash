@@ -1,6 +1,6 @@
-type Func<TResult> = (...args: any[]) => TResult;
+type Func<R> = (...args: any[]) => R;
 
-function spread<TResult>(func: Func<TResult>, start = 0): Func<TResult> {
+function spread<R>(func: Func<R>, start = 0): Func<R> {
     return function (this: any, args: any[]) {
         return func.call(this, ...args.slice(start));
     };

@@ -6,30 +6,17 @@ import { entries } from '../object/entries';
 
 type Func = (...args: any[]) => any;
 type PropertyName = string | number | symbol;
-type MemoArrayIterator<T, TResult> = (prev: TResult, curr: T, index: number, collection: T[]) => TResult;
-type MemoStringIterator<TResult> = (prev: TResult, curr: string, index: number, collection: string) => TResult;
-type MemoRecordIterator<K extends PropertyName, V, TResult> = (
-    prev: TResult,
-    curr: V,
-    key: K,
-    collection: Record<K, V>
-) => TResult;
+type MemoArrayIterator<T, R> = (prev: R, curr: T, index: number, collection: T[]) => R;
+type MemoStringIterator<R> = (prev: R, curr: string, index: number, collection: string) => R;
+type MemoRecordIterator<K extends PropertyName, V, R> = (prev: R, curr: V, key: K, collection: Record<K, V>) => R;
 
-function reduceRight<T, TResult>(
-    collection: T[],
-    predicate?: MemoArrayIterator<T, TResult>,
-    accumulator?: TResult
-): TResult;
-function reduceRight<TResult>(
-    collection: string,
-    predicate?: MemoStringIterator<TResult>,
-    accumulator?: TResult
-): TResult;
-function reduceRight<K extends PropertyName, V, TResult>(
+function reduceRight<T, R>(collection: T[], predicate?: MemoArrayIterator<T, R>, accumulator?: R): R;
+function reduceRight<R>(collection: string, predicate?: MemoStringIterator<R>, accumulator?: R): R;
+function reduceRight<K extends PropertyName, V, R>(
     collection: Record<K, V>,
-    predicate?: MemoRecordIterator<K, V, TResult>,
-    accumulator?: TResult
-): TResult;
+    predicate?: MemoRecordIterator<K, V, R>,
+    accumulator?: R
+): R;
 function reduceRight(collection: any, predicate: Func = identity, accumulator?: any): any {
     const iterateeFunc = iteratee(predicate);
     return entries(collection).reduceRight((prev, [key, value]: [PropertyName, unknown]) => {

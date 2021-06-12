@@ -5,25 +5,22 @@ import { assign } from '../object/assign';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterator<T, TResult> = (value: T) => TResult;
-type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
+type ValueIterator<T, R> = (value: T) => R;
+type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
-function countBy<T, TResult extends PropertyName>(
-    collection: T[],
-    predicate?: ValueIterateeCustom<T, TResult>
-): Record<TResult, number>;
-function countBy<TResult extends PropertyName>(
+function countBy<T, R extends PropertyName>(collection: T[], predicate?: ValueIterateeCustom<T, R>): Record<R, number>;
+function countBy<R extends PropertyName>(
     collection: string,
-    predicate?: ValueIterateeCustom<string, TResult>
-): Record<TResult, number>;
-function countBy<K extends PropertyName, V, TResult extends PropertyName>(
+    predicate?: ValueIterateeCustom<string, R>
+): Record<R, number>;
+function countBy<K extends PropertyName, V, R extends PropertyName>(
     collection: Record<K, V>,
-    predicate?: ValueIterateeCustom<V, TResult>
-): Record<TResult, number>;
-function countBy<TResult extends PropertyName>(
+    predicate?: ValueIterateeCustom<V, R>
+): Record<R, number>;
+function countBy<R extends PropertyName>(
     collection: any,
-    predicate: ValueIterateeCustom<any, TResult> = identity
-): Record<TResult, number> {
+    predicate: ValueIterateeCustom<any, R> = identity
+): Record<R, number> {
     const result: Record<PropertyName, number> = {};
     const iterateeFunc = iteratee(predicate);
     values(collection).forEach((value) => {

@@ -1,7 +1,7 @@
 import { identity } from './identity';
 
-function overSome<TArgs extends any[]>(predicates: ((...args: TArgs) => boolean)[] = [identity as any]) {
-    return function (this: any, ...args: TArgs): boolean {
+function overSome<As extends any[]>(predicates: ((...args: As) => boolean)[] = [identity as any]) {
+    return function (this: any, ...args: As): boolean {
         return predicates.some((predicate) => predicate.call(this, ...args));
     };
 }

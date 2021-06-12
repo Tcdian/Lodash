@@ -1,11 +1,12 @@
 import { isObject } from '../lang/isObject';
 import { isUndefined } from '../lang/isUndefined';
+import { keys } from './keys';
 
 type MergeWithCustomizer = (objValue: any, srcValue: any, key: any, object: any, source: any, stack: any) => any;
 
 function _baseMerge(object: any, sources: any[], customizer?: MergeWithCustomizer, stack: Set<any> = new Set()): any {
     sources.forEach((source) => {
-        Object.keys(source).forEach((key) => {
+        keys(source).forEach((key) => {
             let finalVal = source[key];
             if (!stack.has(finalVal)) {
                 stack.add(finalVal);

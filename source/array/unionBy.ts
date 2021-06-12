@@ -7,8 +7,8 @@ import { initial } from '../array/initial';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterator<T, TResult> = (value: T) => TResult;
-type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
+type ValueIterator<T, R> = (value: T) => R;
+type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function unionBy<T>(array: T[], other: T[], predicate: ValueIterateeCustom<T, unknown>): T[];
 function unionBy<T>(array: T[], other1: T[], other2: T[], predicate: ValueIterateeCustom<T, unknown>): T[];

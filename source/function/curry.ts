@@ -3,24 +3,20 @@ import { _replaceHolders } from '../util/_replaceHolders';
 
 type Func = (...args: any[]) => any;
 interface Curry {
-    <TArg, TResult>(func: (arg: TArg) => TResult, arity?: number): CurriedFunction1<TArg, TResult>;
-    <TArg1, TArg2, TResult>(func: (arg1: TArg1, arg2: TArg2) => TResult, arity?: number): CurriedFunction2<
-        TArg1,
-        TArg2,
-        TResult
-    >;
+    <A, R>(func: (arg: A) => R, arity?: number): CurriedFunction1<A, R>;
+    <A1, A2, R>(func: (arg1: A1, arg2: A2) => R, arity?: number): CurriedFunction2<A1, A2, R>;
     (func: Func, arity?: number): Func;
     placeholder: '_';
 }
-interface CurriedFunction1<TArg, TResult> {
-    (): CurriedFunction1<TArg, TResult>;
-    (arg: TArg): TResult;
+interface CurriedFunction1<A, R> {
+    (): CurriedFunction1<A, R>;
+    (arg: A): R;
 }
-interface CurriedFunction2<TArg1, TArg2, TResult> {
-    (): CurriedFunction2<TArg1, TArg2, TResult>;
-    (arg1: TArg1): CurriedFunction1<TArg2, TResult>;
-    (arg1: '_', arg2: TArg2): CurriedFunction1<TArg1, TResult>;
-    (args1: TArg1, arg2: TArg2): TResult;
+interface CurriedFunction2<A1, A2, R> {
+    (): CurriedFunction2<A1, A2, R>;
+    (arg1: A1): CurriedFunction1<A2, R>;
+    (arg1: '_', arg2: A2): CurriedFunction1<A1, R>;
+    (args1: A1, arg2: A2): R;
 }
 
 const curry: Curry = function (func: Func, arity = func.length): Func {

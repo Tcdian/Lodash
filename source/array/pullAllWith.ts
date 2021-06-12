@@ -2,11 +2,11 @@ import { pullAll } from './pullAll';
 import { isFunction } from '../lang/isFunction';
 import { findIndex } from './findIndex';
 
-type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
+type Comparator<T1, T2> = (a: T1, b: T2) => boolean;
 
-function pullAllWith<T0, T1>(array: T0[], values: T1[], comparator?: Comparator<T0, T1>): T0[] {
+function pullAllWith<T, T1>(array: T[], values: T1[], comparator?: Comparator<T, T1>): T[] {
     if (!isFunction(comparator)) {
-        return pullAll(array, values as any as T0[]);
+        return pullAll(array, values as any as T[]);
     }
     values.forEach((othVal) => {
         let fromIndex = 0;

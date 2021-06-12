@@ -6,12 +6,12 @@ import { entries } from '../object/entries';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ArrayIterator<T, TResult> = (value: T, index: number, collection: T[]) => TResult;
-type ArrayIterateeCustom<T, TResult> = ArrayIterator<T, TResult> | IterateeShorthand<T>;
-type StringIterator<TResult> = (char: string, index: number, string: string) => TResult;
-type StringIterateeCustom<TResult> = StringIterator<TResult> | IterateeShorthand<string>;
-type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, collection: Record<K, V>) => TResult;
-type RecordIterateeCustom<K extends PropertyName, V, TResult> = RecordIterator<K, V, TResult> | IterateeShorthand<V>;
+type ArrayIterator<T, R> = (value: T, index: number, collection: T[]) => R;
+type ArrayIterateeCustom<T, R> = ArrayIterator<T, R> | IterateeShorthand<T>;
+type StringIterator<R> = (char: string, index: number, string: string) => R;
+type StringIterateeCustom<R> = StringIterator<R> | IterateeShorthand<string>;
+type RecordIterator<K extends PropertyName, V, R> = (value: V, key: K, collection: Record<K, V>) => R;
+type RecordIterateeCustom<K extends PropertyName, V, R> = RecordIterator<K, V, R> | IterateeShorthand<V>;
 
 function some<T>(collection: T[], predicate?: ArrayIterateeCustom<T, boolean>): boolean;
 function some(collection: string, predicate?: StringIterateeCustom<boolean>): boolean;

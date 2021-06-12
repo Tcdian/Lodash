@@ -5,25 +5,22 @@ import { assign } from '../object/assign';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterator<T, TResult> = (value: T) => TResult;
-type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
+type ValueIterator<T, R> = (value: T) => R;
+type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
-function keyBy<T, TResult extends PropertyName>(
-    collection: T[],
-    predicate?: ValueIterateeCustom<T, TResult>
-): Record<TResult, T>;
-function keyBy<TResult extends PropertyName>(
+function keyBy<T, R extends PropertyName>(collection: T[], predicate?: ValueIterateeCustom<T, R>): Record<R, T>;
+function keyBy<R extends PropertyName>(
     collection: string,
-    predicate?: ValueIterateeCustom<string, TResult>
-): Record<TResult, string>;
-function keyBy<K extends PropertyName, V, TResult extends PropertyName>(
+    predicate?: ValueIterateeCustom<string, R>
+): Record<R, string>;
+function keyBy<K extends PropertyName, V, R extends PropertyName>(
     collection: Record<K, V>,
-    predicate?: ValueIterateeCustom<V, TResult>
-): Record<TResult, V>;
-function keyBy<TResult extends PropertyName>(
+    predicate?: ValueIterateeCustom<V, R>
+): Record<R, V>;
+function keyBy<R extends PropertyName>(
     collection: any,
-    predicate: ValueIterateeCustom<any, TResult> = identity
-): Record<TResult, any> {
+    predicate: ValueIterateeCustom<any, R> = identity
+): Record<R, any> {
     const result: Record<PropertyName, any> = {};
     const iterateeFunc = iteratee(predicate);
     values(collection).forEach((value) => {

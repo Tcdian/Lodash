@@ -6,9 +6,9 @@ import { entries } from '../object/entries';
 
 type Func = (...args: any[]) => any;
 type PropertyName = string | number | symbol;
-type ArrayIterator<T, TResult> = (value: T, index: number, collection: T[]) => TResult;
-type StringIterator<TResult> = (char: string, index: number, string: string) => TResult;
-type RecordIterator<K extends PropertyName, V, TResult> = (value: V, key: K, collection: Record<K, V>) => TResult;
+type ArrayIterator<T, R> = (value: T, index: number, collection: T[]) => R;
+type StringIterator<R> = (char: string, index: number, string: string) => R;
+type RecordIterator<K extends PropertyName, V, R> = (value: V, key: K, collection: Record<K, V>) => R;
 
 function forEachRight<T>(collection: T[], predicate?: ArrayIterator<T, unknown>): T[];
 function forEachRight(collection: string, predicate?: StringIterator<unknown>): string;

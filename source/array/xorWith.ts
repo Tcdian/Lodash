@@ -5,7 +5,7 @@ import { isFunction } from '../lang/isFunction';
 import { uniqWith } from './uniqWith';
 import { flatten } from './flatten';
 
-type Comparator<T0, T1> = (a: T0, b: T1) => boolean;
+type Comparator<T1, T2> = (a: T1, b: T2) => boolean;
 
 function xorWith<T>(array: T[], comparator: Comparator<T, T>): T[];
 function xorWith<T>(array1: T[], array2: T[], comparator: Comparator<T, T>): T[];

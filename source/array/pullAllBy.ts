@@ -4,14 +4,10 @@ import { findIndex } from './findIndex';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterator<T, TResult> = (value: T) => TResult;
-type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
+type ValueIterator<T, R> = (value: T) => R;
+type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
-function pullAllBy<T0, T1>(
-    array: T0[],
-    values: T1[],
-    predicate: ValueIterateeCustom<T0 | T1, unknown> = identity
-): T0[] {
+function pullAllBy<T, T1>(array: T[], values: T1[], predicate: ValueIterateeCustom<T | T1, unknown> = identity): T[] {
     const iterateeFunc = iteratee(predicate);
     values.forEach((othVal) => {
         let fromIndex = 0;

@@ -4,8 +4,8 @@ import { isEmpty } from '../lang/isEmpty';
 
 type PropertyName = string | number | symbol;
 type IterateeShorthand<T> = PropertyName | [PropertyName, any] | Partial<T>;
-type ValueIterator<T, TResult> = (value: T) => TResult;
-type ValueIterateeCustom<T, TResult> = ValueIterator<T, TResult> | IterateeShorthand<T>;
+type ValueIterator<T, R> = (value: T) => R;
+type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function maxBy<T>(array: T[], predicate: ValueIterateeCustom<T, unknown> = identity): T | undefined {
     if (isEmpty(array)) {
