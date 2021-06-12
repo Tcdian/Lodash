@@ -10,13 +10,7 @@ import { keys } from '../object/keys';
 import { keysIn } from '../object/keysIn';
 import { assign } from '../object/assign';
 
-type PropertyName = string | number | symbol;
-type CloneWithCustomizer = (
-    value: any,
-    key: PropertyName | undefined,
-    object: any,
-    stack: Map<any, any> | undefined
-) => any;
+type CloneWithCustomizer = (value: any, key: any, object: any, stack: any) => any;
 
 const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_FLAT_FLAG = 1 << 1;

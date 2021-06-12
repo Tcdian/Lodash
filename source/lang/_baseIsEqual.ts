@@ -2,14 +2,13 @@ import { _baseGetTag } from './_baseGetTag';
 import { isArray } from './isArray';
 import { isUndefined } from './isUndefined';
 
-type PropertyName = string | number | symbol;
 type IsEqualCustomizer = (
     objValue: any,
     othValue: any,
-    key: PropertyName | undefined,
+    key: any,
     object: any,
     other: any,
-    stack: Map<any, any> | undefined
+    stack: any
 ) => boolean | undefined;
 
 const COMPARE_PARTIAL_FLAG = 1 << 0;

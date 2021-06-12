@@ -1,14 +1,13 @@
 import { _baseIsEqual } from './_baseIsEqual';
 import { isUndefined } from './isUndefined';
 
-type PropertyName = string | number | symbol;
 type IsEqualCustomizer = (
     objValue: any,
     othValue: any,
-    key: PropertyName | undefined,
+    key: any,
     object: any,
     other: any,
-    stack: Map<any, any> | undefined
+    stack: any
 ) => boolean | undefined;
 
 function isEqualWith(value: any, other: any, customizer: IsEqualCustomizer): boolean {

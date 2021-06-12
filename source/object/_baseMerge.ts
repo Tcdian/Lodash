@@ -1,15 +1,7 @@
 import { isObject } from '../lang/isObject';
 import { isUndefined } from '../lang/isUndefined';
 
-type PropertyName = string | number | symbol;
-type MergeWithCustomizer = (
-    objValue: any,
-    srcValue: any,
-    key: PropertyName | undefined,
-    object: any,
-    source: any,
-    stack: Set<any> | undefined
-) => any;
+type MergeWithCustomizer = (objValue: any, srcValue: any, key: any, object: any, source: any, stack: any) => any;
 
 function _baseMerge(object: any, sources: any[], customizer?: MergeWithCustomizer, stack: Set<any> = new Set()): any {
     sources.forEach((source) => {
