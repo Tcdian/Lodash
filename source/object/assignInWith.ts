@@ -7,9 +7,9 @@ import { assign } from '../object/assign';
 type AssignCustomizer<T, Source> = (
     objValue: T[keyof T],
     srcValue: Source[keyof Source],
-    key?: keyof T,
-    object?: T,
-    source?: Source
+    key: keyof T,
+    object: T,
+    source: Source
 ) => any;
 
 function assignInWith<T, Source>(object: T, source: Source, customizer: AssignCustomizer<T, Source>): T & Source;

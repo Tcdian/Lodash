@@ -8,9 +8,9 @@ import { keys } from './keys';
 type AssignCustomizer<T, Source> = (
     objValue: T[keyof T],
     srcValue: Source[keyof Source],
-    key?: keyof T,
-    object?: T,
-    source?: Source
+    key: keyof T,
+    object: T,
+    source: Source
 ) => any;
 
 function assignWith<T, Source>(object: T, source: Source, customizer: AssignCustomizer<T, Source>): T & Source;

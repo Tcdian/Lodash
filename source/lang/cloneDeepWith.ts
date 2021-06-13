@@ -4,9 +4,9 @@ const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_SYMBOLS_FLAG = 1 << 2;
 
 type PropertyName = string | number | symbol;
-type CloneWithCustomizer<T> = (value: any, key?: PropertyName, object?: T, stack?: Map<any, any>) => any;
+type CloneDeepWithCustomizer<T> = (value: any, key: PropertyName | undefined, object: T | undefined, stack: any) => any;
 
-function cloneDeepWith<T>(value: T, customizer?: CloneWithCustomizer<T>): any {
+function cloneDeepWith<T>(value: T, customizer?: CloneDeepWithCustomizer<T>): any {
     return _baseClone(value, CLONE_SYMBOLS_FLAG | CLONE_DEEP_FLAG, customizer);
 }
 

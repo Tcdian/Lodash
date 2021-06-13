@@ -1,10 +1,11 @@
 import { _baseIsEqual } from './_baseIsEqual';
 import { isUndefined } from './isUndefined';
 
+type PropertyName = string | number | symbol;
 type IsEqualCustomizer = (
     objValue: any,
     othValue: any,
-    key: any,
+    key: PropertyName | undefined,
     object: any,
     other: any,
     stack: any

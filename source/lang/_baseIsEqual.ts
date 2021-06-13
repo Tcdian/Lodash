@@ -3,10 +3,11 @@ import { isArray } from './isArray';
 import { isUndefined } from './isUndefined';
 import { keys } from '../object/keys';
 
+type PropertyName = string | number | symbol;
 type IsEqualCustomizer = (
     objValue: any,
     othValue: any,
-    key: any,
+    key: PropertyName,
     object: any,
     other: any,
     stack: any
@@ -80,4 +81,4 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
     return result;
 }
 
-export { _baseIsEqual, IsEqualCustomizer };
+export { _baseIsEqual };

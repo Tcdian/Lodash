@@ -10,16 +10,17 @@ import { keys } from '../object/keys';
 import { keysIn } from '../object/keysIn';
 import { assign } from '../object/assign';
 
-type CloneWithCustomizer = (value: any, key: any, object: any, stack: any) => any;
+type PropertyName = string | number | symbol;
+type CloneWithCustomizer<T> = (value: any, key: PropertyName | undefined, object: T | undefined, stack: any) => any;
 
 const CLONE_DEEP_FLAG = 1 << 0;
 const CLONE_FLAT_FLAG = 1 << 1;
 const CLONE_SYMBOLS_FLAG = 1 << 2;
 
-function _baseClone(
-    value: any,
+function _baseClone<T>(
+    value: T,
     bitmask: number,
-    customizer?: CloneWithCustomizer,
+    customizer?: CloneWithCustomizer<T>,
     key?: any,
     object?: any,
     stack = new Map()
@@ -55,27 +56,23 @@ function _baseClone(
                 result = new Map();
                 break;
             case '[object RegExp]':
-                result = new RegExp((value as RegExp).source, (value as RegExp).flags);
-                result.lastIndex = (value as RegExp).lastIndex;
+                result = new RegExp((value as any as RegExp).source, (value as any as RegExp).flags);
+                result.lastIndex = (value as any as RegExp).lastIndex;
                 break;
             case '[object Date]':
-                result = new Date((value as Date).valueOf());
+                result = new Date((value as any as Date).valueOf());
                 break;
             case '[object String]':
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                result = new String((value as String).valueOf());
+                result = new String(value.valueOf());
                 break;
             case '[object Boolean]':
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                result = new Boolean((value as Boolean).valueOf());
+                result = new Boolean(value.valueOf());
                 break;
             case '[object Number]':
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                result = new Number((value as Number).valueOf());
+                result = new Number(value.valueOf());
                 break;
             case '[object Symbol]':
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                result = Object(Symbol.prototype.valueOf.call(value as Symbol));
+                result = Object(Symbol.prototype.valueOf.call(value));
                 break;
             case '[object Function]':
             case '[object AsyncFunction]':
@@ -87,12 +84,10 @@ function _baseClone(
                 break;
         }
     }
-
     if (stack.has(value)) {
         return stack.get(value);
     }
     stack.set(value, result);
-
     if (isArray(value)) {
         value.forEach((subValue, index) => {
             result[index] = _baseClone(subValue, bitmask, customizer, index, value, stack);
@@ -108,13 +103,13 @@ function _baseClone(
             result.set(key, _baseClone(subValue, bitmask, customizer, key, value, stack));
         });
     }
-
     const keysFunc = isFlat ? (isFull ? _getAllKeysIn : keysIn) : isFull ? _getAllKeys : keys;
     keysFunc(value).forEach((key) => {
         assign(result, {
             [key]: _baseClone((value as any)[key], bitmask, customizer, key, value, stack),
         });
     });
+    stack.delete(value);
     return result;
 }
 
