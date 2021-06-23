@@ -1,7 +1,7 @@
 import { isEqualWith } from '../source/lang/isEqualWith';
 
 describe('isEqualWith', () => {
-    test('isEqualWith with customizer', () => {
+    test('isEqualWith customizer', () => {
         function isGreeting(value: string) {
             return /^h(?:i|ello)$/.test(value);
         }

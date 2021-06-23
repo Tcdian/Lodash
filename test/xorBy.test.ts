@@ -1,7 +1,7 @@
 import { xorBy } from '../source/array/xorBy';
 
 describe('xorBy', () => {
-    test('xorBy iterator', () => {
+    test('iterator', () => {
         expect(xorBy([2.1, 1.2], [2.3, 3.4], Math.floor)).toEqual([1.2, 3.4]);
     });
 

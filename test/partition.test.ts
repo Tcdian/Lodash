@@ -7,7 +7,7 @@ describe('partition', () => {
         { user: 'pebbles', age: 1, active: false },
     ];
 
-    test('partition iterator', () => {
+    test('iterator', () => {
         expect(partition(users, (user) => user.active)).toEqual([
             [{ user: 'fred', age: 40, active: true }],
             [

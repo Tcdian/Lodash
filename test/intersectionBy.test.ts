@@ -1,7 +1,7 @@
 import { intersectionBy } from '../source/array/intersectionBy';
 
 describe('intersectionBy', () => {
-    test('intersectionBy iterator', () => {
+    test('iterator', () => {
         expect(intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor)).toEqual([2.1]);
     });
 

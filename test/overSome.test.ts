@@ -7,6 +7,7 @@ describe('overSome', () => {
         expect(func(0)).toBe(true);
         expect(func(NaN)).toBe(false);
     });
+
     test('overSome default parameters', () => {
         const func = overSome();
         expect(func(false)).toBe(false);

@@ -7,7 +7,7 @@ describe('map', () => {
 
     const users = [{ user: 'barney' }, { user: 'fred' }];
 
-    test('array, map', () => {
+    test('array map', () => {
         expect(map([4, 8], square)).toEqual([16, 64]);
     });
 

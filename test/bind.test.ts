@@ -7,7 +7,7 @@ describe('bind', () => {
         return greeting + ' ' + this.user + punctuation;
     }
 
-    test('bind', () => {
+    test('bind this', () => {
         const bound = bind(greet, object, 'hi');
         expect(bound('!')).toBe('hi fred!');
     });

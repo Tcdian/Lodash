@@ -7,7 +7,7 @@ describe('findLastKey', () => {
         pebbles: { age: 1, active: true },
     };
 
-    test('findLastKey iterator', () => {
+    test('iterator', () => {
         expect(findLastKey(users, (user) => user.age < 40)).toBe('pebbles');
     });
 

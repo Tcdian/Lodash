@@ -1,7 +1,7 @@
 import { groupBy } from '../source/collection/groupBy';
 
 describe('groupBy', () => {
-    test('groupBy iterator', () => {
+    test('iterator', () => {
         expect(groupBy([6.1, 4.2, 6.3], Math.floor)).toEqual({ '4': [4.2], '6': [6.1, 6.3] });
     });
 

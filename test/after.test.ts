@@ -3,12 +3,12 @@ import { after } from '../source/function/after';
 describe('after', () => {
     test('after 2 times', () => {
         const mockFn = jest.fn();
-        const calledFunc = after(2, mockFn);
-        calledFunc();
+        const callAfter2Times = after(2, mockFn);
+        callAfter2Times();
         expect(mockFn).not.toBeCalled();
-        calledFunc();
+        callAfter2Times();
         expect(mockFn).toBeCalledTimes(1);
-        calledFunc();
+        callAfter2Times();
         expect(mockFn).toBeCalledTimes(2);
     });
 });

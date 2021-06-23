@@ -1,7 +1,7 @@
 import { isMatchWith } from '../source/lang/isMatchWith';
 
 describe('isMatchWith', () => {
-    test('isMatchWith with customizer', () => {
+    test('isMatchWith customizer', () => {
         function isGreeting(value: string) {
             return /^h(?:i|ello)$/.test(value);
         }

@@ -3,7 +3,7 @@ import { sortedIndexBy } from '../source/array/sortedIndexBy';
 describe('sortedIndexBy', () => {
     const objects = [{ x: 4 }, { x: 5 }];
 
-    test('sortedIndexBy iterator', () => {
+    test('iterator', () => {
         expect(sortedIndexBy(objects, { x: 4 }, (o) => o.x)).toBe(0);
     });
 

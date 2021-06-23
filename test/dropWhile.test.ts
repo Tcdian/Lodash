@@ -7,7 +7,7 @@ describe('dropWhile', () => {
         { user: 'pebbles', active: true },
     ];
 
-    test('dropWhile iterator', () => {
+    test('iterator', () => {
         expect(dropWhile(users, (user) => !user.active)).toEqual([{ user: 'pebbles', active: true }]);
     });
 

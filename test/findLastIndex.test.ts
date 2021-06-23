@@ -7,7 +7,7 @@ describe('findLastIndex', () => {
         { user: 'pebbles', active: false },
     ];
 
-    test('findLastIndex iterator', () => {
+    test('iterator', () => {
         expect(findLastIndex(users, (user) => user.user === 'pebbles')).toBe(2);
     });
 

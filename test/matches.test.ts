@@ -2,7 +2,7 @@ import { matches } from '../source/util/matches';
 import { filter } from '../source/collection/filter';
 
 describe('matches', () => {
-    test('matches', () => {
+    test('partial deep comparison between a given object and source', () => {
         const objects = [
             { a: 1, b: 2, c: 3 },
             { a: 4, b: 5, c: 6 },

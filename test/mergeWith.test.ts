@@ -2,7 +2,7 @@ import { mergeWith } from '../source/object/mergeWith';
 import { isArray } from '../source/lang/isArray';
 
 describe('mergeWith', () => {
-    test('mergeWith({ a: [1], b: [2] }, { a: [3], b: [4] }, customizer)', () => {
+    test('mergeWith customizer', () => {
         function customizer(objValue: any, srcValue: any) {
             if (isArray(objValue)) {
                 return objValue.concat(srcValue);

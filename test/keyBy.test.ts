@@ -6,7 +6,7 @@ describe('keyBy', () => {
         { dir: 'right', code: 100 },
     ];
 
-    test('keyBy iterator', () => {
+    test('iterator', () => {
         expect(keyBy(array, (o) => String.fromCharCode(o.code))).toEqual({
             a: { dir: 'left', code: 97 },
             d: { dir: 'right', code: 100 },

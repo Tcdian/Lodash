@@ -3,7 +3,7 @@ import { sortedLastIndexBy } from '../source/array/sortedLastIndexBy';
 describe('sortedLastIndexBy', () => {
     const objects = [{ x: 4 }, { x: 5 }];
 
-    test('sortedLastIndexBy iterator', () => {
+    test('iterator', () => {
         expect(sortedLastIndexBy(objects, { x: 4 }, (o) => o.x)).toBe(1);
     });
 

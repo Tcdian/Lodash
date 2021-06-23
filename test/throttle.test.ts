@@ -3,7 +3,7 @@ import { throttle } from '../source/function/throttle';
 describe('throttle', () => {
     jest.useFakeTimers();
 
-    test('throttle', () => {
+    test('throttle 1000 seconds', () => {
         const mockFn = jest.fn();
         const throttled = throttle(mockFn, 1000);
         throttled(1);

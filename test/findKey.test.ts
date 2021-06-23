@@ -7,7 +7,7 @@ describe('findKey', () => {
         pebbles: { age: 1, active: true },
     };
 
-    test('findKey iterator', () => {
+    test('iterator', () => {
         expect(findKey(users, (user) => user.age < 40)).toBe('barney');
     });
 

@@ -2,7 +2,7 @@ import { keys } from '../source/object/keys';
 import { create } from '../source/object/create';
 
 describe('keys', () => {
-    test('keys(create({ a: 1 }, { b: 2, c: 3 })) => ["b", "c"]', () => {
+    test('Returns the array of own enumerable property names', () => {
         const object = create({ a: 1 }, { b: 2, c: 3 });
         expect(keys(object)).toEqual(['b', 'c']);
     });

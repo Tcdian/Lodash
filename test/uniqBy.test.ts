@@ -1,7 +1,7 @@
 import { uniqBy } from '../source/array/uniqBy';
 
 describe('uniqBy', () => {
-    test('uniqBy iterator', () => {
+    test('iterator', () => {
         expect(uniqBy([2.1, 1.2, 2.3], Math.floor)).toEqual([2.1, 1.2]);
     });
 

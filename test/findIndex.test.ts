@@ -7,7 +7,7 @@ describe('findIndex', () => {
         { user: 'pebbles', active: true },
     ];
 
-    test('findIndex iterator', () => {
+    test('iterator', () => {
         expect(findIndex(users, (user) => user.user == 'barney')).toBe(0);
     });
 

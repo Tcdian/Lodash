@@ -1,11 +1,11 @@
 import { curry } from '../source/function/curry';
 
 describe('curry', () => {
-    function abc(a: number, b: number, c: number) {
+    function grouped(a: number, b: number, c: number) {
         return [a, b, c];
     }
 
-    const curried = curry(abc);
+    const curried = curry(grouped);
 
     test('curried(1)(2)(3) => [1, 2, 3]', () => {
         expect(curried(1)(2)(3)).toEqual([1, 2, 3]);

@@ -1,7 +1,7 @@
 import { unionBy } from '../source/array/unionBy';
 
 describe('unionBy', () => {
-    test('unionBy iterator', () => {
+    test('iterator', () => {
         expect(unionBy([2.1], [1.2, 2.3], Math.floor)).toEqual([2.1, 1.2]);
     });
 

@@ -7,7 +7,7 @@ describe('takeRightWhile', () => {
         { user: 'pebbles', active: false },
     ];
 
-    test('takeRightWhile iterator', () => {
+    test('iterator', () => {
         expect(takeRightWhile(users, (user) => !user.active)).toEqual([
             { user: 'fred', active: false },
             { user: 'pebbles', active: false },

@@ -5,7 +5,7 @@ describe('flatMapDepth', () => {
         return [[[n, n]]];
     }
 
-    test('flatMapDepth([1, 2], duplicate, 2) => [[1, 1], [2, 2]]', () => {
+    test('flatten 2 times', () => {
         expect(flatMapDepth([1, 2], duplicate, 2)).toEqual([
             [1, 1],
             [2, 2],
