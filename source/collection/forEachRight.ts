@@ -26,7 +26,7 @@ function forEachRight(collection: any, predicate: Func<any[], any> = identity): 
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
-        iterateeFunc(value, key, pair);
+        iterateeFunc(value, key, collection);
     }
     return collection;
 }

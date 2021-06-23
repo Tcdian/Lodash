@@ -40,7 +40,7 @@ function findLast(collection: any, predicate: any = identity, fromIndex?: number
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
-        if (iterateeFunc(value, key, pair)) {
+        if (iterateeFunc(value, key, collection)) {
             return value;
         }
     }

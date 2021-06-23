@@ -33,7 +33,7 @@ function find(collection: any, predicate: any = identity, fromIndex = 0): any {
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
-        if (iterateeFunc(value, key, pair)) {
+        if (iterateeFunc(value, key, collection)) {
             return value;
         }
     }
