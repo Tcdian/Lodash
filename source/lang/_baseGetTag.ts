@@ -18,6 +18,7 @@ type TypeTag =
     | '[object Undefined]'
     | '[object WeakMap]'
     | '[object WeakSet]';
+// | ...
 
 function _baseGetTag(value: any): TypeTag {
     return Object.prototype.toString.call(value) as TypeTag;
