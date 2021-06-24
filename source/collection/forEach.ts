@@ -21,8 +21,7 @@ function forEach(collection: any, predicate: Func<any[], any> = identity): any {
     const pairs = entries(collection);
     const len = pairs.length;
     for (let i = 0; i < len; i++) {
-        const pair = pairs[i];
-        let [key, value]: [PropertyName, any] = pair;
+        let [key, value]: [PropertyName, any] = pairs[i];
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }

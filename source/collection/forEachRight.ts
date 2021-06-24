@@ -21,8 +21,7 @@ function forEachRight(collection: any, predicate: Func<any[], any> = identity): 
     const pairs = entries(collection);
     const len = pairs.length;
     for (let i = len - 1; i >= 0; i--) {
-        const pair = pairs[i];
-        let [key, value]: [PropertyName, any] = pair;
+        let [key, value]: [PropertyName, any] = pairs[i];
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }

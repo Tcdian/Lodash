@@ -35,8 +35,7 @@ function findLast(collection: any, predicate: any = identity, fromIndex?: number
         }
     }
     for (let i = fromIndex; i > 0; i--) {
-        const pair = pairs[i];
-        let [key, value]: [PropertyName, any] = pair;
+        let [key, value]: [PropertyName, any] = pairs[i];
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }

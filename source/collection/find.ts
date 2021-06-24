@@ -28,8 +28,7 @@ function find(collection: any, predicate: any = identity, fromIndex = 0): any {
         fromIndex = Math.max(fromIndex + len, 0);
     }
     for (let i = fromIndex; i < len; i++) {
-        const pair = pairs[i];
-        let [key, value]: [PropertyName, any] = pair;
+        let [key, value]: [PropertyName, any] = pairs[i];
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
