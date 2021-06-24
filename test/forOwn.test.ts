@@ -1,4 +1,4 @@
-import { forInRight } from '../source/object/forInRight';
+import { forOwn } from '../source/object/forOwn';
 
 interface Foo {
     a: number;
@@ -11,8 +11,8 @@ interface FooConstructor {
     (): void;
 }
 
-describe('forInRight', () => {
-    test('Iterates over own and inherited enumerable string keyed properties', () => {
+describe('forOwn', () => {
+    test('Iterates over own enumerable string keyed properties', () => {
         const Foo = function (this: Foo) {
             this.a = 1;
             this.b = 2;
@@ -21,13 +21,12 @@ describe('forInRight', () => {
         Foo.prototype.c = 3;
 
         let entries: [string, number][] = [];
-        forInRight(new Foo(), function (value, key) {
+        forOwn(new Foo(), function (value, key) {
             entries = [...entries, [key, value]];
         });
         expect(entries).toEqual([
-            ['c', 3],
-            ['b', 2],
             ['a', 1],
+            ['b', 2],
         ]);
     });
 });

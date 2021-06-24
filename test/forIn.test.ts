@@ -17,6 +17,7 @@ describe('forIn', () => {
             this.a = 1;
             this.b = 2;
         } as FooConstructor;
+
         Foo.prototype.c = 3;
 
         let entries: [string, number][] = [];
