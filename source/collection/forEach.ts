@@ -18,10 +18,18 @@ function forEach<K extends PropertyName, V>(
 ): Record<K, V>;
 function forEach(collection: any, predicate: Func<any[], any> = identity): any {
     const iterateeFunc = iteratee(predicate);
-    entries(collection).forEach(([key, value]: [PropertyName, unknown]) => {
-        key = isArray(collection) || isString(collection) ? Number(key) : key;
-        return iterateeFunc(value, key, collection);
-    });
+    const pairs = entries(collection);
+    const len = pairs.length;
+    for (let i = 0; i < len; i++) {
+        const pair = pairs[i];
+        let [key, value]: [PropertyName, any] = pair;
+        if (isArray(collection) || isString(collection)) {
+            key = Number(key);
+        }
+        if (iterateeFunc(value, key, collection) === false) {
+            return collection;
+        }
+    }
     return collection;
 }
 
