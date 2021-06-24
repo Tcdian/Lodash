@@ -1,13 +1,8 @@
 import { isFunction } from '../lang/isFunction';
+import { keysIn } from './keysIn';
 
 function functionsIn(object: any): string[] {
-    const result: string[] = [];
-    for (const key in object) {
-        if (isFunction(object[key])) {
-            result.push(key);
-        }
-    }
-    return result;
+    return keysIn(object).filter((key) => isFunction(object[key]));
 }
 
 export { functionsIn };

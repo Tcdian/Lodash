@@ -14,8 +14,8 @@ function partition<K extends PropertyName, V>(
     predicate?: ValueIterateeCustom<V, unknown>
 ): [V[], V[]];
 function partition(collection: any, predicate: ValueIterateeCustom<any, unknown> = identity): [any[], any[]] {
-    const result: [any[], any[]] = [[], []];
     const iterateeFunc = iteratee(predicate);
+    const result: [any[], any[]] = [[], []];
     values(collection).forEach((value) => {
         if (iterateeFunc(value)) {
             result[0].push(value);

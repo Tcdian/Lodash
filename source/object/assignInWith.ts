@@ -2,7 +2,6 @@ import { last } from '../array/last';
 import { initial } from '../array/initial';
 import { isFunction } from '../lang/isFunction';
 import { isUndefined } from '../lang/isUndefined';
-import { assign } from '../object/assign';
 
 type AssignCustomizer<T, Source> = (
     objValue: T[keyof T],
@@ -23,7 +22,7 @@ function assignInWith(object: any, ...otherArgs: any[]): any;
 function assignInWith(object: any, ...otherArgs: any[]): any {
     const customizer: AssignCustomizer<any, any> = last(otherArgs);
     if (!isFunction(customizer)) {
-        return assign(object, ...otherArgs);
+        return Object.assign(object, ...otherArgs);
     }
     const sources = initial(otherArgs);
     sources.forEach((source) => {
