@@ -11,8 +11,8 @@ function minBy<T>(array: T[], predicate: ValueIterateeCustom<T, unknown> = ident
     if (isEmpty(array)) {
         return undefined;
     }
-    const iterateeFunc = iteratee(predicate);
-    return array.reduce((previous, current) => (iterateeFunc(previous) < iterateeFunc(current) ? previous : current));
+    const iterativeFunc = iteratee(predicate);
+    return array.reduce((previous, current) => (iterativeFunc(previous) < iterativeFunc(current) ? previous : current));
 }
 
 export { minBy };

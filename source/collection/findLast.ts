@@ -22,7 +22,7 @@ function findLast<K extends PropertyName, V>(
     fromIndex?: number
 ): V;
 function findLast(collection: any, predicate: any = identity, fromIndex?: number): any {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const pairs = entries(collection);
     const len = pairs.length;
     if (isUndefined(fromIndex)) {
@@ -39,7 +39,7 @@ function findLast(collection: any, predicate: any = identity, fromIndex?: number
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
-        if (iterateeFunc(value, key, collection)) {
+        if (iterativeFunc(value, key, collection)) {
             return value;
         }
     }

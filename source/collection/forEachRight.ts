@@ -17,7 +17,7 @@ function forEachRight<K extends PropertyName, V>(
     predicate?: RecordIterator<K, V, unknown>
 ): Record<K, V>;
 function forEachRight(collection: any, predicate: Func<any[], any> = identity): any {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const pairs = entries(collection);
     const len = pairs.length;
     for (let i = len - 1; i >= 0; i--) {
@@ -25,7 +25,7 @@ function forEachRight(collection: any, predicate: Func<any[], any> = identity): 
         if (isArray(collection) || isString(collection)) {
             key = Number(key);
         }
-        if (iterateeFunc(value, key, collection) === false) {
+        if (iterativeFunc(value, key, collection) === false) {
             return collection;
         }
     }

@@ -7,8 +7,8 @@ type ValueIterator<T, R> = (value: T) => R;
 type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function meanBy<T>(array: T[], predicate: ValueIterateeCustom<T, unknown> = identity): number {
-    const iterateeFunc = iteratee(predicate);
-    return array.reduce((previous, current) => previous + iterateeFunc(current), 0) / array.length;
+    const iterativeFunc = iteratee(predicate);
+    return array.reduce((previous, current) => previous + iterativeFunc(current), 0) / array.length;
 }
 
 export { meanBy };

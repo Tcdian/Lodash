@@ -11,10 +11,10 @@ function invertBy<K extends PropertyName, V>(
     object: Record<K, V>,
     predicate: ValueIterateeCustom<V, unknown> = identity
 ): Record<string, K[]> {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const result: Record<string, K[]> = {};
     entries(object).forEach(([key, value]) => {
-        const generated = iterateeFunc(value);
+        const generated = iterativeFunc(value);
         if (Object.prototype.hasOwnProperty.call(result, generated)) {
             result[generated].push(key);
         } else {

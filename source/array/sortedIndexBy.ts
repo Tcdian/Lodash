@@ -7,7 +7,7 @@ type ValueIterator<T, R> = (value: T) => R;
 type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function sortedIndexBy<T>(array: T[], value: T, predicate: ValueIterateeCustom<T, unknown> = identity): number {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const len = array.length;
     if (value > array[len - 1]) {
         return len;
@@ -16,7 +16,7 @@ function sortedIndexBy<T>(array: T[], value: T, predicate: ValueIterateeCustom<T
     let right = len - 1;
     while (left < right) {
         const mid = (left + right) >> 1;
-        if (iterateeFunc(array[mid]) < iterateeFunc(value)) {
+        if (iterativeFunc(array[mid]) < iterativeFunc(value)) {
             left = mid + 1;
         } else {
             right = mid;

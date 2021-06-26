@@ -11,8 +11,8 @@ function findKey<K extends PropertyName, V>(
     object: Record<K, V>,
     predicate: RecordIterateeCustom<K, V, unknown> = identity
 ): K | undefined {
-    const iterateeFunc = iteratee(predicate);
-    const found = entries(object).find(([key, value]) => iterateeFunc(value, key, object));
+    const iterativeFunc = iteratee(predicate);
+    const found = entries(object).find(([key, value]) => iterativeFunc(value, key, object));
     return found && found[0];
 }
 

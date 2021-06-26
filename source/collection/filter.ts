@@ -20,11 +20,11 @@ function filter<K extends PropertyName, V>(
     predicate?: RecordIterateeCustom<K, V, unknown>
 ): V[];
 function filter(collection: any, predicate: any = identity): any {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     return entries(collection)
         .filter(([key, value]: [PropertyName, unknown]) => {
             key = isArray(collection) || isString(collection) ? Number(key) : key;
-            return iterateeFunc(value, key, collection);
+            return iterativeFunc(value, key, collection);
         })
         .map(([, value]) => value);
 }

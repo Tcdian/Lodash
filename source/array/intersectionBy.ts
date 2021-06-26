@@ -24,7 +24,7 @@ function intersectionBy<T>(...args: [...arrays: T[][], predicate: ValueIterateeC
     if (isUndefined(predicate)) {
         predicate = identity;
     }
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const arrays = initial(args) as T[][];
     const firstArray = first(arrays);
     const otherArrays = tail(arrays);
@@ -35,7 +35,7 @@ function intersectionBy<T>(...args: [...arrays: T[][], predicate: ValueIterateeC
         return (
             firstArray.indexOf(arrVal) === index &&
             otherArrays.every((otherArray) =>
-                otherArray.some((othVal) => Object.is(iterateeFunc(arrVal), iterateeFunc(othVal)))
+                otherArray.some((othVal) => Object.is(iterativeFunc(arrVal), iterativeFunc(othVal)))
             )
         );
     });

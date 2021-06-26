@@ -17,10 +17,10 @@ function map<T, R>(collection: T[], predicate?: ArrayIterateeCustom<T, R>): R[];
 function map<R>(collection: string, predicate?: StringIterateeCustom<R>): R[];
 function map<K extends PropertyName, V, R>(collection: Record<K, V>, predicate?: RecordIterateeCustom<K, V, R>): R[];
 function map(collection: any, predicate: any = identity): any {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     return entries(collection).map(([key, value]: [PropertyName, unknown]) => {
         key = isArray(collection) || isString(collection) ? Number(key) : key;
-        return iterateeFunc(value, key, collection);
+        return iterativeFunc(value, key, collection);
     });
 }
 

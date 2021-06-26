@@ -8,10 +8,10 @@ type ArrayIterator<T, R> = (value: T, index: number, collection: T[]) => R;
 type ArrayIterateeCustom<T, R> = ArrayIterator<T, R> | IterateeShorthand<T>;
 
 function remove<T>(array: T[], predicate: ArrayIterateeCustom<T, unknown> = identity): T[] {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const toBeDeleted: number[] = [];
     array.forEach((value, index, collection) => {
-        if (iterateeFunc(value, index, collection)) {
+        if (iterativeFunc(value, index, collection)) {
             toBeDeleted.push(index);
         }
     });

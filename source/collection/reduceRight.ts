@@ -18,10 +18,10 @@ function reduceRight<K extends PropertyName, V, R>(
     accumulator?: R
 ): R;
 function reduceRight(collection: any, predicate: Func<any[], any> = identity, accumulator?: any): any {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     return entries(collection).reduceRight((prev, [key, value]: [PropertyName, unknown]) => {
         key = isArray(collection) || isString(collection) ? Number(key) : key;
-        return iterateeFunc(prev, value, key, collection);
+        return iterativeFunc(prev, value, key, collection);
     }, accumulator);
 }
 

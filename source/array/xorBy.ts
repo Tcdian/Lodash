@@ -24,14 +24,14 @@ function xorBy<T>(...args: [...arrays: T[][], predicate: ValueIterateeCustom<T, 
     if (isUndefined(predicate)) {
         predicate = identity;
     }
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const arrays = initial(args) as T[][];
-    const uniqedArrays = arrays.map((array) => uniqBy(array, iterateeFunc));
+    const uniqedArrays = arrays.map((array) => uniqBy(array, iterativeFunc));
     const flattened = flatten<T>(uniqedArrays);
     return flattened.filter(
         (arrVal, arrIndex, collection) =>
             !collection.find(
-                (othVal, othIndex) => arrIndex !== othIndex && Object.is(iterateeFunc(arrVal), iterateeFunc(othVal))
+                (othVal, othIndex) => arrIndex !== othIndex && Object.is(iterativeFunc(arrVal), iterativeFunc(othVal))
             )
     );
 }

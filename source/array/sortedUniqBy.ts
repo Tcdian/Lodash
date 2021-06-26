@@ -7,10 +7,10 @@ type ValueIterator<T, R> = (value: T) => R;
 type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function sortedUniqBy<T>(array: T[], predicate: ValueIterateeCustom<T, unknown> = identity): T[] {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     return array.filter(
         (value, index, collection) =>
-            index === 0 || !Object.is(iterateeFunc(value), iterateeFunc(collection[index - 1]))
+            index === 0 || !Object.is(iterativeFunc(value), iterativeFunc(collection[index - 1]))
     );
 }
 

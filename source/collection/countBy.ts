@@ -20,10 +20,10 @@ function countBy<R extends PropertyName>(
     collection: any,
     predicate: ValueIterateeCustom<any, R> = identity
 ): Record<R, number> {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const result: Record<PropertyName, number> = {};
     values(collection).forEach((value) => {
-        const generated = iterateeFunc(value);
+        const generated = iterativeFunc(value);
         if (Object.prototype.hasOwnProperty.call(result, generated)) {
             result[generated] += 1;
         } else {

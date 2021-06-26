@@ -20,10 +20,10 @@ function some<K extends PropertyName, V>(
     predicate?: RecordIterateeCustom<K, V, boolean>
 ): boolean;
 function some(collection: any, predicate: any = identity): boolean {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     return entries(collection).some(([key, value]: [PropertyName, unknown]) => {
         key = isArray(collection) || isString(collection) ? Number(key) : key;
-        return iterateeFunc(value, key, collection);
+        return iterativeFunc(value, key, collection);
     });
 }
 

@@ -15,10 +15,10 @@ function mapKeys<K extends PropertyName, V, R extends PropertyName>(
     predicate?: RecordIterateeCustom<K, V, R>
 ): Record<R, V>;
 function mapKeys(object: any, predicate: any = identity): Record<string, any> {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const result: Record<string, any> = {};
     entries(object).forEach(([key, value]) => {
-        result[iterateeFunc(value, key, object)] = value;
+        result[iterativeFunc(value, key, object)] = value;
     });
     return result;
 }

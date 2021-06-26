@@ -20,10 +20,10 @@ function keyBy<R extends PropertyName>(
     collection: any,
     predicate: ValueIterateeCustom<any, R> = identity
 ): Record<R, any> {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const result: Record<PropertyName, any> = {};
     values(collection).forEach((value) => {
-        const generated = iterateeFunc(value);
+        const generated = iterativeFunc(value);
         Object.assign(result, { [generated]: value });
     });
     return result;

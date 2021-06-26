@@ -11,9 +11,9 @@ function findLastIndex<T>(
     predicate: ArrayIterateeCustom<T, unknown> = identity,
     fromIndex = array.length - 1
 ): number {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     for (let i = fromIndex; i >= 0; i--) {
-        if (iterateeFunc(array[i], i, array)) {
+        if (iterativeFunc(array[i], i, array)) {
             return i;
         }
     }

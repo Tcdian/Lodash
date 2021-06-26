@@ -8,13 +8,13 @@ type ValueIterator<T, R> = (value: T) => R;
 type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function pullAllBy<T, T1>(array: T[], values: T1[], predicate: ValueIterateeCustom<T | T1, unknown> = identity): T[] {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     values.forEach((othVal) => {
         let fromIndex = 0;
         while (
             (fromIndex = findIndex(
                 array,
-                (arrVal) => Object.is(iterateeFunc(arrVal), iterateeFunc(othVal)),
+                (arrVal) => Object.is(iterativeFunc(arrVal), iterativeFunc(othVal)),
                 fromIndex
             )) > -1
         ) {

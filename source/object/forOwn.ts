@@ -11,12 +11,12 @@ function forOwn<K extends PropertyName, V>(
     collection: Record<K, V>,
     predicate: RecordIterateeCustom<K, V, unknown> = identity
 ): Record<K, V> {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const pairs = entries(collection);
     const len = pairs.length;
     for (let i = 0; i < len; i++) {
         const [key, value]: [PropertyName, any] = pairs[i];
-        if (iterateeFunc(value, key, collection) === false) {
+        if (iterativeFunc(value, key, collection) === false) {
             return collection;
         }
     }

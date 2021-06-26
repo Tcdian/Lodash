@@ -11,12 +11,12 @@ function findLastKey<K extends PropertyName, V>(
     object: Record<K, V>,
     predicate: RecordIterateeCustom<K, V, unknown> = identity
 ): K | undefined {
-    const iterateeFunc = iteratee(predicate);
+    const iterativeFunc = iteratee(predicate);
     const pairs = entries(object);
     const len = pairs.length;
     for (let i = len - 1; i >= 0; i--) {
         const [key, value] = pairs[i];
-        if (iterateeFunc(value, key, object)) {
+        if (iterativeFunc(value, key, object)) {
             return key;
         }
     }
