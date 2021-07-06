@@ -11,10 +11,10 @@ type PropertyPath = PropertyName | PropertyName[];
 type SetWithCustomizer<T> = (nsValue: any, key: PropertyName, nsObject: T) => any;
 
 function setWith<T>(object: T, path: PropertyPath, value: any, customizer?: SetWithCustomizer<T>): any {
-    const pathArr = toPath(path);
-    const key = first(pathArr);
+    const formattedPath = toPath(path);
+    const key = first(formattedPath);
     if (!isUndefined(key)) {
-        const resPathArr = tail(pathArr);
+        const resPathArr = tail(formattedPath);
         if (isEmpty(resPathArr)) {
             (object as any)[key] = value;
         } else {

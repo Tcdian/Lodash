@@ -4,12 +4,12 @@ type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | PropertyName[];
 
 function hasIn(object: any, path: PropertyPath): boolean {
-    const pathArr = toPath(path);
-    for (let i = 0; i < pathArr.length; i++) {
-        if (!(pathArr[i] in object)) {
+    const formattedPath = toPath(path);
+    for (let i = 0; i < formattedPath.length; i++) {
+        if (!(formattedPath[i] in object)) {
             return false;
         }
-        object = object[pathArr[i]];
+        object = object[formattedPath[i]];
     }
     return true;
 }

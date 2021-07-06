@@ -27,10 +27,10 @@ function get(object: any, path: PropertyPath, defaultValue?: any): any {
     if (object === undefined) {
         return defaultValue;
     }
-    const pathArr = toPath(path);
+    const formattedPath = toPath(path);
     let result = object;
-    for (let i = 0; i < pathArr.length; i++) {
-        result = result[pathArr[i]];
+    for (let i = 0; i < formattedPath.length; i++) {
+        result = result[formattedPath[i]];
         if (result === undefined) {
             return defaultValue;
         }

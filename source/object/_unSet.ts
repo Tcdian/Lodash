@@ -9,9 +9,9 @@ type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | PropertyName[];
 
 function _unSet(object: any, path: PropertyPath): boolean {
-    const pathArr = toPath(path);
-    const parent = get(object, initial(pathArr));
-    return isNil(parent) || delete parent[_toKey(last(pathArr))];
+    const formattedPath = toPath(path);
+    const parent = get(object, initial(formattedPath));
+    return isNil(parent) || delete parent[_toKey(last(formattedPath))];
 }
 
 export { _unSet };

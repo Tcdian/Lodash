@@ -9,9 +9,9 @@ type PropertyName = string | number | symbol;
 type PropertyPath = PropertyName | PropertyName[];
 
 function invoke(object: any, path: PropertyPath, ...args: any[]): any {
-    const pathArr = toPath(path);
-    const data = get(object, initial(pathArr));
-    const func = isNil(data) ? data : data[_toKey(last(pathArr))];
+    const formattedPath = toPath(path);
+    const data = get(object, initial(formattedPath));
+    const func = isNil(data) ? data : data[_toKey(last(formattedPath))];
     return isNil(func) ? undefined : func.call(data, ...args);
 }
 
