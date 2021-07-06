@@ -1,10 +1,9 @@
 import { get } from '../object/get';
 
-type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | PropertyName[];
+type Many<T> = T | T[];
 
-function property<TObj, R>(path: PropertyPath): (object: TObj) => R {
-    return function (object: TObj): R {
+function property<T, R>(path: Many<keyof T>) {
+    return function (object: T): R {
         return get(object, path);
     };
 }

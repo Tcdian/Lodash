@@ -7,10 +7,10 @@ import { isUndefined } from '../lang/isUndefined';
 import { _isIndex } from '../lang/_isIndex';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | PropertyName[];
+type Many<T> = T | T[];
 type SetWithCustomizer<T> = (nsValue: any, key: PropertyName, nsObject: T) => any;
 
-function setWith<T>(object: T, path: PropertyPath, value: any, customizer?: SetWithCustomizer<T>): any {
+function setWith<T>(object: T, path: Many<PropertyName>, value: any, customizer?: SetWithCustomizer<T>): any {
     const formattedPath = toPath(path);
     const key = first(formattedPath);
     if (!isUndefined(key)) {

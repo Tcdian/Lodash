@@ -2,7 +2,7 @@
 import { toPath } from '../util/toPath';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | PropertyName[];
+type Many<T> = T | T[];
 
 function get<T extends object, K extends keyof T>(object: T, path: K | [K]): T[K];
 function get<T extends object, K extends keyof T, Default>(
@@ -16,14 +16,14 @@ function get<T extends object, K1 extends keyof T, K2 extends keyof T[K1], Defau
     path: [K1, K2],
     defaultValue: Default
 ): Exclude<T[K1][K2], undefined> | Default;
-function get<K extends PropertyName, V>(object: Record<K, V>, path: PropertyPath): V;
+function get<K extends PropertyName, V>(object: Record<K, V>, path: Many<K>): V;
 function get<K extends PropertyName, V, Default>(
     object: Record<K, V>,
-    path: PropertyPath,
+    path: Many<K>,
     defaultValue: Default
 ): Exclude<V, undefined> | Default;
-function get(object: any, path: PropertyPath, defaultValue?: any): any;
-function get(object: any, path: PropertyPath, defaultValue?: any): any {
+function get(object: any, path: Many<PropertyName>, defaultValue?: any): any;
+function get(object: any, path: Many<PropertyName>, defaultValue?: any): any {
     if (object === undefined) {
         return defaultValue;
     }
