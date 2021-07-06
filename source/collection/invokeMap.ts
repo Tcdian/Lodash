@@ -3,7 +3,7 @@ import { isFunction } from '../lang/isFunction';
 import { get } from '../object/get';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
+type PropertyPath = PropertyName | PropertyName[];
 
 function invokeMap<R>(
     collection: Record<PropertyName, unknown> | unknown[],

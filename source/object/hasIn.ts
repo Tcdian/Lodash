@@ -1,7 +1,7 @@
 import { toPath } from '../util/toPath';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
+type PropertyPath = PropertyName | PropertyName[];
 
 function hasIn(object: any, path: PropertyPath): boolean {
     const pathArr = toPath(path);

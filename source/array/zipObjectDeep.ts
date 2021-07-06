@@ -1,7 +1,7 @@
 import { set } from '../object/set';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
+type PropertyPath = PropertyName | PropertyName[];
 
 function zipObjectDeep(props: PropertyPath[] = [], values: any[] = []): Record<PropertyName, any> {
     const result: Record<PropertyName, any> = {};

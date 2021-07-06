@@ -6,7 +6,7 @@ import { isNil } from '../lang/isNil';
 import { _toKey } from '../util/_toKey';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
+type PropertyPath = PropertyName | PropertyName[];
 
 function invoke(object: any, path: PropertyPath, ...args: any[]): any {
     const pathArr = toPath(path);

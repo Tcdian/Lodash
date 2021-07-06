@@ -2,7 +2,7 @@
 import { toPath } from '../util/toPath';
 
 type PropertyName = string | number | symbol;
-type PropertyPath = PropertyName | ReadonlyArray<PropertyName>;
+type PropertyPath = PropertyName | PropertyName[];
 
 function get<T extends object, K extends keyof T>(object: T, path: K | [K]): T[K];
 function get<T extends object, K extends keyof T, Default>(
