@@ -8,8 +8,7 @@ function entries(string: string): [string, string][];
 function entries<K extends PropertyName, V>(object: Record<K, V>): [K, V][];
 function entries<T>(set: Set<T>): [T, T][];
 function entries<K, V>(map: Map<K, V>): [K, V][];
-// eslint-disable-next-line @typescript-eslint/ban-types
-function entries(object: object): [string, any][];
+function entries(object: any): [string, any][];
 function entries(object: any): [string, any][] {
     if (isSet(object) || isMap(object)) {
         return [...object.entries()];
