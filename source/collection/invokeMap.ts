@@ -4,10 +4,11 @@ import { get } from '../object/get';
 
 type PropertyName = string | number | symbol;
 type Many<T> = T | T[];
+type PropertyPath = Many<PropertyName>;
 
 function invokeMap<R>(
     collection: Record<PropertyName, unknown> | unknown[],
-    path: ((...args: any[]) => R) | Many<PropertyName>,
+    path: ((...args: any[]) => R) | PropertyPath,
     ...args: any[]
 ): R[] {
     return values(collection).map((value) => {

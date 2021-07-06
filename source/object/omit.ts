@@ -1,6 +1,6 @@
 import { flatten } from '../array/flatten';
 import { _baseClone } from '../lang/_baseClone';
-import { _unSet } from './_unSet';
+import { unset } from './unset';
 import { isPlainObject } from '../lang/isPlainObject';
 import { toPath } from '../util/toPath';
 
@@ -19,7 +19,7 @@ function omit<T extends object, K extends keyof T>(object: T, ...paths: (K | K[]
         isPlainObject(value) ? undefined : value
     );
     formattedPaths.forEach((path) => {
-        _unSet(result, path);
+        unset(result, path);
     });
     return result;
 }

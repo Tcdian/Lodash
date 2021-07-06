@@ -7,8 +7,9 @@ import { _toKey } from '../util/_toKey';
 
 type PropertyName = string | number | symbol;
 type Many<T> = T | T[];
+type PropertyPath = Many<PropertyName>;
 
-function invoke(object: any, path: Many<PropertyName>, ...args: any[]): any {
+function invoke(object: any, path: PropertyPath, ...args: any[]): any {
     const formattedPath = toPath(path);
     const data = get(object, initial(formattedPath));
     const func = isNil(data) ? data : data[_toKey(last(formattedPath))];
