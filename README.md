@@ -1,7 +1,7 @@
-## Lodash TypeScript 实现
+## Lodash TypeScript 实现        
 
 <details open>
-<summary>array</summary>
+<summary><font size=5>Array</font></summary>
 
 - [chunk](source/array/chunk.ts)
 - [compact](source/array/compact.ts)
@@ -70,7 +70,7 @@
 </details>
 
 <details open>
-<summary>collection</summary>
+<summary><font size=5>Collection</font></summary>
 
 - [countBy](source/collection/countBy.ts)
 - [every](source/collection/every.ts)
@@ -101,13 +101,13 @@
 </details>
 
 <details open>
-<summary>date</summary>
+<summary><font size=5>Date</font></summary>
 
 - [now](source/date/now.ts)
 </details>
 
 <details open>
-<summary>function</summary>
+<summary><font size=5>Function</font></summary>
 
 - [after](source/function/after.ts)
 - [ary](source/function/ary.ts)
@@ -135,14 +135,8 @@
 </details>
 
 <details open>
-<summary>lang</summary>
+<summary><font size=5>Lang</font></summary>
 
-- [_baseClone](source/lang/_baseClone.ts)
-- [_baseGetTag](source/lang/_baseGetTag.ts)
-- [_baseIsEqual](source/lang/_baseIsEqual.ts)
-- [_getAllKeys](source/lang/_getAllKeys.ts)
-- [_getAllKeysIn](source/lang/_getAllKeysIn.ts)
-- [_isIndex](source/lang/_isIndex.ts)
 - [castArray](source/lang/castArray.ts)
 - [clone](source/lang/clone.ts)
 - [cloneDeep](source/lang/cloneDeep.ts)
@@ -199,7 +193,7 @@
 </details>
 
 <details open>
-<summary>math</summary>
+<summary><font size=5>Math</font></summary>
 
 - [add](source/math/add.ts)
 - [ceil](source/math/ceil.ts)
@@ -219,7 +213,7 @@
 </details>
 
 <details open>
-<summary>number</summary>
+<summary><font size=5>Number</font></summary>
 
 - [clamp](source/number/clamp.ts)
 - [inRange](source/number/inRange.ts)
@@ -227,9 +221,8 @@
 </details>
 
 <details open>
-<summary>object</summary>
+<summary><font size=5>Object</font></summary>
 
-- [_baseMerge](source/object/_baseMerge.ts)
 - [assign](source/object/assign.ts)
 - [assignIn](source/object/assignIn.ts)
 - [assignInWith](source/object/assignInWith.ts)
@@ -276,7 +269,7 @@
 </details>
 
 <details open>
-<summary>string</summary>
+<summary><font size=5>String</font></summary>
 
 - [capitalize](source/string/capitalize.ts)
 - [endsWith](source/string/endsWith.ts)
@@ -299,11 +292,8 @@
 </details>
 
 <details open>
-<summary>util</summary>
+<summary><font size=5>Util</font></summary>
 
-- [_executeBound](source/util/_executeBound.ts)
-- [_replaceHolders](source/util/_replaceHolders.ts)
-- [_toKey](source/util/_toKey.ts)
 - [attempt](source/util/attempt.ts)
 - [bindAll](source/util/bindAll.ts)
 - [cond](source/util/cond.ts)

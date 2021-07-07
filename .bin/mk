@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+const _ = require('lodash');
 
 main();
 
@@ -28,9 +29,15 @@ async function writeMD(catalog) {
 ${catalog
     .map(
         (files) => `<details open>
-<summary>${files[0].match(/source\/(.+)\//)[1]}</summary>
+<summary><font size=5>${_.upperFirst(files[0].match(/source\/(.+)\//)[1])}</font></summary>
 
-${files.map((file) => `- [${file.match(/\/([^\/]+?)\.ts/)[1]}](${file})`).join('\n')}
+${files
+    .filter((file) => !file.includes('_'))
+    .map((file) => {
+        const fileName = file.match(/\/([^\/]+?)\.ts/)[1];
+        return `- [${fileName}](${file})`;
+    })
+    .join('\n')}
 </details>
 `
     )
