@@ -282,6 +282,7 @@
 - [pad](source/string/pad.ts)
 - [padEnd](source/string/padEnd.ts)
 - [padStart](source/string/padStart.ts)
+- [parseInt](source/string/parseInt.ts)
 - [repeat](source/string/repeat.ts)
 - [replace](source/string/replace.ts)
 - [split](source/string/split.ts)
