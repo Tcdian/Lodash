@@ -288,6 +288,7 @@
 - [snakeCase](source/string/snakeCase.ts)
 - [split](source/string/split.ts)
 - [startCase](source/string/startCase.ts)
+- [startsWith](source/string/startsWith.ts)
 - [toLower](source/string/toLower.ts)
 - [toUpper](source/string/toUpper.ts)
 - [trim](source/string/trim.ts)
