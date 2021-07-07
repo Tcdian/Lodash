@@ -1,12 +1,4 @@
-interface HtmlEscapes {
-    '&': '&amp;';
-    '<': '&lt;';
-    '>': '&gt;';
-    '"': '&quot;';
-    "'": '&#39;';
-}
-
-const htmlEscapes: HtmlEscapes = {
+const htmlEscapes = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -17,7 +9,7 @@ const htmlEscapes: HtmlEscapes = {
 const reUnescapedHtml = /[&<>"']/g;
 
 function escape(string: string): string {
-    return string.replace(reUnescapedHtml, (match) => htmlEscapes[match as keyof HtmlEscapes]);
+    return string.replace(reUnescapedHtml, (match) => htmlEscapes[match as keyof typeof htmlEscapes]);
 }
 
 export { escape };

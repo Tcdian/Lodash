@@ -295,6 +295,7 @@
 - [trimEnd](source/string/trimEnd.ts)
 - [trimStart](source/string/trimStart.ts)
 - [truncate](source/string/truncate.ts)
+- [unescape](source/string/unescape.ts)
 - [upperFirst](source/string/upperFirst.ts)
 - [words](source/string/words.ts)
 </details>
