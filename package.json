@@ -6,7 +6,8 @@
     "scripts": {
         "test": "jest",
         "test:watch": "jest --coverage --watch",
-        "prettier": "prettier --write source/*/*.ts test/*.ts"
+        "prettier": "prettier --write source/*/*.ts test/*.ts",
+        "mk": "./.bin/mk"
     },
     "repository": {
         "type": "git",

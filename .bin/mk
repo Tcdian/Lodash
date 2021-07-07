@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+
+main();
+
+async function main() {
+    const catalog = await getCatalog('source');
+    writeMD(catalog);
+}
+
+async function getCatalog(dirPath) {
+    const absolutePath = path.resolve('.', dirPath);
+    const stat = await fs.promises.stat(absolutePath);
+    if (stat.isFile()) {
+        return path.relative('.', dirPath);
+    }
+    const dirs = await fs.promises.readdir(absolutePath);
+    return await Promise.all(dirs.map((dir) => getCatalog(path.join(dirPath, dir))));
+}
+
+async function writeMD(catalog) {
+    await fs.promises.writeFile('./README.md', '');
+    await fs.promises.writeFile(
+        './README.md',
+        `## Lodash TypeScript 实现        
+
+${catalog
+    .map(
+        (files) => `<details open>
+<summary>${files[0].match(/source\/(.+)\//)[1]}</summary>
+
+${files.map((file) => `- [${file.match(/\/([^\/]+?)\.ts/)[1]}](${file})`).join('\n')}
+</details>
+`
+    )
+    .join('\n')}`
+    );
+}
