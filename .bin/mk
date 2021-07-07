@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
@@ -24,7 +25,7 @@ async function writeMD(catalog) {
     await fs.promises.writeFile('./README.md', '');
     await fs.promises.writeFile(
         './README.md',
-        `## Lodash TypeScript 实现        
+        `## 使用 TypeScript 实现 Lodash       
 
 ${catalog
     .map(

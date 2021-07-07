@@ -1,4 +1,4 @@
-## Lodash TypeScript 实现        
+## 使用 TypeScript 实现 Lodash       
 
 <details open>
 <summary><font size=5>Array</font></summary>
@@ -271,6 +271,7 @@
 <details open>
 <summary><font size=5>String</font></summary>
 
+- [camelCase](source/string/camelCase.ts)
 - [capitalize](source/string/capitalize.ts)
 - [endsWith](source/string/endsWith.ts)
 - [escape](source/string/escape.ts)
@@ -289,6 +290,7 @@
 - [trimStart](source/string/trimStart.ts)
 - [truncate](source/string/truncate.ts)
 - [upperFirst](source/string/upperFirst.ts)
+- [words](source/string/words.ts)
 </details>
 
 <details open>

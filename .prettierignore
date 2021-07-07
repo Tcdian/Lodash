@@ -1,8 +1,8 @@
-# Ignore artifacts:
+# dependencies
 node_modules
 
 # config file
 tsconfig.json
 
-# local
-/dist
+# tests
+/coverage
