@@ -285,6 +285,7 @@
 - [parseInt](source/string/parseInt.ts)
 - [repeat](source/string/repeat.ts)
 - [replace](source/string/replace.ts)
+- [snakeCase](source/string/snakeCase.ts)
 - [split](source/string/split.ts)
 - [toLower](source/string/toLower.ts)
 - [toUpper](source/string/toUpper.ts)
