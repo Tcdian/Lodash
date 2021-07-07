@@ -276,6 +276,7 @@
 - [endsWith](source/string/endsWith.ts)
 - [escape](source/string/escape.ts)
 - [escapeRegExp](source/string/escapeRegExp.ts)
+- [kebabCase](source/string/kebabCase.ts)
 - [lowerFirst](source/string/lowerFirst.ts)
 - [pad](source/string/pad.ts)
 - [padEnd](source/string/padEnd.ts)
