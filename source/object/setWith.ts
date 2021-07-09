@@ -4,7 +4,7 @@ import { tail } from '../array/tail';
 import { isEmpty } from '../lang/isEmpty';
 import { isObject } from '../lang/isObject';
 import { isUndefined } from '../lang/isUndefined';
-import { _isIndex } from '../lang/_isIndex';
+import { _isIndex } from './_isIndex';
 
 type PropertyName = string | number | symbol;
 type Many<T> = T | T[];

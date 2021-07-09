@@ -1,5 +1,5 @@
-import { _executeBound } from '../util/_executeBound';
-import { _replaceHolders } from '../util/_replaceHolders';
+import { _executeBound } from './_executeBound';
+import { _replaceHolders } from './_replaceHolders';
 
 type Func<TS extends any[], R> = (...args: TS) => R;
 interface Curry {

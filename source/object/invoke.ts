@@ -3,7 +3,7 @@ import { toPath } from '../util/toPath';
 import { last } from '../array/last';
 import { initial } from '../array/initial';
 import { isNil } from '../lang/isNil';
-import { _toKey } from '../util/_toKey';
+import { _toKey } from './_toKey';
 
 type PropertyName = string | number | symbol;
 type Many<T> = T | T[];

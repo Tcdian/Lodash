@@ -1,4 +1,4 @@
-import { isInteger } from './isInteger';
+import { isInteger } from '../lang/isInteger';
 
 function _isIndex(value: any): boolean {
     value = Number(value);

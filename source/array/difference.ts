@@ -1,8 +1,7 @@
 import { flatten } from './flatten';
 
 function difference<T>(array: T[], ...values: T[][]): T[] {
-    const exitSet = new Set(flatten(values));
-    return array.filter((arrVal) => !exitSet.has(arrVal));
+    return array.filter((arrVal) => !flatten(values).some((othVal) => Object.is(arrVal, othVal)));
 }
 
 export { difference };
