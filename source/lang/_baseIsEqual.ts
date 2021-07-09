@@ -1,6 +1,5 @@
 import { _baseGetTag } from './_baseGetTag';
 import { isArray } from './isArray';
-import { isUndefined } from './isUndefined';
 import { keys } from '../object/keys';
 
 type PropertyName = string | number | symbol;
@@ -58,7 +57,7 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
         }
         result = other.every((v, index) => {
             const compared = customizer && customizer(value[index], other[index], index, value, other, stack);
-            if (!isUndefined(compared)) {
+            if (compared !== undefined) {
                 return !!compared;
             }
             return _baseIsEqual(value[index], other[index], bitmask, customizer, stack);
@@ -70,7 +69,7 @@ function _baseIsEqualDeep(value: any, other: any, bitmask: number, customizer?: 
         }
         result = otherKeys.every((key) => {
             const compared = customizer && customizer(value[key], other[key], key, value, other, stack);
-            if (!isUndefined(compared)) {
+            if (compared !== undefined) {
                 return !!compared;
             }
             return _baseIsEqual(value[key], other[key], bitmask, customizer, stack);

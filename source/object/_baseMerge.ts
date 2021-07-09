@@ -1,5 +1,4 @@
 import { isObject } from '../lang/isObject';
-import { isUndefined } from '../lang/isUndefined';
 import { keys } from './keys';
 
 type PropertyName = string | number | symbol;
@@ -15,18 +14,16 @@ type MergeWithCustomizer = (
 function _baseMerge(object: any, sources: any[], customizer?: MergeWithCustomizer, stack: Set<any> = new Set()): any {
     sources.forEach((source) => {
         keys(source).forEach((key) => {
-            let finalVal = source[key];
-            if (!stack.has(finalVal)) {
-                stack.add(finalVal);
-                const customized = isUndefined(customizer)
-                    ? undefined
-                    : customizer(object[key], source[key], key, object, source, stack);
-                finalVal = isUndefined(customized) ? finalVal : customized;
+            let finalValue = source[key];
+            if (!stack.has(finalValue)) {
+                stack.add(finalValue);
+                const customized = customizer && customizer(object[key], source[key], key, object, source, stack);
+                finalValue = customized !== undefined ? customized : finalValue;
                 if (customized === undefined && isObject(object[key]) && isObject(source[key])) {
-                    finalVal = _baseMerge(object[key], [source[key]], customizer, stack);
+                    finalValue = _baseMerge(object[key], [source[key]], customizer, stack);
                 }
-                object[key] = finalVal;
-                stack.delete(finalVal);
+                object[key] = finalValue;
+                stack.delete(finalValue);
             }
         });
     });

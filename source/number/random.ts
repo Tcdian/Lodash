@@ -1,11 +1,10 @@
-import { isUndefined } from '../lang/isUndefined';
 import { isBoolean } from '../lang/isBoolean';
 
 function random(floating?: boolean): number;
 function random(upper: number, floating?: boolean): number;
 function random(lower: number, upper: number, floating?: boolean): number;
 function random(lower?: number | boolean, upper?: number | boolean, floating?: boolean): number {
-    if (isUndefined(floating)) {
+    if (floating === undefined) {
         if (isBoolean(upper)) {
             floating = upper;
             upper = undefined;
@@ -18,8 +17,8 @@ function random(lower?: number | boolean, upper?: number | boolean, floating?: b
         lower = 0;
         upper = 1;
     } else {
-        upper = isUndefined(upper) ? lower : upper;
-        lower = isUndefined(upper) ? 0 : lower;
+        upper = upper !== undefined ? upper : lower;
+        lower = upper !== undefined ? lower : 0;
         if ((lower as number) > (upper as number)) {
             [lower, upper] = [upper, lower];
         }

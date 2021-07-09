@@ -6,8 +6,8 @@ function rearg(func: Func<any[], any>, ...indexes: number[][]): Func<any[], any>
     const reIndexes = flatten(indexes);
     return function (this: any, ...args: any[]) {
         const finalArgs = new Array(args.length);
-        reIndexes.forEach((reIndex, i) => {
-            finalArgs[i] = args[reIndex];
+        reIndexes.forEach((reIndex, index) => {
+            finalArgs[index] = args[reIndex];
         });
         return func.call(this, ...finalArgs);
     };

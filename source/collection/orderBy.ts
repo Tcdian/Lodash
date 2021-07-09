@@ -28,18 +28,18 @@ function orderBy(
         };
     });
     return wrapped
-        .sort((wrappedVal, wrappedOth) => {
-            const valCriteria = wrappedVal.criteria;
-            const othCriteria = wrappedOth.criteria;
-            const len = valCriteria.length;
+        .sort((wrappedValue, wrappedOther) => {
+            const valueCriteria = wrappedValue.criteria;
+            const otherCriteria = wrappedOther.criteria;
+            const len = valueCriteria.length;
             let index = -1;
             while (++index < len) {
-                if (valCriteria[index] !== othCriteria[index]) {
-                    const cmpResult = valCriteria[index] < othCriteria[index] ? -1 : 1;
-                    return cmpResult * (orders[index] === 'desc' ? -1 : 1);
+                if (valueCriteria[index] !== otherCriteria[index]) {
+                    const compared = valueCriteria[index] < otherCriteria[index] ? -1 : 1;
+                    return compared * (orders[index] === 'desc' ? -1 : 1);
                 }
             }
-            return wrappedVal.index - wrappedOth.index;
+            return wrappedValue.index - wrappedOther.index;
         })
         .map(({ value }) => value);
 }

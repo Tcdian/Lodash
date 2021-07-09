@@ -1,9 +1,8 @@
 import { assignWith } from '../source/object/assignWith';
-import { isUndefined } from '../source/lang/isUndefined';
 
 describe('assignWith', () => {
     function customizer(objValue?: number, srcValue?: number) {
-        return isUndefined(objValue) ? srcValue : objValue;
+        return objValue !== undefined ? objValue : srcValue;
     }
 
     test('assignWith customizer', () => {

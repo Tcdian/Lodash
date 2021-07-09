@@ -1,11 +1,10 @@
 import { first } from './first';
 import { tail } from './tail';
-import { isUndefined } from '../lang/isUndefined';
 
 function intersection<T>(...arrays: T[][]): T[] {
     const firstArray = first(arrays);
     const otherArrays = tail(arrays);
-    if (isUndefined(firstArray)) {
+    if (firstArray === undefined) {
         return [];
     }
     return firstArray.filter((value, index) => {

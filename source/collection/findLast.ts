@@ -2,7 +2,6 @@ import { identity } from '../util/identity';
 import { iteratee } from '../util/iteratee';
 import { isArray } from '../lang/isArray';
 import { isString } from '../lang/isString';
-import { isUndefined } from '../lang/isUndefined';
 import { entries } from '../object/entries';
 
 type PropertyName = string | number | symbol;
@@ -25,7 +24,7 @@ function findLast(collection: any, predicate: any = identity, fromIndex?: number
     const iterativeFunc = iteratee(predicate);
     const pairs = entries(collection);
     const len = pairs.length;
-    if (isUndefined(fromIndex)) {
+    if (fromIndex === undefined) {
         fromIndex = len - 1;
     } else {
         if (fromIndex < 0) {

@@ -3,10 +3,10 @@ function chunk<T>(array: T[], size = 1): T[][] {
         return [];
     }
     let result: T[][] = [];
-    let i = 0;
+    let index = 0;
     const len = array.length;
-    while (i < len) {
-        result = [...result, array.slice(i, (i += size))];
+    while (index < len) {
+        result = [...result, array.slice(index, (index += size))];
     }
     return result;
 }

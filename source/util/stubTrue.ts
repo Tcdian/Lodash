@@ -1,4 +1,4 @@
-function stubTrue() {
+function stubTrue(): true {
     return true;
 }
 

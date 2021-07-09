@@ -1,4 +1,4 @@
-function stubString() {
+function stubString(): string {
     return '';
 }
 

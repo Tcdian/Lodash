@@ -1,7 +1,6 @@
 import { last } from '../array/last';
 import { initial } from '../array/initial';
 import { isFunction } from '../lang/isFunction';
-import { isUndefined } from '../lang/isUndefined';
 
 type AssignCustomizer<T, Source> = (
     objValue: T[keyof T],
@@ -28,7 +27,7 @@ function assignInWith(object: any, ...otherArgs: any[]): any {
     sources.forEach((source) => {
         for (const key in source) {
             const customized = customizer(object[key], source[key], key, object, source);
-            object[key] = isUndefined(customized) ? source[key] : customized;
+            object[key] = customized !== undefined ? customized : source[key];
         }
     });
     return object;

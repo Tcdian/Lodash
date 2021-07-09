@@ -4,7 +4,6 @@ import { last } from './last';
 import { initial } from './initial';
 import { first } from './first';
 import { tail } from './tail';
-import { isUndefined } from '../lang/isUndefined';
 import { isArrayLikeObject } from '../lang/isArrayLikeObject';
 import { intersection } from './intersection';
 
@@ -21,14 +20,14 @@ function intersectionBy<T>(...args: [...arrays: T[][], predicate: ValueIterateeC
     if (isArrayLikeObject(predicate)) {
         return intersection(...(args as T[][]));
     }
-    if (isUndefined(predicate)) {
+    if (predicate === undefined) {
         predicate = identity;
     }
     const iterativeFunc = iteratee(predicate);
     const arrays = initial(args) as T[][];
     const firstArray = first(arrays);
     const otherArrays = tail(arrays);
-    if (isUndefined(firstArray)) {
+    if (firstArray === undefined) {
         return [];
     }
     return firstArray.filter((arrVal, index) => {

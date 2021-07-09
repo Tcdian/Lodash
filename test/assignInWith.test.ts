@@ -1,12 +1,11 @@
 import { assignInWith } from '../source/object/assignInWith';
 import { create } from '../source/object/create';
-import { isUndefined } from '../source/lang/isUndefined';
 
 describe('assignInWith', () => {
     const source = create({ b: 2 });
 
     function customizer(objValue?: number, srcValue?: number) {
-        return isUndefined(objValue) ? srcValue : objValue;
+        return objValue !== undefined ? objValue : srcValue;
     }
 
     test('assignInWith customizer', () => {

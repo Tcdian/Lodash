@@ -7,13 +7,13 @@ function swap(array: unknown[], a: number, b: number) {
 }
 
 function shuffle<T>(collection: T[]): T[] {
-    const valueArr = values(collection);
-    const len = valueArr.length;
+    const collectionValues = values(collection);
+    const len = collectionValues.length;
     for (let i = 0; i < len - 1; i++) {
         const randomIndex = Math.floor(Math.random() * (len - i) + i);
-        swap(valueArr, i, randomIndex);
+        swap(collectionValues, i, randomIndex);
     }
-    return valueArr;
+    return collectionValues;
 }
 
 export { shuffle };

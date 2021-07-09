@@ -1,7 +1,6 @@
 import { _baseGetTag } from './_baseGetTag';
 import { _getAllKeys } from './_getAllKeys';
 import { _getAllKeysIn } from './_getAllKeysIn';
-import { isUndefined } from './isUndefined';
 import { isObject } from './isObject';
 import { isArray } from './isArray';
 import { isSet } from './isSet';
@@ -31,7 +30,7 @@ function _baseClone<T>(
     if (customizer) {
         result = object ? customizer(value, key, object, stack) : customizer(value, undefined, undefined, stack);
     }
-    if (!isUndefined(result)) {
+    if (result !== undefined) {
         return result;
     }
     if (!isObject(value)) {

@@ -2,7 +2,6 @@ import { identity } from '../util/identity';
 import { iteratee } from '../util/iteratee';
 import { last } from './last';
 import { initial } from './initial';
-import { isUndefined } from '../lang/isUndefined';
 import { isArrayLikeObject } from '../lang/isArrayLikeObject';
 import { uniqBy } from './uniqBy';
 import { flatten } from './flatten';
@@ -21,7 +20,7 @@ function xorBy<T>(...args: [...arrays: T[][], predicate: ValueIterateeCustom<T, 
     if (isArrayLikeObject(predicate)) {
         return xor(...(args as T[][]));
     }
-    if (isUndefined(predicate)) {
+    if (predicate === undefined) {
         predicate = identity;
     }
     const iterativeFunc = iteratee(predicate);

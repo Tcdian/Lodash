@@ -1,8 +1,10 @@
 import { isObject } from '../lang/isObject';
 
+type Func<TS extends any[], R> = (...args: TS) => R;
+
 function _executeBound(
-    func: (...args: any[]) => any,
-    boundFunc: (...args: any[]) => any,
+    func: Func<any[], any>,
+    boundFunc: Func<any[], any>,
     thisArg: any,
     context: any,
     args: any[]

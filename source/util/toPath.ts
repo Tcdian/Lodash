@@ -7,7 +7,7 @@ function toPath(value: any): (string | symbol)[] {
         return [value];
     }
     if (isArray(value)) {
-        return value.map((arrVal) => (isSymbol(arrVal) ? arrVal : toString(arrVal)));
+        return value.map((part) => (isSymbol(part) ? part : toString(part)));
     }
     return toString(value)
         .split(/[\\[\]\\.]/)

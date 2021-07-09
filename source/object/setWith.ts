@@ -3,7 +3,6 @@ import { first } from '../array/first';
 import { tail } from '../array/tail';
 import { isEmpty } from '../lang/isEmpty';
 import { isObject } from '../lang/isObject';
-import { isUndefined } from '../lang/isUndefined';
 import { _isIndex } from './_isIndex';
 
 type PropertyName = string | number | symbol;
@@ -14,17 +13,17 @@ type SetWithCustomizer<T> = (nsValue: any, key: PropertyName, nsObject: T) => an
 function setWith<T>(object: T, path: PropertyPath, value: any, customizer?: SetWithCustomizer<T>): any {
     const formattedPath = toPath(path);
     const key = first(formattedPath);
-    if (!isUndefined(key)) {
-        const resPathArr = tail(formattedPath);
-        if (isEmpty(resPathArr)) {
+    if (key !== undefined) {
+        const resPaths = tail(formattedPath);
+        if (isEmpty(resPaths)) {
             (object as any)[key] = value;
         } else {
-            const objectVal = (object as any)[key];
-            let newVal = customizer && customizer(objectVal, key, object);
-            if (isUndefined(newVal)) {
-                newVal = isObject(objectVal) ? objectVal : _isIndex(first(resPathArr)) ? [] : {};
+            const objValue = (object as any)[key];
+            let newValue = customizer && customizer(objValue, key, object);
+            if (newValue === undefined) {
+                newValue = isObject(objValue) ? objValue : _isIndex(first(resPaths)) ? [] : {};
             }
-            (object as any)[key] = setWith(newVal, resPathArr, value, customizer);
+            (object as any)[key] = setWith(newValue, resPaths, value, customizer);
         }
     }
     return object;

@@ -1,5 +1,4 @@
 import { _baseIsEqual } from './_baseIsEqual';
-import { isUndefined } from './isUndefined';
 
 type PropertyName = string | number | symbol;
 type IsEqualCustomizer = (
@@ -13,7 +12,7 @@ type IsEqualCustomizer = (
 
 function isEqualWith(value: any, other: any, customizer: IsEqualCustomizer): boolean {
     const compared = customizer && customizer(value, other, undefined, undefined, undefined, undefined);
-    return isUndefined(compared) ? _baseIsEqual(value, other, 0, customizer) : compared;
+    return compared !== undefined ? compared : _baseIsEqual(value, other, 0, customizer);
 }
 
 export { isEqualWith };

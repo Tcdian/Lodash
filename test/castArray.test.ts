@@ -26,7 +26,7 @@ describe('castArray', () => {
     });
 
     test('castArray([1, 2, 3]) => [1, 2, 3]', () => {
-        const arr = [1, 2, 3];
-        expect(castArray(arr)).toBe(arr);
+        const array = [1, 2, 3];
+        expect(castArray(array)).toBe(array);
     });
 });
