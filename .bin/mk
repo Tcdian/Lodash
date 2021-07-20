@@ -7,41 +7,44 @@ const _ = require('lodash');
 main();
 
 async function main() {
-    const catalog = await getCatalog('source');
-    writeMD(catalog);
+    const source = await getCatalog('source');
+    renderMD(source);
 }
 
-async function getCatalog(dirPath) {
-    const absolutePath = path.resolve('.', dirPath);
+async function getCatalog(fileOrDirPath) {
+    const absolutePath = path.resolve('.', fileOrDirPath);
+    const relativePath = path.relative('.', fileOrDirPath);
+    const name = fileOrDirPath.match(/([^\/]+?)(\.(js|ts|md)){0,1}$/i)[1];
     const stat = await fs.promises.stat(absolutePath);
     if (stat.isFile()) {
-        return path.relative('.', dirPath);
+        return { type: 'file', name: name, path: relativePath };
     }
     const dirs = await fs.promises.readdir(absolutePath);
-    return await Promise.all(dirs.map((dir) => getCatalog(path.join(dirPath, dir))));
+    const files = await Promise.all(_.map(dirs, (dir) => getCatalog(path.join(fileOrDirPath, dir))));
+    return { type: 'directory', name: name, path: relativePath, child: files };
 }
 
-async function writeMD(catalog) {
-    await fs.promises.writeFile('./README.md', '');
+async function renderMD(source) {
     await fs.promises.writeFile(
         './README.md',
-        `## 使用 TypeScript 实现 Lodash       
+        `# 使用 TypeScript 实现 Lodash
 
-${catalog
-    .map(
-        (files) => `<details open>
-<summary><font size=5>${_.upperFirst(files[0].match(/source\/(.+)\//)[1])}</font></summary>
-
-${files
-    .filter((file) => !file.includes('_'))
-    .map((file) => {
-        const fileName = file.match(/\/([^\/]+?)\.ts/)[1];
-        return `- [${fileName}](${file})`;
-    })
-    .join('\n')}
-</details>
-`
-    )
-    .join('\n')}`
+${renderCatalog(source)}`
     );
+
+    function renderCatalog(fileOrDir) {
+        if (fileOrDir.type === 'file') {
+            return _.includes(fileOrDir.name, '_') ? '' : `-   [${fileOrDir.name}](<${fileOrDir.path}>)\n`;
+        } else {
+            return fileOrDir.name === 'source'
+                ? _.map(fileOrDir.child, renderCatalog).join('')
+                : `<details open>
+<summary><font size=4>${_.upperFirst(fileOrDir.name)}</font></summary>
+
+${_.map(fileOrDir.child, renderCatalog).join('')}
+</details>
+
+`;
+        }
+    }
 }
