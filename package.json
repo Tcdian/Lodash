@@ -1,7 +1,7 @@
 {
     "name": "@tcdian/lodash",
     "version": "1.0.0",
-    "description": "",
+    "description": "使用 TypeScript 实现 Lodash",
     "main": "index.js",
     "scripts": {
         "test": "jest",

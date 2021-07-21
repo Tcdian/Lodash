@@ -10,7 +10,7 @@ function toPath(value: any): (string | symbol)[] {
         return value.map((part) => (isSymbol(part) ? part : toString(part)));
     }
     return toString(value)
-        .split(/[\\[\]\\.]/)
+        .split(/[[\]\\.]/)
         .filter((key) => key !== '');
 }
 
