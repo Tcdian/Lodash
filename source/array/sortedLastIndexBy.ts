@@ -8,20 +8,17 @@ type ValueIterateeCustom<T, R> = ValueIterator<T, R> | IterateeShorthand<T>;
 
 function sortedLastIndexBy<T>(array: T[], value: T, predicate: ValueIterateeCustom<T, unknown> = identity): number {
     const iterativeFunc = iteratee(predicate);
-    if (value < array[0]) {
-        return 0;
-    }
     let left = 0;
-    let right = array.length - 1;
+    let right = array.length;
     while (left < right) {
-        const mid = Math.ceil((left + right) / 2);
-        if (iterativeFunc(array[mid]) > iterativeFunc(value)) {
-            right = mid - 1;
+        const mid = (left + right) >> 1;
+        if (iterativeFunc(array[mid]) <= iterativeFunc(value)) {
+            left = mid + 1;
         } else {
-            left = mid;
+            right = mid;
         }
     }
-    return left + 1;
+    return left;
 }
 
 export { sortedLastIndexBy };
