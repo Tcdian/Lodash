@@ -7,11 +7,11 @@ const _ = require('lodash');
 main();
 
 async function main() {
-    const source = await getCatalog('source');
+    const source = await getDirectory('source');
     renderMD(source);
 }
 
-async function getCatalog(fileOrDirPath) {
+async function getDirectory(fileOrDirPath) {
     const absolutePath = path.resolve('.', fileOrDirPath);
     const relativePath = path.relative('.', fileOrDirPath);
     const name = fileOrDirPath.match(/([^\/]+?)(\.(js|ts|md)){0,1}$/i)[1];
@@ -20,7 +20,7 @@ async function getCatalog(fileOrDirPath) {
         return { type: 'file', name: name, path: relativePath };
     }
     const dirs = await fs.promises.readdir(absolutePath);
-    const files = await Promise.all(_.map(dirs, (dir) => getCatalog(path.join(fileOrDirPath, dir))));
+    const files = await Promise.all(_.map(dirs, (dir) => getDirectory(path.join(fileOrDirPath, dir))));
     return { type: 'directory', name: name, path: relativePath, child: files };
 }
 
@@ -29,19 +29,19 @@ async function renderMD(source) {
         './README.md',
         `## 使用 TypeScript 实现 Lodash
 
-${renderCatalog(source)}`
+${renderDirectory(source)}`
     );
 
-    function renderCatalog(fileOrDir) {
+    function renderDirectory(fileOrDir) {
         if (fileOrDir.type === 'file') {
             return _.includes(fileOrDir.name, '_') ? '' : `-   [${fileOrDir.name}](<${fileOrDir.path}>)\n`;
         } else {
             return fileOrDir.name === 'source'
-                ? _.map(fileOrDir.child, renderCatalog).join('')
+                ? _.map(fileOrDir.child, renderDirectory).join('')
                 : `<details open>
 <summary><font size=4>${_.upperFirst(fileOrDir.name)}</font></summary>
 
-${_.map(fileOrDir.child, renderCatalog).join('')}
+${_.map(fileOrDir.child, renderDirectory).join('')}
 </details>
 
 `;
