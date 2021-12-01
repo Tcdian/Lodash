@@ -49,12 +49,12 @@ function throttle<T extends Func<any[], any>>(
         const remaining = wait - (time - lastInvokeTime);
         if (remaining <= 0 || remaining > wait) {
             if (timer) {
-                window.clearTimeout(timer);
+                clearTimeout(timer);
                 timer = undefined;
             }
             result = invokeFunc(time);
         } else if (trailing && timer === undefined) {
-            timer = window.setTimeout(() => {
+            timer = setTimeout(() => {
                 result = invokeFunc(leading ? now() : 0);
             }, remaining);
         }
@@ -63,7 +63,7 @@ function throttle<T extends Func<any[], any>>(
 
     throttled.cancel = function () {
         if (timer !== undefined) {
-            window.clearTimeout(timer);
+            clearTimeout(timer);
         }
         timer = lastThis = lastArgs = undefined;
         lastInvokeTime = 0;

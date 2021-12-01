@@ -17,7 +17,7 @@ function debounce<T extends Func<any[], any>>(
     { leading = false }: DebounceSettings = {}
 ): DebouncedFunc<T> {
     let result: any;
-    let timer: number | undefined;
+    let timer: NodeJS.Timeout | number | undefined;
     let lastThis: any;
     let lastArgs: any[] | undefined;
 
@@ -36,10 +36,10 @@ function debounce<T extends Func<any[], any>>(
             result = invokeFunc();
         }
         if (timer) {
-            window.clearTimeout(timer);
+            clearTimeout(timer);
             timer = undefined;
         }
-        timer = window.setTimeout(() => {
+        timer = setTimeout(() => {
             result = invokeFunc();
         }, wait);
         return result;
@@ -47,7 +47,7 @@ function debounce<T extends Func<any[], any>>(
 
     debounced.cancel = function () {
         if (timer !== undefined) {
-            window.clearTimeout(timer);
+            clearTimeout(timer);
         }
         timer = lastThis = lastArgs = undefined;
     };
