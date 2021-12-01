@@ -16,5 +16,13 @@
         "sourceType": "module"
     },
     "plugins": ["@typescript-eslint", "jest", "prettier"],
-    "rules": {}
+    "rules": {
+        "prefer-const": [
+            "error",
+            {
+                "destructuring": "all",
+                "ignoreReadBeforeAssign": false
+            }
+        ]
+    }
 }

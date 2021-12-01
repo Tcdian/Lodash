@@ -1,4 +1,4 @@
-function stubObject(): any {
+function stubObject() {
     return {};
 }
 

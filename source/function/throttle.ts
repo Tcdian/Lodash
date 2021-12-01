@@ -24,7 +24,7 @@ function throttle<T extends Func<any[], any>>(
     { leading = true, trailing = true }: ThrottleSettings = {}
 ): ThrottledFunc<T> {
     let result: any;
-    let timer: number | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     let lastInvokeTime = 0;
     let lastThis: any;
     let lastArgs: any[] | undefined;

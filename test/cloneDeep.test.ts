@@ -13,10 +13,11 @@ describe('cloneDeep', () => {
         expect(shallow[0]).not.toBe(objects[0]);
     });
 
-    interface RecursiveArray extends Array<RecursiveArray> {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}
 
     test('cloneDeep 循环引用数组', () => {
-        const recursiveArray: RecursiveArray = [];
+        const recursiveArray: RecursiveArray<number> = [];
         recursiveArray[0] = recursiveArray;
 
         const shallow = cloneDeep(recursiveArray);

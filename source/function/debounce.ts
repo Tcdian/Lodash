@@ -17,7 +17,7 @@ function debounce<T extends Func<any[], any>>(
     { leading = false }: DebounceSettings = {}
 ): DebouncedFunc<T> {
     let result: any;
-    let timer: NodeJS.Timeout | number | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     let lastThis: any;
     let lastArgs: any[] | undefined;
 
