@@ -7,44 +7,58 @@ const _ = require('lodash');
 main();
 
 async function main() {
-    const source = await getDirectory('source');
-    renderMD(source);
+    const directory = await getDirectory('source');
+    writeMarkdown(directory, 'README.md', _.partial(renderDirectories, renderFileAsLink));
 }
 
 async function getDirectory(fileOrDirPath) {
     const absolutePath = path.resolve('.', fileOrDirPath);
     const relativePath = path.relative('.', fileOrDirPath);
-    const name = fileOrDirPath.match(/([^\/]+?)(\.(js|ts|md)){0,1}$/i)[1];
+    const name = path.basename(fileOrDirPath);
     const stat = await fs.promises.stat(absolutePath);
     if (stat.isFile()) {
-        return { type: 'file', name: name, path: relativePath };
+        return {
+            type: 'file',
+            name: name,
+            path: relativePath,
+            title: name.replace(/\.js|\.ts/, ''),
+        };
+    } else {
+        const dirs = await fs.promises.readdir(absolutePath);
+        const files = await Promise.all(_.map(dirs, (dir) => getDirectory(path.join(fileOrDirPath, dir))));
+        return { type: 'directory', name: name, path: relativePath, child: files };
     }
-    const dirs = await fs.promises.readdir(absolutePath);
-    const files = await Promise.all(_.map(dirs, (dir) => getDirectory(path.join(fileOrDirPath, dir))));
-    return { type: 'directory', name: name, path: relativePath, child: files };
 }
 
-async function renderMD(source) {
+async function writeMarkdown(directory, target, render) {
     await fs.promises.writeFile(
-        './README.md',
+        target,
         `## 使用 TypeScript 实现 Lodash
 
-${renderDirectory(source)}`
+${render(directory.child)}
+`
     );
+}
 
-    function renderDirectory(fileOrDir) {
-        if (fileOrDir.type === 'file') {
-            return _.includes(fileOrDir.name, '_') ? '' : `-   [${fileOrDir.name}](<${fileOrDir.path}>)\n`;
-        } else {
-            return fileOrDir.name === 'source'
-                ? _.map(fileOrDir.child, renderDirectory).join('')
-                : `<details open>
+function renderDirectories(renderFile, directories) {
+    return directories
+        .filter((fileOrDir) => !fileOrDir.name.startsWith('_'))
+        .map((fileOrDir) => {
+            if (fileOrDir.type === 'directory') {
+                return `<details open>
 <summary><font size=4>${_.upperFirst(fileOrDir.name)}</font></summary>
 
-${_.map(fileOrDir.child, renderDirectory).join('')}
-</details>
+${renderDirectories(renderFile, fileOrDir.child)}
 
+</details>
 `;
-        }
-    }
+            } else {
+                return renderFile(fileOrDir);
+            }
+        })
+        .join('\n');
+}
+
+function renderFileAsLink(file) {
+    return `-   [${file.title}](<${file.path}>)`;
 }

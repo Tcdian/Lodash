@@ -4,7 +4,8 @@
     "description": "使用 TypeScript 实现 Lodash",
     "main": "index.js",
     "scripts": {
-        "mk": "./.bin/mk"
+        "mk": "./.bin/mk",
+        "test": "yarn jest"
     },
     "repository": {
         "type": "git",
